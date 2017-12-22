@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', '350点餐系统'),
 
     /*
     |--------------------------------------------------------------------------
@@ -177,6 +177,11 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        /**
+         * 引入laravel_ide_helper
+         */
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
+        
     ],
 
     /*
