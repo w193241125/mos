@@ -18,15 +18,22 @@
                 </ol>
 
             </div>
-
             <div id="page-inner">
 
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- Advanced Tables -->
+                    <!-- Advanced Tables -->
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                Advanced Tables
+                                @if(session('message') == 1)
+                                    <div class="alert alert-success">
+                                        <strong> 添加成功!</strong>
+                                    </div>
+                                @else
+                                    <div class="alert alert-danger">
+                                        <strong>添加失败!</strong>
+                                    </div>
+                                 @endif
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
@@ -43,7 +50,7 @@
                                         <tbody>
                                         @foreach($shop as $s)
                                         <tr class="gradeA">
-                                            <td>{{$s->name}}</td>
+                                            <td>{{$s->sname}}</td>
                                             <td>{{$s->phone}}</td>
                                             <td>{{$s->address}}</td>
                                             <td>{{$s->state}}</td>

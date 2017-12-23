@@ -48,8 +48,8 @@
                                             <td>{{$o->uid}}</td>
                                             <td>{{$o->sid}}</td>
                                             <td>{{$o->food}}</td>
-                                            <td>{{$o->type}}</td>
-                                            <td>{{$o->time}}</td>
+                                            <td>{{$o->otype}}</td>
+                                            <td>{{$o->otime}}</td>
                                             <td>{{$o->total}}</td>
                                             <td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>

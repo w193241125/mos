@@ -7,35 +7,31 @@
             {{ csrf_field() }}
         <div class="col-md-10 col-md-offset-1">
             {{--外层循环 每周菜单--}}
-                @foreach($week as $w)
+            @foreach($type as $t)
                 <div class="panel panel-default" style="">
-                <div class="panel-heading" style="text-align:center"><b style="color:red;font-size: large">星期{{$w->mweek}}</b></div>
-                {{--循环每日菜单--}}
-                @foreach($menu as $a)
-                @if($w->mweek==$a->mweek)
-                <div class="panel-heading" ><span style="color:deepskyblue">@if($a->mtype==1) 早餐@elseif($a->mtype==2)中餐@elseif($a->mtype==3)晚餐 @elseif($a->mtype==4)下午茶@endif </span></div>
-                <div class="panel-heading">餐厅:　<input type="radio" name="{{$a->week_mark}}{{$a->day_mark}}[shop]" value="1">{{$a->sname}}</div>
-
-                <div class="panel-body">
-                    {{--{{dd($menu)}}--}}
-                    @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
+                <div class="panel-heading" style="text-align:center"><b style="color:red;font-size: large">星期{{$t->tname}}</b></div>
+                @foreach($menu as $m)
+                    @if($t->tid == $m->mtype)
+                    @foreach($shop as $s)
+                     <div class="panel-heading" ><span style="color:deepskyblue"></span></div>
+                    <div class="panel-heading">餐厅:<input type="radio" name="" value="{{$m->sid}}" > {{$m->sname}}　</div>
+                    @if($m->sid == $s->sid)
+                    <div class="panel-body">
+                        <input type="checkbox" name="" value="">{{$m->fname}} {{$m->price}}元&nbsp;&nbsp;
+                    </div>
+                    @else
+                        <div class="panel-body">
+                            暂无
                         </div>
-                    @endif
-                    @foreach($menu->where('sid',1) as $m)
-                        <input type="checkbox" name="{{$a->week_mark}}{{$a->day_mark}}[]" value="{{$m->fid}}">{{$m->fname}}&nbsp;{{$m->price}}元&nbsp;&nbsp;
+                        @endif
                     @endforeach
-                </div>
                 @endif
                 @endforeach
-                {{--循环每日菜单--}}
+                </div>
+            @endforeach
+                {{--外层循环结束--}}
 
-            </div>
-                @endforeach
-            {{--外层循环结束--}}
-
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-default">点餐</button>
 
         </div>
         </form>

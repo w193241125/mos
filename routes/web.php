@@ -13,9 +13,12 @@
 
 //后台商家设置
 Route::get('/admin/shop', 'Admin\ShopController@show');
+Route::get('/admin/shop/add', 'Admin\ShopController@add');
+Route::post('/admin/shop/doadd', 'Admin\ShopController@doadd');
 
 //食物设置
 Route::get('/admin/food','Admin\FoodController@show');
+Route::get('/admin/food/add','Admin\FoodController@add');
 //食物设置
 Route::get('/admin/order','Admin\OrderController@show');
 

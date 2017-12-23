@@ -41,11 +41,11 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        dd($request);
         $arr['password'] = $request->password;
         $arr['username'] = $request->uname;
 
         DB::table('users')->get($arr);
+        return redirect('home');
 
     }
 }

@@ -240,7 +240,7 @@
                         <a href="{{url('admin/shop')}}">商家列表</a>
                     </li>
                     <li>
-                        <a href="morris-chart.html">Morris Chart</a>
+                        <a href="/admin/shop/add">添加商家</a>
                     </li>
                 </ul>
             </li>
@@ -251,7 +251,7 @@
                         <a href="{{url('admin/food')}}">食物列表</a>
                     </li>
                     <li>
-                        <a href="morris-chart.html">Morris Chart</a>
+                        <a href="/admin/food/add">添加食物</a>
                     </li>
                 </ul>
             </li>

@@ -11,6 +11,8 @@ class OrderController extends Controller
     public function show()
     {
         $order = DB::table('orders')->get();
-        return view('admin.order.order', compact('order'));
+        $food = DB::table('foods')->select('fid','fname')->get();
+
+        return view('admin.order.order', ['order'=>$order, 'food'=>$food]);
     }
 }

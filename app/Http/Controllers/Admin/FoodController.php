@@ -13,4 +13,24 @@ class FoodController extends Controller
         $food = DB::table('foods')->get();
         return view('admin.food.food', compact('food'));
     }
+
+    public function add()
+    {
+        $shop = DB::table('shops')->get();
+        return view('admin.food.add',['shop'=>$shop]);
+    }
+
+    public function doadd(Request $request)
+    {
+        $food['fname'] = $request->fname;
+        $food['price'] = $request->price;
+        $food['state'] = $request->state;
+
+        $res = DB::table('food')->insert($food);
+        if ($res){
+            return redirect('admin/food')->with(['message'=>'1']);
+        } else {
+            return redirect('admin/food')->with(['message'=>'2']);
+        }
+    }
 }

@@ -44,7 +44,7 @@
                                     @foreach($food as $f)
                                         <tr class="gradeA">
                                             <td>{{$f->sid}}</td>
-                                            <td>{{$f->name}}</td>
+                                            <td>{{$f->fname}}</td>
                                             <td>{{$f->price}}</td>
                                             <td>{{$f->state}}</td>
                                             <td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
