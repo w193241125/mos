@@ -33,6 +33,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                     <tr>
+                                        <th>序号</th>
                                         <th>商家名称</th>
                                         <th>食物名称</th>
                                         <th>价格</th>
@@ -43,7 +44,8 @@
                                     <tbody>
                                     @foreach($food as $f)
                                         <tr class="gradeA">
-                                            <td>{{$f->sid}}</td>
+                                            <td>{{$f->fid}}</td>
+                                            <td>{{$f->sname}}</td>
                                             <td>{{$f->fname}}</td>
                                             <td>{{$f->price}}</td>
                                             <td>{{$f->state}}</td>

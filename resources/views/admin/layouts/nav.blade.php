@@ -227,7 +227,7 @@
         <ul class="nav" id="main-menu">
 
             <li>
-                <a href="{{url('admin/order')}}"><i class="fa fa-dashboard"></i> 主页</a>
+                <a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> 主页</a>
             </li>
             <li>
                 <a href="{{url('admin/order')}}"><i class="fa fa-desktop"></i> 订单列表</a>
@@ -256,10 +256,22 @@
                 </ul>
             </li>
             <li>
+                <a href="#"><i class="fa fa-sitemap"></i> 菜单设置<span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="{{url('admin/menu')}}">菜单列表</a>
+                    </li>
+                    <li>
+                        <a href="/admin/menu/add">添加菜单</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
                 <a href="#"><i class="fa fa-sitemap"></i> 用户设置<span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li>
-                        <a href="{{url('shop')}}">用户列表</a>
+                        <a href="{{url('admin/user')}}">用户列表</a>
                     </li>
                     <li>
                         <a href="morris-chart.html">Morris Chart</a>

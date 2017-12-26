@@ -10,7 +10,7 @@ class FoodController extends Controller
 {
     public function show()
     {
-        $food = DB::table('foods')->get();
+        $food = DB::table('foods as f')->leftJoin('shops as s','s.sid','=','f.sid')->get();
         return view('admin.food.food', compact('food'));
     }
 

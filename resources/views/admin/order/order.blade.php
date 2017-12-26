@@ -9,7 +9,7 @@
     <div id="page-wrapper" >
         <div class="header">
             <h1 class="page-header">
-                订单列表 <small>Responsive tables</small>
+                订单列表 <small>本周</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#">主页</a></li>
@@ -26,7 +26,7 @@
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            Advanced Tables
+                            本周订单
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -46,10 +46,10 @@
                                     @foreach($order as $o)
                                         <tr class="gradeA">
                                             <td>{{$o->uid}}</td>
-                                            <td>{{$o->sid}}</td>
-                                            <td>{{$o->food}}</td>
-                                            <td>{{$o->otype}}</td>
-                                            <td>{{$o->otime}}</td>
+                                            <td>{{$o->sname}}</td>
+                                            <td>{{$o->list}}</td>
+                                            <td>{{$o->tname}}</td>
+                                            <td>{{$o->week_of_year}}</td>
                                             <td>{{$o->total}}</td>
                                             <td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>

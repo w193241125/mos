@@ -30,9 +30,9 @@ class ShopController extends Controller
 
         $res = DB::table('shops')->insert($shop);
         if ($res){
-            return redirect('admin/shop')->with(['message'=>'1']);
+            return redirect('admin/shop')->with(['shopMsg'=>'1']);
         } else {
-            return redirect('admin/shop')->with(['message'=>'2']);
+            return redirect('admin/shop')->with(['shopMsg'=>'2']);
         }
     }
 }

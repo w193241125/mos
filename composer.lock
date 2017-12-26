@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "0233746459166eff62ac411b26913625",
+    "content-hash": "494c68a6680265a3ae277a58b56cb925",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -349,6 +349,48 @@
                 "parser"
             ],
             "time": "2014-09-09T13:34:57+00:00"
+        },
+        {
+            "name": "dv-affection/date_get_week_number",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/dVaffection/date_get_week_number.git",
+                "reference": "76396db2c1f98067cfce7f9771b76da248a28c1e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://files.phpcomposer.com/files/dVaffection/date_get_week_number/76396db2c1f98067cfce7f9771b76da248a28c1e.zip",
+                "reference": "76396db2c1f98067cfce7f9771b76da248a28c1e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/date_get_week_number.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "dV",
+                    "email": "dVaffection@gmail.com"
+                }
+            ],
+            "description": "Provide support for obtaining a week number of year (week starts on Sunday)",
+            "homepage": "https://github.com/dvAffection/date_get_week_number",
+            "keywords": [
+                "date",
+                "php",
+                "week"
+            ],
+            "time": "2013-08-30T06:56:31+00:00"
         },
         {
             "name": "egulias/email-validator",

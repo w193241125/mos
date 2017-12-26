@@ -11,6 +11,11 @@
 |
 */
 
+//后台主页
+Route::get('/admin', 'Admin\IndexController@show');
+//后台用户管理
+Route::get('/admin/user', 'Admin\UserController@show');
+
 //后台商家设置
 Route::get('/admin/shop', 'Admin\ShopController@show');
 Route::get('/admin/shop/add', 'Admin\ShopController@add');
@@ -19,8 +24,13 @@ Route::post('/admin/shop/doadd', 'Admin\ShopController@doadd');
 //食物设置
 Route::get('/admin/food','Admin\FoodController@show');
 Route::get('/admin/food/add','Admin\FoodController@add');
-//食物设置
+//订单
 Route::get('/admin/order','Admin\OrderController@show');
+//菜单设置
+Route::get('/admin/menu','Admin\MenuController@show')->name('menu');
+Route::get('/admin/menu/add/{sid?}','Admin\MenuController@add');
+Route::post('/admin/menu/doadd','Admin\MenuController@doadd');
+Route::get('/admin/menu/ajaxReq/{sid?}','Admin\MenuController@ajaxReq');
 
 Route::namespace('admin')->group(function () {
     Route::resource('shop', 'Admin\ShopController', ['only' => ['show', 'update', 'edit']]);
@@ -43,3 +53,4 @@ Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::any('/home', 'HomeController@upd');
+Route::any('/home/show', 'HomeController@show');
