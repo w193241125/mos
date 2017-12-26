@@ -20,6 +20,8 @@ Route::get('/admin/user', 'Admin\UserController@show');
 Route::get('/admin/shop', 'Admin\ShopController@show');
 Route::get('/admin/shop/add', 'Admin\ShopController@add');
 Route::post('/admin/shop/doadd', 'Admin\ShopController@doadd');
+Route::get('/admin/shop/edit/{sid}', 'Admin\ShopController@edit')->name('shopEdit');
+Route::post('/admin/shop/doedit', 'Admin\ShopController@doedit');
 
 //食物设置
 Route::get('/admin/food','Admin\FoodController@show');
@@ -32,25 +34,15 @@ Route::get('/admin/menu/add/{sid?}','Admin\MenuController@add');
 Route::post('/admin/menu/doadd','Admin\MenuController@doadd');
 Route::get('/admin/menu/ajaxReq/{sid?}','Admin\MenuController@ajaxReq');
 
-Route::namespace('admin')->group(function () {
-    Route::resource('shop', 'Admin\ShopController', ['only' => ['show', 'update', 'edit']]);
-});
 
-// Authentication Routes...
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
-
-// Registration Routes...
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
-
-// Password Reset Routes...
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::any('/home', 'HomeController@upd');
+Route::any('/home', 'HomeController@index');
 Route::any('/home/show', 'HomeController@show');
+
+//导出到excel
+Route::get('excel/export','ExcelController@export');
+Route::get('excel/import','ExcelController@import');
+
+Auth::routes();
+

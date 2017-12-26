@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Faker\Provider\zh_CN\DateTime;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -18,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        //$this->middleware('auth');
+        $this->middleware('auth');
     }
 
     /**
@@ -28,14 +25,15 @@ class HomeController extends Controller
      */
     public function index()
     {
+
         $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
 
         $food = DB::table('foods')->get();
         $shop = DB::table('shops')->get();
         $menu = DB::table('menus')->get()->toArray();
         foreach ($menu as &$v) {
-                $v->food = explode(',',trim($v->fid,','));
-            }
+            $v->food = explode(',',trim($v->fid,','));
+        }
         $type = DB::table('types')->get();
         //$dayType = DB::table('menus')->select('tid')->distinct()->orderBy('tid', 'asc')->get();
         //dd($menu);
@@ -51,44 +49,30 @@ class HomeController extends Controller
         $weekOfYear = date_get_week_number($date);
         //dd($weekOfYear);
 
-        //$tid = [
-        //  1=>'一早',
-        //  2=>'一中',
-        //  3=>'一晚',
-        //  4=>'二早',
-        //  5=>'二中',
-        //  6=>'二晚',
-        //  7=>'三早',
-        //  8=>'三中',
-        //  9=>'三晚',
-        //  10=>'四早',
-        //  11=>'四中',
-        //  12=>'四晚',
-        //  13=>'五早',
-        //  14=>'五中',
-        //  15=>'五晚',
-        //  16=>'六早',
-        //  17=>'六中',
-        //  18=>'六晚',
-        //];
-        //dd($request->order);
+
+        $data['uid'] = 1;
         $data['total'] = 0;
         $data['food'] = '';
-        $data['uid'] = 1;
         $data['created_at'] = date('Y-m-d H:i:s');
         $data['week_of_year'] = $weekOfYear;
         foreach ($request->order as $key=>$item) {
             $data['tmark'] = $key;
             if (is_array($item)){
                 foreach ($item as $k=>$v) {
-                        $data['sid'] = $k;
+                    $data['sid'] = $k;
                     foreach ($v as $fid=>$price) {
                         $data['food'] .= $fid.',';
                         $data['total'] += $price;
                     }
                 }
             }
-            DB::table('orders')->insert($data);
+            $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->get()->toArray();
+            if ($res){
+                echo 1;
+                DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
+            } else {
+                DB::table('orders')->insert($data);
+            }
             $data['total'] = 0;
             $data['food'] = '';
         }

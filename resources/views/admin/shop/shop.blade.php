@@ -54,7 +54,8 @@
                                             <td>{{$s->phone}}</td>
                                             <td>{{$s->address}}</td>
                                             <td>{{$s->state}}</td>
-                                            <td><a href="{{url('/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
+                                            <td>
+                                                <a href="/admin/shop/edit/{{$s->sid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
                                         @endforeach
                                         </tbody>

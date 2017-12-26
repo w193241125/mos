@@ -35,4 +35,30 @@ class ShopController extends Controller
             return redirect('admin/shop')->with(['shopMsg'=>'2']);
         }
     }
+
+    public function edit(Request $request)
+    {
+        $sid = $request->route('sid');
+        $shop = DB::table('shops')->where('sid','=',$sid)->get()->toArray();
+        //dd($shop);
+        return view('admin.shop.edit',['shop'=>$shop[0]]);
+    }
+
+    public function doedit(Request $request)
+    {
+        //dd($request);
+        $sid= $request->sid;
+        $data['sname'] = $request->sname;
+        $data['address'] = $request->address;
+        $data['phone'] = $request->phone;
+        $data['state'] = $request->state;
+        $data['limit_money'] = $request->limit_money;
+        $res = DB::table('shops')->where('sid','=',$sid)->update($data);
+        if ($res){
+            return redirect('admin/shop')->with(['shopMes'=>1]);
+        }else{
+            return redirect('admin/shop')->with(['shopMes'=>2]);
+        }
+
+    }
 }
