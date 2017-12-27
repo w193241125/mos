@@ -48,13 +48,13 @@
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        @foreach($menu as $f)
+                                        @foreach($menu as $m)
                                         <tr class="gradeA">
-                                            <td>{{$f->sname}}</td>
-                                            <td>{{$f->fid}}</td>
-                                            <td>{{$f->tname}}</td>
-                                            <td>{{$f->state}}</td>
-                                            <td><a href="{{url('/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
+                                            <td>{{$m->sname}}</td>
+                                            <td>{{$m->fid}}</td>
+                                            <td>{{$m->tname}}</td>
+                                            <td>{{$m->state}}</td>
+                                            <td><a href="menu/edit/{{$m->mid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
                                         @endforeach
                                         </tbody>

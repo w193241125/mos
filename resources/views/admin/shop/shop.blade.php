@@ -27,11 +27,11 @@
                             <div class="panel-heading">
                                 @if(session('shopMsg') == 1)
                                     <div class="alert alert-success">
-                                        <strong> 添加成功!</strong>
+                                        <strong> 操作成功!</strong>
                                     </div>
                                 @elseif(session('shopMsg') == 2)
                                     <div class="alert alert-danger">
-                                        <strong>添加失败!</strong>
+                                        <strong>操作失败!</strong>
                                     </div>
                                  @endif
                             </div>

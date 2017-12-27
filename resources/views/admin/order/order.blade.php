@@ -45,7 +45,11 @@
                                     <tbody>
                                     @foreach($order as $o)
                                         <tr class="gradeA">
-                                            <td>{{$o->uid}}</td>
+                                            @foreach($user as $u)
+                                                @if($u->uid == $o->uid)
+                                                    <td>{{$u->realname}}</td>
+                                                @endif
+                                            @endforeach
                                             <td>{{$o->sname}}</td>
                                             <td>{{$o->list}}</td>
                                             <td>{{$o->tname}}</td>

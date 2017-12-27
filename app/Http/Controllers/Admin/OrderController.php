@@ -17,6 +17,8 @@ class OrderController extends Controller
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where('week_of_year','=',$weekOfYear)->get()->toArray();
         $type = DB::table('types')->get()->toArray();
+
+        $user = DB::table('users')->get()->toArray();
         foreach ($order as &$item) {
             $item->list = '';
             $tmp = explode(',',trim($item->food,','));
@@ -30,6 +32,6 @@ class OrderController extends Controller
             $item->list = trim($item->list,'+');
         }
 
-        return view('admin.order.order', ['order'=>$order, 'food'=>$food]);
+        return view('admin.order.order', ['order'=>$order, 'food'=>$food,'user'=>$user]);
     }
 }

@@ -26,7 +26,15 @@
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            食物列表
+                            @if(session('foodMsg') == 1)
+                                <div class="alert alert-success">
+                                    <strong> 操作成功!</strong>
+                                </div>
+                            @elseif(session('foodMsg') == 2)
+                                <div class="alert alert-danger">
+                                    <strong>操作失败!</strong>
+                                </div>
+                            @endif
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -49,7 +57,7 @@
                                             <td>{{$f->fname}}</td>
                                             <td>{{$f->price}}</td>
                                             <td>{{$f->state}}</td>
-                                            <td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
+                                            <td><a href="food/edit/{{$f->fid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
                                     @endforeach
                                     </tbody>

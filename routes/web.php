@@ -15,6 +15,10 @@
 Route::get('/admin', 'Admin\IndexController@show');
 //后台用户管理
 Route::get('/admin/user', 'Admin\UserController@show');
+Route::get('/admin/user/add', 'Admin\UserController@add');
+Route::get('/admin/user/edit/{uid?}', 'Admin\UserController@edit');
+Route::post('/admin/user/doadd', 'Admin\UserController@doadd');
+Route::post('/admin/user/doedit', 'Admin\UserController@doedit');
 
 //后台商家设置
 Route::get('/admin/shop', 'Admin\ShopController@show');
@@ -25,13 +29,20 @@ Route::post('/admin/shop/doedit', 'Admin\ShopController@doedit');
 
 //食物设置
 Route::get('/admin/food','Admin\FoodController@show');
+Route::get('/admin/food/edit/{fid?}','Admin\FoodController@edit');
 Route::get('/admin/food/add','Admin\FoodController@add');
+Route::post('/admin/food/doedit','Admin\FoodController@doedit');
+Route::post('/admin/food/doadd','Admin\FoodController@doadd');
+
 //订单
 Route::get('/admin/order','Admin\OrderController@show');
 //菜单设置
 Route::get('/admin/menu','Admin\MenuController@show')->name('menu');
 Route::get('/admin/menu/add/{sid?}','Admin\MenuController@add');
+Route::get('/admin/menu/edit/{mid?}','Admin\MenuController@edit');
 Route::post('/admin/menu/doadd','Admin\MenuController@doadd');
+Route::post('/admin/menu/doedit','Admin\MenuController@doedit');
+
 Route::get('/admin/menu/ajaxReq/{sid?}','Admin\MenuController@ajaxReq');
 
 
@@ -43,6 +54,10 @@ Route::any('/home/show', 'HomeController@show');
 //导出到excel
 Route::get('excel/export','ExcelController@export');
 Route::get('excel/import','ExcelController@import');
+
+//前台用户
+Route::get('user','UsersController@show');
+Route::post('user/reset','UsersController@reset');
 
 Auth::routes();
 
