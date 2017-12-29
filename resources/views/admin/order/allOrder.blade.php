@@ -28,7 +28,13 @@
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <a href="/admin/order/export/1/1" class="btn btn-info right">导出本周Excel表</a>
+                            <form action="/admin/order/search" class="form-inline">
+                                <label for="test6" >
+                                    <small><span class="">范围选择：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$date or ''}}"></small>
+                                </label>
+                                <small><button class="btn btn-primary">提交</button></small>
+                                <a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>
+                            </form>
                         </div>
 
                         <div class="panel-body">

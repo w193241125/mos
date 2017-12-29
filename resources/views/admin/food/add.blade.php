@@ -36,7 +36,7 @@
 
                                         <div class="sub-title">所属商家</div>
                                         <div>
-                                            <select class="selectbox" name="shop" style="width: auto;">
+                                            <select class="selectbox" name="sid" style="width: auto;">
                                                 @foreach($shop as $s)
                                                 <option value="{{$s->sid}}">{{$s->sname}}</option>
                                                     @endforeach
@@ -44,11 +44,11 @@
                                         </div>
                                         <div class="sub-title">食物名称</div>
                                         <div>
-                                            <input type="text" name="sname" class="form-control" placeholder="请输入食物名称" required>
+                                            <input type="text" name="fname" class="form-control" placeholder="请输入食物名称" required>
                                         </div>
                                         <div class="sub-title">价格</div>
                                         <div>
-                                            <input type="number" name="limit_money" class="form-control" placeholder="格式: 20" required>
+                                            <input type="number" name="price" class="form-control" placeholder="格式: 20" required>
                                         </div>
                                         <div class="sub-title">是否启用</div>
                                         <div>

@@ -10,13 +10,24 @@ class MenuController extends Controller
 {
     public function show()
     {
-        $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->get();
+        $tmp = '';
+        $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->get();
+        foreach ($menu as &$item) {
+            $arr = explode(',',$item->fid);
+            foreach ($arr as $fid) {
+                $res = DB::table('foods')->where('fid','=',$fid)->get(['fname'])->toArray();
+                $tmp .= $res[0]->fname.',';
+            }
+            $item->list = $tmp;
+            $tmp = '';
+        }
+
         return view('admin.menu.menu',compact('menu'));
     }
 
     public function add()
     {
-        $shop = DB::table('shops')->get();
+        $shop = DB::table('shops')->where('sid','!=',0)->get();
         $type = DB::table('types')->get();
         return view('admin.menu.add',['shop'=>$shop,'type'=>$type,]);
 
@@ -49,7 +60,7 @@ class MenuController extends Controller
         $mid = $request->route('mid');
         $menu = DB::table('menus')->where('mid','=',$mid)->get()->toArray();
         //dd($menu);
-        $shop = DB::table('shops')->get()->toArray();
+        $shop = DB::table('shops')->where('sid','!=',0)->get()->toArray();
         $food = DB::table('foods')->where('sid','=',$menu[0]->sid)->get();
         $fidArr = explode(',',$menu[0]->fid);
         //dd($shop);
@@ -58,18 +69,17 @@ class MenuController extends Controller
 
     public function doedit(Request $request)
     {
-        //dd($request);
-        $sid= $request->sid;
-        $data['sname'] = $request->sname;
-        $data['address'] = $request->address;
-        $data['phone'] = $request->phone;
-        $data['state'] = $request->state;
-        $data['limit_money'] = $request->limit_money;
-        $res = DB::table('shops')->where('sid','=',$sid)->update($data);
+        $data['fid'] = implode(',',$request->fid);
+        $data['tmark'] = $request->tmark;
+        $data['mweek'] = $request->mweek;
+        $data['sid'] = $request->sid;
+        $mid= $request->mid;
+        $res = DB::table('menus')->where('mid','=',$mid)->update($data);
+
         if ($res){
-            return redirect('admin/shop')->with(['shopMes'=>1]);
+            return redirect('admin/menu')->with(['menuMes'=>1]);
         }else{
-            return redirect('admin/shop')->with(['shopMes'=>2]);
+            return redirect('admin/menu')->with(['menuMes'=>2]);
         }
 
     }

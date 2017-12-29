@@ -48,6 +48,12 @@
                                             </select>
                                         </div>
                                         <div class="sub-title">选择食物</div>
+                                        <div class="checkbox3 checkbox-inline checkbox-check checkbox-light">
+                                            <input type="checkbox" id="checkbox-fa-light-1" checked="">
+                                            <label for="checkbox-fa-light-1">
+                                                Option1
+                                            </label>
+                                        </div>
                                         <div id="getFromAjax">
                                             选择商家后显示!
                                         </div>
@@ -57,10 +63,10 @@
                                             <input type="radio" name="tmark" class="checkbox3" value="{{$t->tmark}}">{{$t->tname}}
                                             @endforeach
                                         </div>
-                                        <div class="sub-title">设置周</div>
+                                        <div class="sub-title">设置状态</div>
                                         <div>
-                                            <input type="radio" name="mweek" class="radio3" value="1" checked>本周
-                                            <input type="radio" name="mweek" class="radio3" value="2">下周
+                                            <input type="radio" name="mweek" class="radio3" value="1" checked>启用
+                                            <input type="radio" name="mweek" class="radio3" value="2">禁用
                                         </div>
 
                                         <div class="sub-title"></div>
@@ -94,6 +100,7 @@
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
                 },
                 success: function(data){
+                    var i = 1;
                     var foodData = data.food;
                     console.log(data);
                     $('#getFromAjax').empty();
@@ -101,11 +108,12 @@
                         var fid = data[index].fid;
                         var fname = data[index].fname;
                         var price = data[index].price;
-                        $("#getFromAjax").append('<input type="checkbox" name="fid[]" class="checkbox3" value="'+fid+'">'+fname);
+                        $("#getFromAjax").append('<input id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<lable for="checkbox-fa-light-'+i+'">'+fname+'</lable>');
                         // console.log(fid)
+                        i++;
                     }
                 }
             });
-        })
+        });
     </script>
     @stop

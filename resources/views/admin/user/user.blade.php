@@ -34,6 +34,7 @@
                                         <strong>操作失败或未执行任何修改!</strong>
                                     </div>
                                  @endif
+                                    <a href="/admin/user/add" class="btn btn-primary">添加用户</a>
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
@@ -53,7 +54,7 @@
                                             <td>{{$u->uname}}</td>
                                             <td>{{$u->realname}}</td>
 {{--                                            <td>{{$u->phone}}</td>--}}
-                                            <td>{{$u->state}}</td>
+                                            <td>@if($u->state==1)启用@elseif($u->state==2)禁用@else其他@endif</td>
                                             <td><a href="{{url('admin/user/edit/').'/'.$u->uid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
                                         @endforeach

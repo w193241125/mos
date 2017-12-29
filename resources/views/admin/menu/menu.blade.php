@@ -34,7 +34,9 @@
                                         <strong>添加失败!</strong>
                                     </div>
                                  @endif
+                                    <a href="/admin/menu/add" class="btn btn-primary">添加菜单</a>
                             </div>
+                            
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -51,9 +53,9 @@
                                         @foreach($menu as $m)
                                         <tr class="gradeA">
                                             <td>{{$m->sname}}</td>
-                                            <td>{{$m->fid}}</td>
+                                            <td>{{$m->list}}</td>
                                             <td>{{$m->tname}}</td>
-                                            <td>{{$m->state}}</td>
+                                            <td>@if($m->state==1)启用@elseif($m->state==2)禁用@else其他@endif</td>
                                             <td><a href="menu/edit/{{$m->mid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
                                         @endforeach
@@ -72,4 +74,3 @@
         </div>
         <!-- /. PAGE INNER  -->
 @stop
-

@@ -13,13 +13,17 @@
         <link href="{{asset('assets/css/bootstrap.css')}}" rel="stylesheet" />
         <!-- FontAwesome Styles-->
         <link href="{{asset('assets/css/font-awesome.css')}}" rel="stylesheet" />
+        {{--checkbox select Style--}}
+        <link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" >
+        <link href="{{asset('assets/css/checkbox3.min.css')}}" rel="stylesheet" >
         <!-- Morris Chart Styles-->
         <link href="{{asset('assets/js/morris/morris-0.4.3.min.css')}}" rel="stylesheet" />
         <!-- Custom Styles-->
         <link href="{{asset('assets/css/custom-styles.css')}}" rel="stylesheet" />
         <!-- Google Fonts-->
-        <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-        <link rel="stylesheet" href="{{asset('assets/js/Lightweight-Chart/cssCharts.css')}}">
+        {{--<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />--}}
+        {{--<link rel="stylesheet" href="{{asset('assets/js/Lightweight-Chart/cssCharts.css')}}">--}}
+        @yield('css')
     </head>
 
 <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->
@@ -48,6 +52,7 @@
 
 <!-- Metis Menu Js -->
 <script src="{{asset('assets/js/jquery.metisMenu.js')}}"></script>
+<script src="{{asset('assets/js/select2.full.min.js')}}"></script>
 <!-- Morris Chart Js -->
 <script src="{{asset('assets/js/morris/raphael-2.1.0.min.js')}}"></script>
 <script src="{{asset('assets/js/morris/morris.js')}}"></script>
@@ -65,6 +70,9 @@
 <!-- 图表 Js -->
 <script type="text/javascript" src="{{asset('assets/js/chart.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('assets/js/chartjs.js')}}"></script>
+
+{{-- laydate时间选择插件 --}}
+<script type="text/javascript" src="{{asset('laydate/laydate.js')}}"></script>
 
 @yield('scripts')
 </body>>

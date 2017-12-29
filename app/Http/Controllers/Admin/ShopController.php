@@ -10,7 +10,7 @@ class ShopController extends Controller
 {
     public function show()
     {
-        $shop = DB::table('shops')->get();
+        $shop = DB::table('shops')->where('state','!=',3)->get();
         return view('admin.shop.shop', compact('shop'));
     }
 

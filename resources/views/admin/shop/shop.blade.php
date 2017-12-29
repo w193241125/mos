@@ -34,6 +34,7 @@
                                         <strong>操作失败!</strong>
                                     </div>
                                  @endif
+                                    <a href="/admin/shop/add" class="btn btn-primary">添加商家</a>
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
@@ -53,7 +54,7 @@
                                             <td>{{$s->sname}}</td>
                                             <td>{{$s->phone}}</td>
                                             <td>{{$s->address}}</td>
-                                            <td>{{$s->state}}</td>
+                                            <td>@if($s->state==1)启用@elseif($s->state==2)禁用@else其他@endif</td>
                                             <td>
                                                 <a href="/admin/shop/edit/{{$s->sid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>

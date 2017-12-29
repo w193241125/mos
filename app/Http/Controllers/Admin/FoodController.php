@@ -16,7 +16,7 @@ class FoodController extends Controller
 
     public function add()
     {
-        $shop = DB::table('shops')->get();
+        $shop = DB::table('shops')->where('state','!=',3)->get();
         return view('admin.food.add',['shop'=>$shop]);
     }
 
@@ -39,7 +39,7 @@ class FoodController extends Controller
     {
         $fid = $request->route('fid');
         $food = DB::table('foods')->where('fid','=',$fid)->get()->toArray();
-        $shop = DB::table('shops')->get()->toArray();
+        $shop = DB::table('shops')->where('state','!=',3)->get()->toArray();
         return view('admin.food.edit',['food'=>$food[0],'shop'=>$shop]);
     }
 

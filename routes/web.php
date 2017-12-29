@@ -36,6 +36,11 @@ Route::post('/admin/food/doadd','Admin\FoodController@doadd');
 
 //订单
 Route::get('/admin/order','Admin\OrderController@show');
+Route::get('/admin/allOrder','Admin\OrderController@allShow');
+Route::get('/admin/order/search','Admin\OrderController@search');
+//Route::get('/admin/order/allExport/{start?}/{end?}','Admin\OrderController@search');
+Route::get('/admin/order/export/{start?}/{end?}','Admin\OrderController@export');
+
 //菜单设置
 Route::get('/admin/menu','Admin\MenuController@show')->name('menu');
 Route::get('/admin/menu/add/{sid?}','Admin\MenuController@add');
@@ -48,10 +53,11 @@ Route::get('/admin/menu/ajaxReq/{sid?}','Admin\MenuController@ajaxReq');
 
 
 Route::get('/', 'HomeController@index')->name('home');
-Route::any('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index');
+Route::any('/home/upd', 'HomeController@upd');
 Route::any('/home/show', 'HomeController@show');
 
-//导出到excel
+//导出到excel(测试用)
 Route::get('excel/export','ExcelController@export');
 Route::get('excel/import','ExcelController@import');
 

@@ -35,6 +35,7 @@
                                     <strong>操作失败!</strong>
                                 </div>
                             @endif
+                            <a href="/admin/food/add" class="btn btn-primary">添加食物</a>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -44,7 +45,7 @@
                                         <th>序号</th>
                                         <th>商家名称</th>
                                         <th>食物名称</th>
-                                        <th>价格</th>
+                                        <th>价格(元)</th>
                                         <th>是否启用</th>
                                         <th>操作</th>
                                     </tr>
@@ -56,7 +57,7 @@
                                             <td>{{$f->sname}}</td>
                                             <td>{{$f->fname}}</td>
                                             <td>{{$f->price}}</td>
-                                            <td>{{$f->state}}</td>
+                                            <td>@if($f->state==1)启用@elseif($f->state==2)禁用@else其他@endif</td>
                                             <td><a href="food/edit/{{$f->fid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
                                     @endforeach

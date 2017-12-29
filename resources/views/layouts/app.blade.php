@@ -12,9 +12,20 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- FontAwesome Styles-->
+    <link href="{{asset('assets/css/font-awesome.css')}}" rel="stylesheet" />
+    {{--checkbox select Style--}}
+    <link href="{{asset('assets/css/select2.min.css')}}" rel="stylesheet" >
+    <link href="{{asset('assets/css/checkbox3.min.css')}}" rel="stylesheet" >
+    <!-- Morris Chart Styles-->
+    <link href="{{asset('assets/js/morris/morris-0.4.3.min.css')}}" rel="stylesheet" />
+
+
+    @yield('css')
 </head>
 <body>
     <div id="app">
+
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
@@ -84,5 +95,9 @@
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <!-- Metis Menu Js -->
+    <script src="{{asset('assets/js/jquery.metisMenu.js')}}"></script>
+    <script src="{{asset('assets/js/select2.full.min.js')}}"></script>
+    @yield('scripts')
 </body>
 </html>
