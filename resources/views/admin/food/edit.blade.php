@@ -46,7 +46,7 @@
                                         </div>
                                         <div class="sub-title">价格</div>
                                         <div>
-                                            <input type="number" name="price" class="form-control" value="{{$food->price}}" required>
+                                            <input type="number" name="price" step="0.1" class="form-control" value="{{$food->price}}" required>
                                         </div>
                                         <div class="sub-title">是否启用</div>
                                         <div>

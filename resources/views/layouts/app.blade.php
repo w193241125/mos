@@ -80,7 +80,7 @@
 
                                 </ul>
                             </li>
-                            @if(Auth::user()->uid == 1)
+                            @if(Auth::user()->state == 3 || Auth::user()->state == 4)
                                 <li> <a href="/admin">前往后台</a></li>
 
                                 @endif

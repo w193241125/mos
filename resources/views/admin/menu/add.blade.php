@@ -35,7 +35,7 @@
                                 </div>
                             @endif
                             <div class="table-responsive">
-                                <form action="/admin/menu/doadd" method="post">
+                                <form id="form1" onsubmit="return false" action="##" method="post">
                                     {{ csrf_field() }}
                                     <div class="panel-body">
                                         <div class="sub-title">选择商家</div>
@@ -48,12 +48,6 @@
                                             </select>
                                         </div>
                                         <div class="sub-title">选择食物</div>
-                                        <div class="checkbox3 checkbox-inline checkbox-check checkbox-light">
-                                            <input type="checkbox" id="checkbox-fa-light-1" checked="">
-                                            <label for="checkbox-fa-light-1">
-                                                Option1
-                                            </label>
-                                        </div>
                                         <div id="getFromAjax">
                                             选择商家后显示!
                                         </div>
@@ -63,14 +57,18 @@
                                             <input type="radio" name="tmark" class="checkbox3" value="{{$t->tmark}}">{{$t->tname}}
                                             @endforeach
                                         </div>
+                                        <div class="sub-title">该时间的菜单</div>
+                                        <div id="getMenuByAjax">
+                                            <span style="color: red">暂无</span>
+                                        </div>
                                         <div class="sub-title">设置状态</div>
                                         <div>
-                                            <input type="radio" name="mweek" class="radio3" value="1" checked>启用
-                                            <input type="radio" name="mweek" class="radio3" value="2">禁用
+                                            <input type="radio" name="mstate" class="radio3" value="1" checked>启用
+                                            <input type="radio" name="mstate" class="radio3" value="2">禁用
                                         </div>
 
                                         <div class="sub-title"></div>
-                                        <button type="submit" class="btn btn-default">确认添加</button>
+                                        <button type="submit" onclick="ajaxAdd()" class="btn btn-default">确认添加</button>
                                     </div>
                                 </form>
                             </div>
@@ -89,7 +87,7 @@
 
 @section('scripts')
     <script>
-
+        //ajax提交查询商家食物列表
         $("#selectshop").change(function () {
             sid = $("#selectshop  option:selected").val();
             $.ajax({
@@ -102,18 +100,95 @@
                 success: function(data){
                     var i = 1;
                     var foodData = data.food;
-                    console.log(data);
                     $('#getFromAjax').empty();
                     for(var index in data){
                         var fid = data[index].fid;
                         var fname = data[index].fname;
                         var price = data[index].price;
-                        $("#getFromAjax").append('<input id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<lable for="checkbox-fa-light-'+i+'">'+fname+'</lable>');
+                        if(tmp != undefined && tmp != price){
+                            $("#getFromAjax").append('<br/>')
+                            $("#getFromAjax").append('<br/>')
+                        }
+                        $("#getFromAjax").append('<input id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<lable for="checkbox-fa-light-'+i+'">'+fname+ price+'元</lable>&nbsp;');
+                        var tmp = price;
                         // console.log(fid)
                         i++;
                     }
                 }
             });
         });
+        //监控checkeded改变,ajax提交查询商家某个时间菜单
+        $('input[name=tmark]').change(function () {
+           var sid = $('#selectshop option:selected').val();
+           var tmark = $('input[name=tmark]:checked').val();
+            $.ajax({
+                type: "get",
+                url: "/admin/menu/ajaxFind/"+sid+'/'+tmark,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                },
+                success: function(data){
+                    if(data.length != 0){
+                        var foodData = data.food;
+                        $('#getMenuByAjax').empty();
+                        for(var index in data){
+                            var fname = data[index].list;
+                            var price = data[index].price;
+                            $("#getMenuByAjax").append('<span style="color: red">'+fname+'</span>');
+                        }
+                    }else{
+                        $('#getMenuByAjax').empty();
+                        $("#getMenuByAjax").append('<span style="color: red">暂无</span>');
+                    }
+                }
+            });
+        });
+        //监控selected改变,ajax提交查询商家某个时间菜单
+        $('#selectshop').change(function () {
+            var sid = $('#selectshop option:selected').val();
+            var tmark = $('input[name=tmark]:checked').val();
+            $.ajax({
+                type: "get",
+                url: "/admin/menu/ajaxFind/"+sid+'/'+tmark,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                },
+                success: function(data){
+                    if(data.length != 0){
+                        var foodData = data.food;
+                        $('#getMenuByAjax').empty();
+                        for(var index in data){
+                            var fname = data[index].list;
+                            var price = data[index].price;
+                            $("#getMenuByAjax").append('<span style="color: red">'+fname+'</span>');
+                        }
+                    }else{
+                        $('#getMenuByAjax').empty();
+                        $("#getMenuByAjax").append('<span style="color: red">暂无</span>');
+                    }
+                }
+            });
+        });
+
+        //ajax提交增加
+        function ajaxAdd(){
+            $.ajax({
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/admin/menu/doadd" ,//url
+                data: $('#form1').serialize(),
+                success: function (result) {
+                    console.log(result);//打印服务端返回的数据(调试用)
+                    if (result.menuMsg == 1) {
+                        alert("添加成功");
+                    }
+                },
+                error : function() {
+                    alert("添加失败！");
+                }
+            });
+        }
     </script>
     @stop

@@ -48,7 +48,7 @@
                                         </div>
                                         <div class="sub-title">价格</div>
                                         <div>
-                                            <input type="number" name="price" class="form-control" placeholder="格式: 20" required>
+                                            <input type="number" name="price" class="form-control" step="0.1" placeholder="格式: 20" required>
                                         </div>
                                         <div class="sub-title">是否启用</div>
                                         <div>
@@ -73,4 +73,11 @@
     </div>
     <!-- /. PAGE INNER  -->
 @stop
+
+@section('scripts')
+    <script>
+
+    </script>
+    @stop
+
 

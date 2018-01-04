@@ -54,7 +54,7 @@
                                             <td>{{$u->uname}}</td>
                                             <td>{{$u->realname}}</td>
 {{--                                            <td>{{$u->phone}}</td>--}}
-                                            <td>@if($u->state==1)启用@elseif($u->state==2)禁用@else其他@endif</td>
+                                            <td>@if($u->state==1)启用@elseif($u->state==2)禁用@elseif($u->state==3)管理员@elseif($u->state==3)商家@endif</td>
                                             <td><a href="{{url('admin/user/edit/').'/'.$u->uid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
                                         @endforeach

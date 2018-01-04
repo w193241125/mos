@@ -48,10 +48,10 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="sub-title">选择食物</div>
+                                        <div class="sub-title">选择食物 &nbsp;&nbsp;&nbsp;<button type="button" id="clear" class="btn-success">清空</button></div>
                                         <div id="getFromAjax">
                                             @foreach($food as $f)
-                                                <input  type="checkbox" name="fid[]" class="checkbox3" value="{{$f->fid}}" {{in_array($f->fid,$fidArr)?'checked':''}}> {{$f->fname}}
+                                                <input  type="checkbox" name="fid[]" class="checkbox3" value="{{$f->fid}}" {{in_array($f->fid,$fidArr)?'checked':''}}> {{$f->fname}}&nbsp;{{$f->price}}元，
                                                 @endforeach
                                         </div>
                                         <div class="sub-title">选择设置时间</div>
@@ -62,8 +62,8 @@
                                         </div>
                                         <div class="sub-title">设置状态</div>
                                         <div>
-                                            <input type="radio" name="mweek" class="radio3" value="1" {{$menu->mweek == 1?'checked':''}}>启用
-                                            <input type="radio" name="mweek" class="radio3" value="2" {{$menu->mweek == 2?'checked':''}}>禁用
+                                            <input type="radio" name="mstate" class="radio3" value="1" {{$menu->mstate == 1?'checked':''}}>启用
+                                            <input type="radio" name="mstate" class="radio3" value="2" {{$menu->mstate == 2?'checked':''}}>禁用
                                         </div>
 
                                         <div class="sub-title"></div>
@@ -86,29 +86,39 @@
 
 @section('scripts')
     <script>
+        $('#clear').on('click',function(){
+            $('input:checkbox').prop('checked', false).removeAttr('checked')
+        })
 
-        {{--$("#selectshop").change(function () {--}}
-            {{--sid = $("#selectshop  option:selected").val();--}}
-            {{--$.ajax({--}}
-                {{--type: "get",--}}
-                {{--url: "/admin/menu/ajaxReq/"+sid,--}}
-                {{--dataType: 'json',--}}
-                {{--headers: {--}}
-                    {{--'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')--}}
-                {{--},--}}
-                {{--success: function(data){--}}
-                    {{--var foodData = data.food;--}}
-                    {{--console.log(data);--}}
-                    {{--$('#getFromAjax').empty();--}}
-                    {{--for(var index in data){--}}
-                        {{--var fid = data[index].fid;--}}
-                        {{--var fname = data[index].fname;--}}
-                        {{--var price = data[index].price;--}}
-                        {{--$("#getFromAjax").append('<input type="checkbox" name="fid[]" class="checkbox3" {{$t->tmark == $menu->tmark?\'checked\':\'\'}} value="'+fid+'">'+fname);--}}
-                        {{--// console.log(fid)--}}
-                    {{--}--}}
-                {{--}--}}
-            {{--});--}}
-        {{--})--}}
+        //ajax提交查询商家食物列表
+        $("#selectshop").change(function () {
+            sid = $("#selectshop  option:selected").val();
+            $.ajax({
+                type: "get",
+                url: "/admin/menu/ajaxReq/"+sid,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                },
+                success: function(data){
+                    var i = 1;
+                    var foodData = data.food;
+                    $('#getFromAjax').empty();
+                    for(var index in data){
+                        var fid = data[index].fid;
+                        var fname = data[index].fname;
+                        var price = data[index].price;
+                        if(tmp != undefined && tmp != price){
+                            $("#getFromAjax").append('<br/>')
+                            $("#getFromAjax").append('<br/>')
+                        }
+                        $("#getFromAjax").append('<input id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<lable for="checkbox-fa-light-'+i+'">'+fname+ price+'元</lable>&nbsp;');
+                        var tmp = price;
+                        // console.log(fid)
+                        i++;
+                    }
+                }
+            });
+        });
     </script>
     @stop

@@ -50,6 +50,8 @@
                                         <div>
                                             <input type="radio" name="state" class="radio3" value="1" checked>启用
                                             <input type="radio" name="state" class="radio3" value="2">禁用
+                                            <input type="radio" name="state" class="radio3" value="3">管理员
+                                            <input type="radio" name="state" class="radio3" value="4">商家
                                         </div>
 
                                         <div class="sub-title"></div>

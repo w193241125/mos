@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Log;
 
 class IndexController extends Controller
 {
-    public function __construct()
+    public function __construct(Request $request)
     {
-
+        //dd($request->user());
+        $this->middleware('auth');
     }
     public function show()
     {

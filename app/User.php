@@ -31,5 +31,13 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function ifAdmin()
+    {
+        return $this->state === 3;
+    }
 
+    public function ifShops()
+    {
+        return $this->state >= 3;
+    }
 }

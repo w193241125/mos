@@ -29,7 +29,6 @@ class HomeController extends Controller
     {
 
         $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
-
         $food = DB::table('foods')->orderBy('price','desc')->get();
         $shop = DB::table('shops')->get();
         $menu = DB::table('menus')->where('mweek','=',1)->get()->toArray();
@@ -46,11 +45,7 @@ class HomeController extends Controller
     public function upd(Request $request)
     {
         $date = new \DateTime;
-        //$date->setDate(2017, 12, 31);
-        //$date->setDate(2018, 1, 1);
         $weekOfYear = date_get_week_number($date);
-        //dd($weekOfYear);
-        //dd($request);
         $data['uid'] = Auth::user()->uid;
         $data['total'] = 0;
         $data['food'] = '';
@@ -65,30 +60,84 @@ class HomeController extends Controller
         }
 
         if (isset($request->order)){
+            $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+            $today = date('Y-m-d');//获取今天日期
+
             foreach ($request->order as $key=>$item) {
-            $data['tmark'] = $key;
-            if (is_array($item)){
-                foreach ($item as $k=>$v) {
-                    $data['sid'] = $k;
-                    foreach ($v as $fid=>$price) {
-                        $re = DB::table('foods')->where('fid','=',$fid)->get()->toArray();
-                        //dd($re[0]->fname);
-                        $data['food'] .= $re[0]->fname.'+';
-                        $data['total'] += $price;
+                $data['tmark'] = $key;
+                if ($dayWeek ==1){
+                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=$today;}
+                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
+                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
+                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
+                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
+                    if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
+                }elseif($dayWeek ==2){
+                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
+                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=$today;}
+                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
+                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
+                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
+                    if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
+                }elseif($dayWeek ==3){
+                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
+                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
+                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=$today;}
+                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
+                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
+                    if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
+                }elseif($dayWeek ==4){
+                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-3 day"));}
+                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
+                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
+                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=$today;}
+                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
+                    if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
+                }elseif($dayWeek ==5){
+                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-4 day"));}
+                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-3 day"));}
+                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
+                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
+                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=$today;}
+                    if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
+                }elseif($dayWeek ==6){
+                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-5 day"));}
+                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-4 day"));}
+                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("-3 day"));}
+                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
+                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
+                    if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=$today;}
+                }elseif($dayWeek ==7){
+                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
+                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
+                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
+                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
+                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
+                    if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+6 day"));}
+                }
+
+                if (is_array($item)){
+                    foreach ($item as $k=>$v) {
+                        $data['sid'] = $k;
+                        foreach ($v as $fid=>$price) {
+                            $re = DB::table('foods')->where('fid','=',$fid)->get()->toArray();
+                            //dd($re[0]->fname);
+                            $data['food'] .= $re[0]->fname.'+';
+                            $data['total'] += $price;
+                        }
                     }
                 }
-            }
 
-            $data['food'] = trim($data['food'],'+');
-            $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->get()->toArray();
-            if ($res){
-                DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
-            } else {
-                DB::table('orders')->insert($data);
+                $data['food'] = trim($data['food'],'+');
+                $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->get()->toArray();
+                if ($res){
+                    DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
+                } else {
+                    DB::table('orders')->insert($data);
+                }
+                $data['total'] = 0;
+                $data['food'] = '';
             }
-            $data['total'] = 0;
-            $data['food'] = '';
-        }
         }
         return redirect('home/show')->with(['message'=>'1']);
     }

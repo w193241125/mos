@@ -42,9 +42,9 @@
                                     <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                         <thead>
                                         <tr>
-                                            <th>商家名称</th>
+                                            <th style="width: 100px">商家名称</th>
                                             <th>菜单</th>
-                                            <th>时间</th>
+                                            <th style="width: 100px">时间</th>
                                             <th>是否启用</th>
                                             <th>操作</th>
                                         </tr>
@@ -55,7 +55,7 @@
                                             <td>{{$m->sname}}</td>
                                             <td>{{$m->list}}</td>
                                             <td>{{$m->tname}}</td>
-                                            <td>@if($m->state==1)启用@elseif($m->state==2)禁用@else其他@endif</td>
+                                            <td>@if($m->mstate==1)启用@elseif($m->mstate==2)禁用@endif</td>
                                             <td><a href="menu/edit/{{$m->mid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
                                         @endforeach

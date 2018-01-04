@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\DB;
 
 class ShopController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        //dd($request->user());
+        $this->middleware('auth');
+    }
+
     public function show()
     {
         $shop = DB::table('shops')->where('state','!=',3)->get();

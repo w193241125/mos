@@ -28,18 +28,15 @@
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <form action="/admin/allOrder" class="form-inline">
-                                <label for="test6" >
-                                    <small><span class="">范围选择：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$date or ''}}"></small>
-                                </label>
-                                商家:<select name="sid" id="">
-                                    <option value="">---全部---</option>
-                                    @foreach($shop as $s)
-                                        <option value="{{$s->sid}}">{{$s->sname}}</option>
+                            <form action="/admin/myorder/" method="get" class="list-inline">
+                                时间:<select name="tmark" id="">
+                                    <option value="">---请选择---</option>
+                                    @foreach($type as $t)
+                                    <option value="{{$t->tmark}}">{{$t->tname}}</option>
                                     @endforeach
                                 </select>
-                                <small><button class="btn btn-primary">提交</button></small>
-                                <a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>
+                                <button type="submit" class="btn btn-info right">查询</button>
+                                <a href="/admin/order/shopexport/1/1" class="btn btn-info right">导出本周Excel表</a>
                             </form>
                         </div>
 
@@ -48,6 +45,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                     <tr>
+                                        <th>用户编号</th>
                                         <th>用户名称</th>
                                         <th>商家</th>
                                         <th>食物</th>
@@ -61,22 +59,24 @@
                                     @foreach($order as $o)
                                         <tr class="gradeA">
                                             @foreach($user as $u)
-                                                @if($u->uid == $o->uid)
+                                            @if($u->uid == $o->uid)
+                                                    <td>{{$u->uname}}</td>
                                                     <td>{{$u->realname}}</td>
                                                 @endif
                                             @endforeach
+
                                             <td>{{$o->sname}}</td>
                                             <td>{{$o->food}}</td>
                                             <td>{{$o->tname}}</td>
                                             {{--<td>@if($o->week_of_year-$thisWeek==0)本周@elseif($o->week_of_year-$thisWeek==1)下周@else其他时间@endif</td>--}}
                                             <td>{{$o->total}}</td>
-                                                <td>{{$o->date}}</td>
+                                                <td>{{$o->created_at}}</td>
                                                 {{--<td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>--}}
                                         </tr>
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['date'=>$date,'sid'=>$sid,])->links() }}
+                                {{ $order->appends(['tmark'=>$tmark])->links() }}
                             </div>
 
                         </div>

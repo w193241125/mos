@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    public function __construct(Request $request)
+    {
+        //dd($request->user());
+        $this->middleware('auth');
+    }
+
     public function show()
     {
         $user = DB::table('users')->get();

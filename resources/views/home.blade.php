@@ -1,12 +1,18 @@
 @extends('layouts.app')
 @section('css')
     <style type="text/css">
+        .price {
+            float: right;
+            margin-left: 10px;
+        }
         label {
             cursor: pointer;
             margin-left: 10px;
         }
         .des {
-            padding: 0 4px 0 4px
+            padding: 0 4px 0 4px;
+            color: #0a689d;
+            font-size: 15px;
         }
         i {
             color: red;
@@ -59,10 +65,12 @@
 <div class="container">
     <div class="header">
         <ol class="breadcrumb">
-            <li><a href="/home">点餐</a></li>
+            <li><a href="/home" >本周点餐</a></li>
+            @if($dayWeek==7)<li><a href="/home" >下周点餐</a></li>@endif
             <li><a href="/home/show">查询</a></li>
         </ol>
     </div>
+    @if(Auth::user()->state != 4)
     <div class="row">
         <div class="shade">
         </div>
@@ -83,7 +91,7 @@
                                 <div class="panel-heading" ><span style="color:deepskyblue"></span></div>
                     <div class="one-option">
                                 <div class="panel-heading">
-                                    餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" >{{$s->sname}} @if($s->sid != 0)　限额:{{$s->limit_money}}元@endif</label>
+                                    餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" ><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元@endif <div class="price"></div></label>
                                 </div>
 
                                 @if($t->tmark == $m->tmark && $s->sid == $m->sid && $m->sid!=0)
@@ -105,25 +113,17 @@
                 </div>
             @endforeach
                 {{--外层循环结束--}}
-            <button class="btn btn-default" type="button">点餐</button>
+            <button class="btn btn-default" type="submit">点餐</button>
         </div>
         </form>
     </div>
+        @endif
 </div>
 
 @endsection
 @section('scripts')
     <script>
         $(function(){
-            // var day = 0,one = 0;
-            // var meals = $('.meal').length;
-            // for (var i = 0; i < meals; i++) {
-            //     var md = $($('.meal')[i]).find('.dining-room');
-            //     day = Math.floor(i / 3) + 1;
-            //     one = i % 3 + 1;
-            //     md.attr('name','shop['+ day +']['+ one +']');
-            //
-            // }
             // $('.panel-body input:checkbox').attr('disabled', 'disabled')
             // 选择一家餐厅后，其它餐厅菜单不可点击
             $('.dining-room').click(function() {
@@ -137,6 +137,8 @@
                     $(this).attr('checked', 'checked');
                     input.prop('checked', false).removeAttr('checked');
                     $(this).parents('.one-option').find('input:checkbox').attr("disabled",false);
+                    w.find('input:radio').siblings('.price').html('')
+
                 } else {
                     $(this).prop('checked', false).removeAttr('checked');
                 }
@@ -151,20 +153,35 @@
                     showTip('请选择对应的餐厅');
                 }
                 else {
+                    var calPrice = 0;
+                    var check = $(this).parents('.panel-body').find('input:checkbox');
                     if($(this).attr('checked') == undefined) {
                         $(this).attr('checked', 'checked');
                     }
                     else {
                         $(this).removeAttr('checked');
                     }
+                    check.each(function(index, item) {
+                        if($(item).attr('checked') == 'checked') {
+                            calPrice += parseFloat($(item).attr('value'));
+                        }
+                    });
+                    var getLimit = parseFloat($(this).parents('.panel-body').siblings().find('input:radio').attr('limit'));
+                    $(this).parents('.panel-body').siblings().find('.price').html(calPrice <= getLimit ? calPrice + '元' : calPrice + '元(超额)')
+                    if(calPrice > getLimit) {
+                        $(this).parents('.panel-body').siblings().find('.price').css({'color': 'red'});
+                    } else {
+                        $(this).parents('.panel-body').siblings().find('.price').css({'color': '#3c96d5'});
+                    }
+
                 }
             });
-            $('.btn-default').click(function() {
-                if(verify()){
-                    $(this).attr('type', 'submit')
-                };
+            $('.btn-default').click(function(e) {
+                if(!verify()){
+                    e.preventDefault();
+                }
             })
-        })
+        });
 
         function verify() {
             var total = 0//中晚餐总价
@@ -172,12 +189,11 @@
             var din = $('.dining-room')
             din.each(function(i) {
                 if($(this).attr('checked') == 'checked'){
-                    var maxPrice = parseInt($(this).attr('limit'));
-                    console.log(maxPrice)
+                    var maxPrice = parseFloat($(this).attr('limit'));
                     var text = $(this).parents('.meal').find('b').text();
                     var menu = $(this).parents('.one-option').find('input:checkbox');
                     menu.each(function() {
-                        var price = parseInt($(this).next().find('i').text());
+                        var price = parseFloat($(this).next().find('i').text());
                         if($(this).attr('checked') == 'checked') {
                             total += price;
                         }
@@ -209,36 +225,34 @@
         function beforeDay(day, index) {
             var start = new Date();
             var errand = start.getDay() - day;
-            var startTime = [0, 0, 0, 0];
-            setTime(start, startTime);
-            var todayStartTime = Date.parse(start);
-            var clcikTime = Date.now() - errand * 86400 * 1000;
-            if(clcikTime < todayStartTime) {
-                showTip('所选时间已经是过去式啦, 不能再下单了！！');
+            var now = Date.now()
+            if(errand > 0) {
+                showTip('不能选择今天之前的餐厅哦！！');
                 return false;
             } else {
-                var plus = (errand < 0 ? - errand : 0) * 86400 * 1000;
                 var morning = new Date(),
                     mid = new Date(),
                     dinner = new Date();
                 var morningTime = [7, 0, 0, 0], midTime = [10, 30, 0, 0], dinnerTime = [16, 0, 0, 0];
-                if(index == 0) {
-                    var mt = Date.parse(setTime(morning, morningTime)) + plus
-                    if(Date.now() > mt) {
-                        showTip('早餐请在7:00之前下单哦！！');
-                        return false;
-                    }
-                } else if (index == 1) {
-                    var midT = Date.parse(setTime(mid, midTime)) + plus
-                    if(Date.now() > midT) {
-                        showTip('中餐请在10:30之前下单哦！！');
-                        return false;
-                    }
-                } else if (index == 2) {
-                    var dinnerT = Date.parse(setTime(dinner, dinnerTime)) + plus;
-                    if(Date.now() > dinnerT) {
-                        showTip('晚餐请在16:00之前下单哦！！');
-                        return false;
+                if(errand == 0) {
+                    if(index == 0) {
+                        var mt = Date.parse(setTime(morning, morningTime))
+                        if(now > mt) {
+                            showTip('早餐请在7:00之前下单哦！！');
+                            return false;
+                        }
+                    } else if (index == 1) {
+                        var midT = Date.parse(setTime(mid, midTime));
+                        if(now > midT) {
+                            showTip('中餐请在10:30之前下单哦！！');
+                            return false;
+                        }
+                    } else if (index == 2) {
+                        var dinnerT = Date.parse(setTime(dinner, dinnerTime))
+                        if(now > dinnerT) {
+                            showTip('晚餐请在16:00之前下单哦！！');
+                            return false;
+                        }
                     }
                 }
                 return true

@@ -49,6 +49,8 @@
                                         <div>
                                             <input type="radio" name="state" class="radio3" value="1" {{$user->state==1?'checked':''}} >启用
                                             <input type="radio" name="state" class="radio3" value="2" {{$user->state==2?'checked':''}} >禁用
+                                            <input type="radio" name="state" class="radio3" value="2" {{$user->state==3?'checked':''}} >管理员
+                                            <input type="radio" name="state" class="radio3" value="2" {{$user->state==4?'checked':''}} >商家
                                         </div>
 
                                         <div class="sub-title"></div>
