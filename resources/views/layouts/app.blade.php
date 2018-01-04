@@ -64,7 +64,7 @@
 
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="user">修改密码</a>
+                                        <a href="/user">修改密码</a>
                                     </li>
                                     <li>
                                         <a href="{{ route('logout') }}"

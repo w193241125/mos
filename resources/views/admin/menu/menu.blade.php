@@ -34,7 +34,15 @@
                                         <strong>添加失败!</strong>
                                     </div>
                                  @endif
-                                    <a href="/admin/menu/add" class="btn btn-primary">添加菜单</a>
+                                    <form action="/admin/menu" method="get">
+                                        <a href="/admin/menu/add" class="btn btn-primary">添加菜单</a>&nbsp;&nbsp;&nbsp;
+                                        按周查询：<select name="mweek">
+                                            <option value="">--选择时间--</option>
+                                            <option value="1">本周</option>
+                                            <option value="2">下周</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-primary">提交</button>
+                                    </form>
                             </div>
                             
                             <div class="panel-body">
@@ -45,7 +53,8 @@
                                             <th style="width: 100px">商家名称</th>
                                             <th>菜单</th>
                                             <th style="width: 100px">时间</th>
-                                            <th>是否启用</th>
+                                            <th style="width: 80px">本周/下周</th>
+                                            <th style="width: 80px">是否启用</th>
                                             <th>操作</th>
                                         </tr>
                                         </thead>
@@ -55,6 +64,7 @@
                                             <td>{{$m->sname}}</td>
                                             <td>{{$m->list}}</td>
                                             <td>{{$m->tname}}</td>
+                                            <td>@if($m->mweek==1)本周@elseif($m->mweek==2)下周@endif</td>
                                             <td>@if($m->mstate==1)启用@elseif($m->mstate==2)禁用@endif</td>
                                             <td><a href="menu/edit/{{$m->mid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>

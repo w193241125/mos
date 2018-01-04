@@ -61,6 +61,11 @@
                                         <div id="getMenuByAjax">
                                             <span style="color: red">暂无</span>
                                         </div>
+                                        <div class="sub-title">本周/下周</div>
+                                        <div>
+                                            <input type="radio" name="mweek" class="radio3" value="1" >本周
+                                            <input type="radio" name="mweek" class="radio3" value="2" checked>下周
+                                        </div>
                                         <div class="sub-title">设置状态</div>
                                         <div>
                                             <input type="radio" name="mstate" class="radio3" value="1" checked>启用
@@ -117,13 +122,42 @@
                 }
             });
         });
-        //监控checkeded改变,ajax提交查询商家某个时间菜单
+        //监控tmark checkeded改变,ajax提交查询商家某个时间菜单
         $('input[name=tmark]').change(function () {
            var sid = $('#selectshop option:selected').val();
            var tmark = $('input[name=tmark]:checked').val();
+           var mweek = $('input[name=mweek]:checked').val();
             $.ajax({
                 type: "get",
-                url: "/admin/menu/ajaxFind/"+sid+'/'+tmark,
+                url: "/admin/menu/ajaxFind/"+sid+'/'+tmark+'/'+mweek,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                },
+                success: function(data){
+                    if(data.length != 0){
+                        var foodData = data.food;
+                        $('#getMenuByAjax').empty();
+                        for(var index in data){
+                            var fname = data[index].list;
+                            var price = data[index].price;
+                            $("#getMenuByAjax").append('<span style="color: red">'+fname+'</span>');
+                        }
+                    }else{
+                        $('#getMenuByAjax').empty();
+                        $("#getMenuByAjax").append('<span style="color: red">暂无</span>');
+                    }
+                }
+            });
+        });
+        //监控mweek checkeded改变,ajax提交查询商家某个时间菜单
+        $('input[name=mweek]').change(function () {
+            var sid = $('#selectshop option:selected').val();
+            var tmark = $('input[name=tmark]:checked').val();
+            var mweek = $('input[name=mweek]:checked').val();
+            $.ajax({
+                type: "get",
+                url: "/admin/menu/ajaxFind/"+sid+'/'+tmark+'/'+mweek,
                 dataType: 'json',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
@@ -148,9 +182,10 @@
         $('#selectshop').change(function () {
             var sid = $('#selectshop option:selected').val();
             var tmark = $('input[name=tmark]:checked').val();
+            var mweek = $('input[name=mweek]:checked').val();
             $.ajax({
                 type: "get",
-                url: "/admin/menu/ajaxFind/"+sid+'/'+tmark,
+                url: "/admin/menu/ajaxFind/"+sid+'/'+tmark+'/'+mweek,
                 dataType: 'json',
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')

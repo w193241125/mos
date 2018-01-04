@@ -66,11 +66,8 @@
     <div class="header">
         <ol class="breadcrumb">
             <li><a href="/" >本周点餐</a></li>
-            <li><a href="/home/show">查询</a></li>
-            @if($dayWeek==5)
-                <li><a href="/nextweek" >下周点餐</a></li>
-                <li><a href="/home/showNextWeek">查询下周</a></li>
-            @endif
+            @if($dayWeek==4)<li><a href="/nextweek" >下周点餐</a></li>@endif
+            <li><a href="/home/showNextWeek">查询下周</a></li>
         </ol>
     </div>
     @if(Auth::user()->state != 4)
@@ -81,7 +78,7 @@
             <div class="mes"></div>
             <div class="btn btn-success">好的</div>
         </div>
-        <form action="/home/upd" method="post">
+        <form action="/home/updNextWeek" method="post">
             {{ csrf_field() }}
         <div class="col-md-10 col-md-offset-1">
             {{--外层循环 每周菜单--}}
@@ -130,10 +127,10 @@
             // $('.panel-body input:checkbox').attr('disabled', 'disabled')
             // 选择一家餐厅后，其它餐厅菜单不可点击
             $('.dining-room').click(function() {
-                var index = $(this).parents('.meal').index();
-                var day = Math.floor(index/3) + 1;
-                var meal = index % 3;
-                if(beforeDay(day,  meal)) {
+                // var index = $(this).parents('.meal').index();
+                // var day = Math.floor(index/3) + 1;
+                // var meal = index % 3;
+                // if(beforeDay(day,  meal)) {
                     var w = $(this).parents('.one-option').siblings('.one-option');
                     var input = w.find('.panel-body input:checkbox');
                     w.find('input:radio').removeAttr('checked');
@@ -141,10 +138,10 @@
                     input.prop('checked', false).removeAttr('checked');
                     $(this).parents('.one-option').find('input:checkbox').attr("disabled",false);
                     w.find('input:radio').siblings('.price').html('')
-
-                } else {
-                    $(this).prop('checked', false).removeAttr('checked');
-                }
+                //
+                // } else {
+                //     $(this).prop('checked', false).removeAttr('checked');
+                // }
             });
             $('.btn-success').click(function() {
                 $('.tip').fadeOut();
@@ -225,42 +222,42 @@
             $('.tip').fadeIn();
             return;
         }
-        function beforeDay(day, index) {
-            var start = new Date();
-            var errand = start.getDay() - day;
-            var now = Date.now()
-            if(errand > 0) {
-                showTip('不能选择今天之前的餐厅哦！！');
-                return false;
-            } else {
-                var morning = new Date(),
-                    mid = new Date(),
-                    dinner = new Date();
-                var morningTime = [7, 0, 0, 0], midTime = [10, 30, 0, 0], dinnerTime = [16, 0, 0, 0];
-                if(errand == 0) {
-                    if(index == 0) {
-                        var mt = Date.parse(setTime(morning, morningTime))
-                        if(now > mt) {
-                            showTip('早餐请在7:00之前下单哦！！');
-                            return false;
-                        }
-                    } else if (index == 1) {
-                        var midT = Date.parse(setTime(mid, midTime));
-                        if(now > midT) {
-                            showTip('中餐请在10:30之前下单哦！！');
-                            return false;
-                        }
-                    } else if (index == 2) {
-                        var dinnerT = Date.parse(setTime(dinner, dinnerTime))
-                        if(now > dinnerT) {
-                            showTip('晚餐请在16:00之前下单哦！！');
-                            return false;
-                        }
-                    }
-                }
-                return true
-            }
-        }
+        // function beforeDay(day, index) {
+        //     var start = new Date();
+        //     var errand = start.getDay() - day;
+        //     var now = Date.now()
+        //     if(errand > 0) {
+        //         showTip('不能选择今天之前的餐厅哦！！');
+        //         return false;
+        //     } else {
+        //         var morning = new Date(),
+        //             mid = new Date(),
+        //             dinner = new Date();
+        //         var morningTime = [7, 0, 0, 0], midTime = [10, 30, 0, 0], dinnerTime = [16, 0, 0, 0];
+        //         if(errand == 0) {
+        //             if(index == 0) {
+        //                 var mt = Date.parse(setTime(morning, morningTime))
+        //                 if(now > mt) {
+        //                     showTip('早餐请在7:00之前下单哦！！');
+        //                     return false;
+        //                 }
+        //             } else if (index == 1) {
+        //                 var midT = Date.parse(setTime(mid, midTime));
+        //                 if(now > midT) {
+        //                     showTip('中餐请在10:30之前下单哦！！');
+        //                     return false;
+        //                 }
+        //             } else if (index == 2) {
+        //                 var dinnerT = Date.parse(setTime(dinner, dinnerTime))
+        //                 if(now > dinnerT) {
+        //                     showTip('晚餐请在16:00之前下单哦！！');
+        //                     return false;
+        //                 }
+        //             }
+        //         }
+        //         return true
+        //     }
+        // }
         function setTime(object, time) {
             object.setHours(time[0]);
             object.setMinutes(time[1]);

@@ -40,7 +40,7 @@ Route::group(['middleware'=>'admin'],function (){
     //Route::get('/admin/order/search','Admin\OrderController@search');
 //Route::get('/admin/order/allExport/{start?}/{end?}','Admin\OrderController@search');
     Route::get('/admin/order/export/{start?}/{end?}','Admin\OrderController@export');
-    Route::get('/admin/order/shopexport/{start?}/{end?}','Admin\OrderController@shopExport');
+
 
 //菜单设置
     Route::get('/admin/menu','Admin\MenuController@show')->name('menu');
@@ -50,22 +50,30 @@ Route::group(['middleware'=>'admin'],function (){
     Route::post('/admin/menu/doedit','Admin\MenuController@doedit');
 
     Route::get('/admin/menu/ajaxReq/{sid}','Admin\MenuController@ajaxReq');
-    Route::get('/admin/menu/ajaxFind/{sid}/{tmark}','Admin\MenuController@fingMenuOfCurrentTime');
+    Route::get('/admin/menu/ajaxFind/{sid}/{tmark}/{mweek}','Admin\MenuController@fingMenuOfCurrentTime');
 
 });
 
 Route::group(['middleware'=>'shops'],function (){
     Route::get('/admin', 'Admin\IndexController@show')->name('admin');
     Route::get('/admin/myorder','Admin\OrderController@myOrder');
+    Route::get('/admin/order/shopexport/{start?}/{end?}','Admin\OrderController@shopExport');
 });
-Route::get('/', 'HomeController@index')->name('home');
-Route::get('/home', 'HomeController@index');
-Route::any('/home/upd', 'HomeController@upd');
-Route::any('/home/show', 'HomeController@show');
 
 //导出到excel(测试用)
 Route::get('excel/export','ExcelController@export');
 Route::get('excel/import','ExcelController@import');
+
+
+//前台页面（本周）
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index');
+Route::any('/home/upd', 'HomeController@upd');
+Route::any('/home/show', 'HomeController@show');
+//下周点餐
+Route::get('/nextweek', 'HomeController@nextWeekIndex');
+Route::any('/home/updNextWeek', 'HomeController@updNextWeek');
+Route::any('/home/showNextWeek', 'HomeController@showNextWeek');
 
 //前台用户
 Route::get('user','UsersController@show');

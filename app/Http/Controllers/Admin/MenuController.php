@@ -13,10 +13,16 @@ class MenuController extends Controller
         //dd($request->user());
         $this->middleware('auth');
     }
-    public function show()
+
+    public function show(Request $request)
     {
+        if (!empty($request->mweek)){
+            $mweek = $request->mweek;
+            $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->where('m.mweek','=',$mweek)->orderBy('m.tmark')->get();
+        }else{
+            $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->orderBy('m.tmark')->get();
+        }
         $tmp = '';
-        $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->orderBy('m.tmark')->get();
         foreach ($menu as &$item) {
             if ($item->fid) {
                 $arr = explode(',', $item->fid);
@@ -27,7 +33,6 @@ class MenuController extends Controller
             }
                 $item->list = $tmp;
                 $tmp = '';
-
         }
 
         return view('admin.menu.menu',compact('menu'));
@@ -80,7 +85,7 @@ class MenuController extends Controller
     {
         $data['fid'] = $request->fid?implode(',',$request->fid):'';
         $data['tmark'] = $request->tmark;
-        //$data['mweek'] = $request->mweek;
+        $data['mweek'] = $request->mweek?$request->mweek:1;
         $data['sid'] = $request->sid;
         $data['mstate'] = $request->mstate;
         $mid= $request->mid;
@@ -109,7 +114,8 @@ class MenuController extends Controller
     {
         $sid = $request->route('sid');
         $tmark = $request->route('tmark');
-        $menu = DB::table('menus')->where(['sid'=>$sid,'tmark'=>$tmark])->get()->toArray();
+        $mweek = $request->route('mweek');
+        $menu = DB::table('menus')->where(['sid'=>$sid,'tmark'=>$tmark,'mweek'=>$mweek])->get()->toArray();
         //return(json_encode($menu));
         $tmp = '';
         foreach ($menu as &$item) {

@@ -22,7 +22,7 @@ class OrderController extends Controller
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
         $where = ['week_of_year'=>$weekOfYear];
-        $orderBy = 'o.tmark';
+        $orderBy = 'o.uid';
         if ($request->tmark){
             $where['o.tmark'] = $request->tmark;
             $orderBy = 'o.uid';
@@ -90,7 +90,7 @@ class OrderController extends Controller
 
         $cellData[0] = ['用户名称','商家','食物','订单类型','订单时间','价格',];
         foreach ($order as $item) {
-            array_push($cellData,[$item->realname,$item->sname,$item->food,$item->tname,$item->created_at,$item->total]);
+            array_push($cellData,[$item->realname,$item->sname,$item->food,$item->tname,$item->date,$item->total]);
         }
         //dd($cellData);
         Excel::create($excelName,function($excel) use ($cellData){
@@ -203,7 +203,7 @@ class OrderController extends Controller
 
         $cellData[0] = ['用户名称','商家','食物','订单类型','订单时间','价格',];
         foreach ($order as $item) {
-            array_push($cellData,[$item->realname,$item->sname,$item->food,$item->tname,$item->created_at,$item->total]);
+            array_push($cellData,[$item->realname,$item->sname,$item->food,$item->tname,$item->date,$item->total]);
         }
         //dd($cellData);
         Excel::create($excelName,function($excel) use ($cellData){

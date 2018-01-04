@@ -60,6 +60,11 @@
                                             <input type="radio" name="tmark" class="checkbox3" value="{{$t->tmark}}" {{$t->tmark == $menu->tmark?'checked':''}} >{{$t->tname}}
                                             @endforeach
                                         </div>
+                                        <div class="sub-title">本周/下周</div>
+                                        <div>
+                                            <input type="radio" name="mweek" class="radio3" value="1" {{$menu->mweek == 1?'checked':''}} >本周
+                                            <input type="radio" name="mweek" class="radio3" value="2" {{$menu->mweek == 2?'checked':''}}>下周
+                                        </div>
                                         <div class="sub-title">设置状态</div>
                                         <div>
                                             <input type="radio" name="mstate" class="radio3" value="1" {{$menu->mstate == 1?'checked':''}}>启用

@@ -36,7 +36,7 @@
                                     @endforeach
                                 </select>
                                 <button type="submit" class="btn btn-info right">查询</button>
-                                <a href="/admin/order/shopexport/1/1" class="btn btn-info right">导出本周Excel表</a>
+                                {{--<a href="/admin/order/shopexport/1/1" class="btn btn-info right">导出本周Excel表</a>--}}
                             </form>
                         </div>
 
@@ -70,7 +70,7 @@
                                             <td>{{$o->tname}}</td>
                                             {{--<td>@if($o->week_of_year-$thisWeek==0)本周@elseif($o->week_of_year-$thisWeek==1)下周@else其他时间@endif</td>--}}
                                             <td>{{$o->total}}</td>
-                                                <td>{{$o->created_at}}</td>
+                                                <td>{{$o->date}}</td>
                                                 {{--<td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>--}}
                                         </tr>
                                     @endforeach
