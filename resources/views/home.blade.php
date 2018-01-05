@@ -86,6 +86,8 @@
         <div class="col-md-10 col-md-offset-1">
             {{--外层循环 每周菜单--}}
             @foreach($type as $t)
+                @if($t->tmark=='P'||$t->tmark=='Q'||$t->tmark=='R')
+                    @if($fmods==1)
                 <div class="panel panel-default meal" style="">
                 <div class="panel-heading" style="text-align:center"><b style="font-size: large">{{$t->tname}}</b></div>
                     @foreach($shop as $s){{--shop--}}
@@ -114,6 +116,37 @@
                         @endforeach{{--menu--}}
                     @endforeach{{--shop--}}
                 </div>
+                        @endif
+                @else
+                    <div class="panel panel-default meal" style="">
+                        <div class="panel-heading" style="text-align:center"><b style="font-size: large">{{$t->tname}}</b></div>
+                        @foreach($shop as $s){{--shop--}}
+                        @foreach($menu as $m){{--menu--}}
+                        @if($t->tmark === $m->tmark && $s->sid === $m->sid){{--同一餐, 同一商店--}}
+                        <div class="panel-heading" ><span style="color:deepskyblue"></span></div>
+                        <div class="one-option">
+                            <div class="panel-heading">
+                                餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" ><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元@endif <div class="price"></div></label>
+                            </div>
+
+                            @if($t->tmark == $m->tmark && $s->sid == $m->sid && $m->sid!=0)
+                                <div class="panel-body">
+                                    @foreach($food as $f)
+                                        @if(in_array($f->fid,$m->food)&&$s->sid == $f->sid)
+                                            <label>
+                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}">
+                                                <span class="des">{{$f->fname}}<i>{{$f->price}}</i> 元</span>
+                                            </label>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            @endif
+                        </div>
+                        @endif
+                        @endforeach{{--menu--}}
+                        @endforeach{{--shop--}}
+                    </div>
+                @endif
             @endforeach
                 {{--外层循环结束--}}
             <button class="btn btn-default" type="submit">点餐</button>

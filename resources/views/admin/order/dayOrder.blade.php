@@ -5,7 +5,7 @@
 @stop
 @section('css')
     <link rel="stylesheet" href="{{asset('laydate/theme/default/laydate.css')}}">
-    @stop
+@stop
 @section('content')
 
     <div id="page-wrapper" >
@@ -28,22 +28,18 @@
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <form action="/admin/order/" method="get" class="list-inline">
-                                时间:<select name="tmark" id="">
-                                    <option value="">---请选择---</option>
-                                    @foreach($type as $t)
-                                    <option value="{{$t->tmark}}">{{$t->tname}}</option>
-                                    @endforeach
-                                </select>
-                                &nbsp;商家:<select name="sid" id="">
+                            <form action="/admin/dayorder" class="form-inline" method="get">
+                                <label for="test6" >
+                                    <small><span class="">范围选择：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$date or ''}}"></small>
+                                </label>
+                                商家:<select name="sid" id="">
                                     <option value="">---全部---</option>
                                     @foreach($shop as $s)
                                         <option value="{{$s->sid}}">{{$s->sname}}</option>
                                     @endforeach
                                 </select>
-
-                                <button type="submit" class="btn btn-info right">查询</button>
-                                <a href="/admin/order/export/1/1" class="btn btn-info right">导出本周Excel表</a>
+                                <small><button class="btn btn-primary">提交</button></small>
+                                <a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>
                             </form>
                         </div>
 
@@ -52,38 +48,27 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                     <tr>
-                                        <th>用户编号</th>
-                                        <th>用户名称</th>
                                         <th>商家</th>
-                                        <th>食物</th>
-                                        <th>订单类型</th>
-                                        <th>价格</th>
+                                        <th>数量</th>
                                         <th>订单时间</th>
+                                        <th>价格</th>
                                         {{--<th>操作</th>--}}
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($order as $o)
+                                    @foreach($dayOrder as $d)
                                         <tr class="gradeA">
-                                            @foreach($user as $u)
-                                            @if($u->uid == $o->uid)
-                                                    <td>{{$u->uname}}</td>
-                                                    <td>{{$u->realname}}</td>
-                                                @endif
-                                            @endforeach
-
-                                            <td>{{$o->sname}}</td>
-                                            <td>{{$o->food}}</td>
-                                            <td>{{$o->tname}}</td>
+                                            <td>{{$d->sname}}</td>
+                                            <td>{{$d->num}}</td>
+                                            <td>{{$tdate}}</td>
                                             {{--<td>@if($o->week_of_year-$thisWeek==0)本周@elseif($o->week_of_year-$thisWeek==1)下周@else其他时间@endif</td>--}}
-                                            <td>{{$o->total}}</td>
-                                                <td>{{$o->date}}</td>
-                                                {{--<td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>--}}
+                                            <td>@if($d->sname==2){{$d->total + $d->num*2}}@else{{$d->total}}@endif</td>
                                         </tr>
-                                    @endforeach
+                                        @endforeach
+                                        {{--<td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>--}}
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['tmark'=>$tmark,'sid'=>$sid])->links() }}
+                                {{--{{ $order->appends(['date'=>$date,'sid'=>$sid,])->links() }}--}}
                             </div>
 
                         </div>
@@ -107,4 +92,4 @@
         });
 
     </script>
-    @stop
+@stop

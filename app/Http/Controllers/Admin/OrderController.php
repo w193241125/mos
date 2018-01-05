@@ -213,19 +213,33 @@ class OrderController extends Controller
         })->export('xls');
     }
 
-    public function dayOrder()
+    public function dayOrder(Request $request)
     {
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
         $where['week_of_year'] = $weekOfYear;
+        $sdate = $request->date?$request->date:'';
+        $tdate = $request->date?$request->date:'本周';
+        $sid = $request->sid?$request->sid:'';
 
+        $where = " week_of_year = $weekOfYear ";
 
-        $dayOrder = DB::table('orders')->select(['tmark','total'])->where($where)->groupBy('tmark')->sum('total');
-        dd($dayOrder);
-        $sql = "select tmark,sum(total) from orders where week_of_year = $weekOfYear GROUP BY tmark";
+        $start = '';
+        $end = '';
+        if ($request->date){
+            $start = substr($request->date,0,10);
+            $end = substr($request->date,-10);
+            $where = " `date`>='$start' AND `date`<='$end' ";
+        }
 
-        echo $sql;die;
-        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,]);
+        if ($request->sid){
+            $where .= " and o.sid = $sid ";
+        }
+
+        $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
+        $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid where {$where} GROUP BY o.sid");
+
+        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,]);
     }
 }

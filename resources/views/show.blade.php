@@ -26,7 +26,7 @@
                     <td>
                     @foreach($order as $o)
                             @if($t->tmark == $o->tmark)
-                            {{$t->tname}} :{{$o->food}}<br>
+                            {{$o->food}}
                             @endif
                         @endforeach
                     </td>

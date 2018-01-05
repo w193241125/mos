@@ -41,7 +41,7 @@
             </li>
             @if(Auth::user()->uid == 1)
             <li>
-                <a href="{{url('admin/dayorder')}}"><i class="fa fa-desktop"></i> 订单统计/按餐</a>
+                <a href="{{url('admin/dayorder')}}"><i class="fa fa-desktop"></i> 订单统计</a>
             </li>
                 <li>
                 <a href="{{url('admin/order')}}"><i class="fa fa-desktop"></i> 本周订单列表</a>

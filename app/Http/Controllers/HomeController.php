@@ -27,11 +27,14 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $date = new \DateTime;
+        $weekOfYear = date_get_week_number($date);
+        $fmods = fmod($weekOfYear,2);
 
         $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $food = DB::table('foods')->orderBy('price','desc')->get();
         $shop = DB::table('shops')->get();
-        $menu = DB::table('menus')->where('mweek','=',1)->get()->toArray();
+        $menu = DB::table('menus')->where(['mweek'=>1,'mstate'=>1])->get()->toArray();
         foreach ($menu as &$v) {
             $v->food = explode(',',trim($v->fid,','));
         }
@@ -39,7 +42,7 @@ class HomeController extends Controller
         //$dayType = DB::table('menus')->select('tid')->distinct()->orderBy('tid', 'asc')->get();
         //dd($menu);
         //return view('home',compact('menu'));
-        return view('home', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type]);
+        return view('home', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type,'fmods'=>$fmods]);
     }
 
     public function upd(Request $request)
@@ -148,6 +151,8 @@ class HomeController extends Controller
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
+        $fmods = fmod($weekOfYear,2);
+
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->get()->toArray();
         $type = DB::table('types')->get()->toArray();
@@ -156,16 +161,20 @@ class HomeController extends Controller
 
     public function nextWeekIndex()
     {
+        $date = new \DateTime;
+        $weekOfYear = date_get_week_number($date) +1;
+        $fmods = fmod($weekOfYear,2);
+
         $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $food = DB::table('foods')->orderBy('price','desc')->get();
         $shop = DB::table('shops')->get();
-        $menu = DB::table('menus')->where('mweek','=',2)->get()->toArray();
+        $menu = DB::table('menus')->where(['mweek'=>2,'mstate'=>1])->get()->toArray();
         foreach ($menu as &$v) {
             $v->food = explode(',',trim($v->fid,','));
         }
         $type = DB::table('types')->get();
 
-        return view('nextweek', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type]);
+        return view('nextweek', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type,'fmods'=>$fmods]);
     }
 
     public function updNextWeek(Request $request)
@@ -176,7 +185,7 @@ class HomeController extends Controller
         $data['total'] = 0;
         $data['food'] = '';
         $data['created_at'] = date('Y-m-d H:i:s');
-        $data['week_of_year'] = ++$weekOfYear;//设置周数为下周
+        $data['week_of_year'] = $weekOfYear + 1;//设置周数为下周
 
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
@@ -190,7 +199,7 @@ class HomeController extends Controller
             $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
             foreach ($request->order as $key=>$item) {
                 $data['tmark'] = $key;
-                if($dayWeek ==4){
+                if($dayWeek ==5){
                     if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
                     if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
@@ -245,10 +254,12 @@ class HomeController extends Controller
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date) + 1;//结果加1 为下周
+        $fmods = fmod($weekOfYear,2);
+
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->get()->toArray();
         $type = DB::table('types')->get()->toArray();
-        return view('showNextWeek',['order'=>$order,'type'=>$type]);
+        return view('showNextWeek',['order'=>$order,'type'=>$type,'fmods'=>$fmods]);
     }
 
 }
