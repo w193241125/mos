@@ -36,6 +36,7 @@ Route::group(['middleware'=>'admin'],function (){
 
 //订单
     Route::get('/admin/order','Admin\OrderController@show');
+    Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
     Route::get('/admin/allOrder','Admin\OrderController@allShow');
     //Route::get('/admin/order/search','Admin\OrderController@search');
 //Route::get('/admin/order/allExport/{start?}/{end?}','Admin\OrderController@search');

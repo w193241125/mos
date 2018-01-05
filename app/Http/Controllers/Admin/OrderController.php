@@ -212,4 +212,20 @@ class OrderController extends Controller
             });
         })->export('xls');
     }
+
+    public function dayOrder()
+    {
+        //获取本周是今年第几周
+        $date = new \DateTime;
+        $weekOfYear = date_get_week_number($date);
+        $where['week_of_year'] = $weekOfYear;
+
+
+        $dayOrder = DB::table('orders')->select(['tmark','total'])->where($where)->groupBy('tmark')->sum('total');
+        dd($dayOrder);
+        $sql = "select tmark,sum(total) from orders where week_of_year = $weekOfYear GROUP BY tmark";
+
+        echo $sql;die;
+        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,]);
+    }
 }
