@@ -39,7 +39,7 @@
             <li>
                 <a href="{{url('admin')}}"><i class="fa fa-dashboard"></i> 主页</a>
             </li>
-            @if(Auth::user()->uid == 1)
+            @if(Auth::user()->state == 3)
             <li>
                 <a href="{{url('admin/dayorder')}}"><i class="fa fa-desktop"></i> 订单统计</a>
             </li>
@@ -62,9 +62,10 @@
                 <a href="{{url('admin/user')}}"><i class="fa fa-user"></i>用户列表</a>
             </li>
                 @endif
-            @if(Auth::user()->uid !== 1)
+            @if(Auth::user()->state == 4)
                 <li>
                     <a href="{{url('admin/myorder')}}"><i class="fa fa-desktop"></i> 我的订单列表</a>
+                    <a href="{{url('admin/myordercount')}}"><i class="fa fa-desktop"></i>订单统计</a>
                 </li>
                 @endif
         </ul>

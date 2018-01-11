@@ -570,14 +570,14 @@ margin: 8px 0;
     background: transparent;
 }
 .navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
-background-color: #283643;
+background-color: #87aed1;
 }
 .navbar-default .navbar-toggle {
-border-color: #fff;
+border-color: #87aed1;
 }
 
 .navbar-default .navbar-toggle .icon-bar {
-background-color: #FFF;
+background-color: #6a4646;
 }
 .nav > li > a > i {
     margin-right:10px;

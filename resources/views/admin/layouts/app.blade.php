@@ -23,7 +23,14 @@
         <!-- Google Fonts-->
         {{--<link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />--}}
         {{--<link rel="stylesheet" href="{{asset('assets/js/Lightweight-Chart/cssCharts.css')}}">--}}
-        @yield('css')
+        @section('css')
+            <style type="text/css">
+                label {
+                    cursor: pointer;
+                    margin-left: 10px;
+                }
+            </style>
+            @stop
     </head>
 
 <!--[if lt IE 7 ]> <body class="ie ie6"> <![endif]-->

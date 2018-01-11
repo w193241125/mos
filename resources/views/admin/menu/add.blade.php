@@ -3,7 +3,11 @@
 @section('title')
     商家列表
 @stop
+@section('css')
+    <style type="text/css">
 
+    </style>
+    @stop
 @section('content')
 
     <div id="page-wrapper" >
@@ -13,8 +17,8 @@
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#">主页</a></li>
-                <li><a href="#">商家设置</a></li>
-                <li class="active">添加商家</li>
+                <li><a href="#">菜单设置</a></li>
+                <li class="active">添加菜单</li>
             </ol>
 
         </div>
@@ -47,14 +51,16 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="sub-title">选择食物</div>
+                                        <div class="sub-title">选择食物 &nbsp;&nbsp;&nbsp;
+                                            <button type="button" id="clear" class="btn btn-default btn-sm">清空</button>
+                                            <button type="button" id="selectall" class="btn btn-default btn-sm">全选</button></div>
                                         <div id="getFromAjax">
                                             选择商家后显示!
                                         </div>
                                         <div class="sub-title">选择设置时间</div>
                                         <div>
                                             @foreach($type as $t)
-                                            <input type="radio" name="tmark" class="checkbox3" value="{{$t->tmark}}">{{$t->tname}}
+                                                <label for="radio{{$t->tmark}}"><input id="radio{{$t->tmark}}" type="radio" name="tmark" class="checkbox3" value="{{$t->tmark}}">{{$t->tname}}，</label>
                                             @endforeach
                                         </div>
                                         <div class="sub-title">该时间的菜单</div>
@@ -63,13 +69,13 @@
                                         </div>
                                         <div class="sub-title">本周/下周</div>
                                         <div>
-                                            <input type="radio" name="mweek" class="radio3" value="1" >本周
-                                            <input type="radio" name="mweek" class="radio3" value="2" checked>下周
+                                            <label for="radioThis"><input id="radioThis" type="radio" name="mweek" class="radio3" value="1" >本周</label>
+                                            <label for="radioNext">  <input id="radioNext" type="radio" name="mweek" class="radio3" value="2" checked>下周</label>
                                         </div>
                                         <div class="sub-title">设置状态</div>
                                         <div>
-                                            <input type="radio" name="mstate" class="radio3" value="1" checked>启用
-                                            <input type="radio" name="mstate" class="radio3" value="2">禁用
+                                            <label for="radioUse"><input id="radioUse" type="radio" name="mstate" class="radio3" value="1" checked>启用</label>
+                                            <label for="radioBan"><input id="radioBan"  type="radio" name="mstate" class="radio3" value="2">禁用</label>
                                         </div>
 
                                         <div class="sub-title"></div>
@@ -92,6 +98,13 @@
 
 @section('scripts')
     <script>
+        $('#clear').on('click',function(){
+            $('input:checkbox').prop('checked', false).removeAttr('checked')
+        })
+        $('#selectall').on('click',function(){
+            $('input:checkbox').prop('checked', true)
+        })
+
         //ajax提交查询商家食物列表
         $("#selectshop").change(function () {
             sid = $("#selectshop  option:selected").val();
@@ -114,7 +127,7 @@
                             $("#getFromAjax").append('<br/>')
                             $("#getFromAjax").append('<br/>')
                         }
-                        $("#getFromAjax").append('<input id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<lable for="checkbox-fa-light-'+i+'">'+fname+ price+'元</lable>&nbsp;');
+                        $("#getFromAjax").append('<input  id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<label for="checkbox-fa-light-'+i+'"><span style="color: #0a689d">'+fname+'</span>'+'<span style="color: red">'+ price+'</span><span style="color: #0a689d">元</span>，</label>&nbsp;');
                         var tmp = price;
                         // console.log(fid)
                         i++;

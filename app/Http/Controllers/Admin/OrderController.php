@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -34,7 +35,7 @@ class OrderController extends Controller
         $sid = $request->sid?$request->sid:'';
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
-        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->orderBy($orderBy)->paginate(20);
+        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->where('ostate','=',1)->orderBy($orderBy)->paginate(20);
         $type = DB::table('types')->get()->toArray();
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
 
@@ -63,7 +64,7 @@ class OrderController extends Controller
         $tmark=$request->tmark;
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
-        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where('week_of_year','=',$weekOfYear)->where('m.tmark','=',$tmark)->paginate(20);
+        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where('week_of_year','=',$weekOfYear)->where('ostate','=',1)->where('m.tmark','=',$tmark)->paginate(20);
         $type = DB::table('types')->get()->toArray();
 
         $user = DB::table('users')->get()->toArray();
@@ -82,7 +83,7 @@ class OrderController extends Controller
             $date = new \DateTime;
             $weekOfYear = date_get_week_number($date);
 
-            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->where('week_of_year','=',$weekOfYear)->get()->toArray();
+            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->where('week_of_year','=',$weekOfYear)->where('ostate','=',1)->get()->toArray();
         } else {
             $excelName = substr($start,0,10).' 到 '.substr($end,0,10).' 的订单';
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('created_at',[$start,$end])->get()->toArray();
@@ -109,12 +110,18 @@ class OrderController extends Controller
         $sdate = $request->date?$request->date:'';
         $start = 1;
         $end = 1;
+        $where = !empty($request->sid)?[['o.sid','=',$request->sid]]:[['o.sid','!=',0]];
+
         if ($request->date){
+
             $start = substr($request->date,0,10);
             $end = substr($request->date,-10);
-            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->whereBetween('date',[$start,$end])->paginate(20);
+            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->whereBetween('date',[$start,$end])->where($where)->where('ostate','=',1)->paginate(20);
+
         } else {
-            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->paginate(20);
+
+            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->where($where)->where('ostate','=',1)->paginate(20);
+
         }
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
@@ -146,6 +153,7 @@ class OrderController extends Controller
     //商家获取自己的订单列表
     public function myOrder(Request $request)
     {
+
         $realname = Auth::user()->realname;
         $where['sname'] = $realname;
         //获取本周是今年第几周
@@ -154,33 +162,40 @@ class OrderController extends Controller
         $where['week_of_year'] = $weekOfYear;
         $orderBy = 'o.uid';
 
+        $sdate = $request->date?$request->date:'';
         $tmark = $request->tmark?$request->tmark:'';
-        $sid = $request->sid?$request->sid:'';
-        if ($request->tmark){
-            $where['o.tmark'] = $request->tmark;
-            $orderBy = 'o.uid';
+        $start = '';
+        $end = '';
+
+        if ($request->start&&$request->end){
+            unset($where['week_of_year']);
+            $start = $request->start;
+            $end = $request->end;
+            $where[] = ['date','>=',$start];
+            $where[] = ['date','<=',$end];
+            $orderBy = 'o.date';
         }
 
+        if ($request->tmark&&$request->date){
+            $where[]= ['o.tmark','=',$request->tmark];
+            $orderBy = 'o.date';
+            echo 1;
+        }
+
+        if($request->tmark&& !$request->date){
+            $where['o.tmark'] = $request->tmark;
+            $orderBy = 'o.uid';
+            echo 2;
+        }
+
+        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->where('ostate','=',1)->orderBy($orderBy)->paginate(20);
+
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
-        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->orderBy($orderBy)->paginate(20);
         $type = DB::table('types')->get()->toArray();
-        //$shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
 
         $user = DB::table('users')->get()->toArray();
-        //foreach ($order as &$item) {
-        //    $item->list = '';
-        //    $tmp = explode(',',trim($item->food,','));
-        //    foreach ($food as $f) {
-        //        foreach ($tmp as $t) {
-        //            if ($f->fid == $t){
-        //                $item->list .= $f->fname.'+';
-        //            }
-        //        }
-        //    }
-        //    $item->list = trim($item->list,'+');
-        //}
 
-        return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'sid'=>$sid]);
+        return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'date'=>$sdate,'start'=>$start,'end'=>$end]);
 
     }
 
@@ -198,7 +213,7 @@ class OrderController extends Controller
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->where(['week_of_year'=>$weekOfYear,'sname'=>$realname])->get()->toArray();
         } else {
             $excelName = substr($start,0,10).' 到 '.substr($end,0,10).' 的订单';
-            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('created_at',[$start,$end])->get()->toArray();
+            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('created_at',[$start,$end])->where('ostate','=',1)->get()->toArray();
         }
 
         $cellData[0] = ['用户名称','商家','食物','订单类型','订单时间','价格',];
@@ -215,6 +230,9 @@ class OrderController extends Controller
 
     public function dayOrder(Request $request)
     {
+        $state = Auth::user()->state;
+        $sname = Auth::user()->realname;
+
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
@@ -223,16 +241,19 @@ class OrderController extends Controller
         $tdate = $request->date?$request->date:'本周';
         $sid = $request->sid?$request->sid:'';
 
-        $where = " week_of_year = $weekOfYear ";
+        $where = " week_of_year = $weekOfYear and ostate=1 ";
 
         $start = '';
         $end = '';
         if ($request->date){
             $start = substr($request->date,0,10);
             $end = substr($request->date,-10);
-            $where = " `date`>='$start' AND `date`<='$end' ";
+            $where = " `date`>='$start' AND `date`<='$end' and ostate=1 ";
         }
-
+        if ($state == 4){
+            $sid = DB::table('shops')->select('sid')->where('sname','=',$sname)->get();
+            $where .= " and o.sid={$sid[0]->sid} ";
+        }
         if ($request->sid){
             $where .= " and o.sid = $sid ";
         }

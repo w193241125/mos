@@ -11,30 +11,33 @@
     <div id="page-wrapper" >
         <div class="header">
             <h1 class="page-header">
-                订单列表 <small>本周</small>
+                订单列表
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#">主页</a></li>
-                <li><a href="#">订单设置</a></li>
-                <li class="active">订单列表</li>
-            </ol>
-
         </div>
 
-        <div id="page-inner">
+        {{--<div id="page-inner">--}}
 
-            <div class="row">
-                <div class="col-md-12">
+            {{--<div class="row">--}}
+                {{--<div class="col-md-12">--}}
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <form action="/admin/myorder/" method="get" class="list-inline">
-                                时间:<select name="tmark" id="">
+                                    <label for="date1" >
+                                        <small><span class="">开始时间：</span><input class="layui-input date-item" type="text" id="date1" name="start" placeholder="yyyy-MM-dd" lay-key="1" value="{{$start or ''}}"></small>
+                                    </label>
+
+                                <label for="date2" >
+                                    <small><span class="">结束时间：</span><input class="layui-input date-item" type="text" id="date2" name="end" placeholder="yyyy-MM-dd" lay-key="2" value="{{$end or ''}}"></small>
+                                </label>
+                                <label>
+                                    <small>时间:<select name="tmark" id="">
                                     <option value="">---请选择---</option>
                                     @foreach($type as $t)
                                     <option value="{{$t->tmark}}">{{$t->tname}}</option>
                                     @endforeach
-                                </select>
+                                </select> </small>
+                                </label>
                                 <button type="submit" class="btn btn-info right">查询</button>
                                 {{--<a href="/admin/order/shopexport/1/1" class="btn btn-info right">导出本周Excel表</a>--}}
                             </form>
@@ -46,8 +49,8 @@
                                     <thead>
                                     <tr>
                                         <th>用户编号</th>
-                                        <th>用户名称</th>
-                                        <th>商家</th>
+                                        {{--<th>用户名称</th>--}}
+                                        {{--<th>商家</th>--}}
                                         <th>食物</th>
                                         <th>订单类型</th>
                                         <th>价格</th>
@@ -61,11 +64,11 @@
                                             @foreach($user as $u)
                                             @if($u->uid == $o->uid)
                                                     <td>{{$u->uname}}</td>
-                                                    <td>{{$u->realname}}</td>
+{{--                                                    <td>{{$u->realname}}</td>--}}
                                                 @endif
                                             @endforeach
 
-                                            <td>{{$o->sname}}</td>
+{{--                                            <td>{{$o->sname}}</td>--}}
                                             <td>{{$o->food}}</td>
                                             <td>{{$o->tname}}</td>
                                             {{--<td>@if($o->week_of_year-$thisWeek==0)本周@elseif($o->week_of_year-$thisWeek==1)下周@else其他时间@endif</td>--}}
@@ -76,28 +79,45 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['tmark'=>$tmark])->links() }}
+                                {{ $order->appends(['tmark'=>$tmark,'start'=>$start,'end'=>$end])->links() }}
                             </div>
 
                         </div>
                     </div>
                     <!--End Advanced Tables -->
-                </div>
-            </div>
+                {{--</div>--}}
+            {{--</div>--}}
             <!-- /. ROW  -->
 
-        </div>
+        {{--</div>--}}
     </div>
     <!-- /. PAGE INNER  -->
 @stop
 
 @section('scripts')
     <script>
-        //日期范围
+        // //日期范围
+        // laydate.render({
+        //     elem: '#date'
+        //     ,range: true
+        // });
+        //开启公历节日
         laydate.render({
-            elem: '#date'
-            ,range: true
+            elem: '#date1'
+            ,calendar: true
         });
+        //开启公历节日
+        laydate.render({
+            elem: '#date2'
+            ,calendar: true
+        });
+        //同时绑定多个
+        // lay('.date-item').each(function(){
+        //     laydate.render({
+        //         elem: this
+        //         ,trigger: 'click'
+        //     });
+        // });
 
     </script>
     @stop

@@ -11,12 +11,6 @@
             <h1 class="page-header">
                 350点餐系统 <small>后台</small>
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#">主页</a></li>
-                <li><a href="#">订单设置</a></li>
-                <li class="active">订单列表</li>
-            </ol>
-
         </div>
 
         <div id="page-inner">
@@ -29,7 +23,7 @@
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
-                                假装有个华丽的舞台~
+                                欢迎来到350点餐后台,点击左上角返回前台哦~
                             </div>
 
                         </div>

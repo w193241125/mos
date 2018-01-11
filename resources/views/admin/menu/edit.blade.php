@@ -9,12 +9,12 @@
     <div id="page-wrapper" >
         <div class="header">
             <h1 class="page-header">
-                菜单添加 <small>Responsive tables</small>
+                菜单编辑 <small>Responsive tables</small>
             </h1>
             <ol class="breadcrumb">
                 <li><a href="#">主页</a></li>
-                <li><a href="#">商家设置</a></li>
-                <li class="active">添加商家</li>
+                <li><a href="#">菜单设置</a></li>
+                <li class="active">编辑菜单</li>
             </ol>
 
         </div>
@@ -25,10 +25,8 @@
                 <div class="col-md-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            添加菜单
-                        </div>
                         <div class="panel-body">
+                            <a href="javascript:history.go(-1);" class="btn btn-primary btn-toolbar ">返回</a>
                             @if(session('error'))
                                 <div class="alert alert-danger">
                                     <strong> {{session('error')}}</strong>
@@ -48,27 +46,28 @@
                                                 @endforeach
                                             </select>
                                         </div>
-                                        <div class="sub-title">选择食物 &nbsp;&nbsp;&nbsp;<button type="button" id="clear" class="btn-success">清空</button></div>
+                                        <div class="sub-title">选择食物 &nbsp;&nbsp;&nbsp;<button type="button" id="clear" class="btn btn-default btn-sm">清空</button>
+                                            <button type="button" id="selectall" class="btn btn-default btn-sm">全选</button></div></div>
                                         <div id="getFromAjax">
                                             @foreach($food as $f)
-                                                <input  type="checkbox" name="fid[]" class="checkbox3" value="{{$f->fid}}" {{in_array($f->fid,$fidArr)?'checked':''}}> {{$f->fname}}&nbsp;{{$f->price}}元，
+                                                <label for="foods{{$f->fid}}"><input id="foods{{$f->fid}}" type="checkbox" name="fid[]" class="checkbox3" value="{{$f->fid}}" {{in_array($f->fid,$fidArr)?'checked':''}}> <span style="color: #0a689d">{{$f->fname}}</span><span style="color: red">{{$f->price}}</span> <span style="color: #0a689d">元，</span></label>
                                                 @endforeach
                                         </div>
                                         <div class="sub-title">选择设置时间</div>
                                         <div>
                                             @foreach($type as $t)
-                                            <input type="radio" name="tmark" class="checkbox3" value="{{$t->tmark}}" {{$t->tmark == $menu->tmark?'checked':''}} >{{$t->tname}}
+                                                <label for="radio{{$t->tmark}}"><input id="radio{{$t->tmark}}" type="radio" name="tmark" class="checkbox3" value="{{$t->tmark}}" {{$t->tmark == $menu->tmark?'checked':''}} >{{$t->tname}}，</label>
                                             @endforeach
                                         </div>
                                         <div class="sub-title">本周/下周</div>
                                         <div>
-                                            <input type="radio" name="mweek" class="radio3" value="1" {{$menu->mweek == 1?'checked':''}} >本周
-                                            <input type="radio" name="mweek" class="radio3" value="2" {{$menu->mweek == 2?'checked':''}}>下周
+                                            <label for="radioThis"><input id="radioThis" type="radio" name="mweek" class="radio3" value="1" {{$menu->mweek == 1?'checked':''}} >本周</label>
+                                            <label for="radioNext"><input id="radioNext" type="radio" name="mweek" class="radio3" value="2" {{$menu->mweek == 2?'checked':''}}>下周</label>
                                         </div>
                                         <div class="sub-title">设置状态</div>
                                         <div>
-                                            <input type="radio" name="mstate" class="radio3" value="1" {{$menu->mstate == 1?'checked':''}}>启用
-                                            <input type="radio" name="mstate" class="radio3" value="2" {{$menu->mstate == 2?'checked':''}}>禁用
+                                            <label for="radioUse"><input id="radioUse" type="radio" name="mstate" class="radio3" value="1" {{$menu->mstate == 1?'checked':''}}>启用</label>
+                                            <label for="radioBan"><input id="radioBan" type="radio" name="mstate" class="radio3" value="2" {{$menu->mstate == 2?'checked':''}}>禁用</label>
                                         </div>
 
                                         <div class="sub-title"></div>
@@ -93,6 +92,9 @@
     <script>
         $('#clear').on('click',function(){
             $('input:checkbox').prop('checked', false).removeAttr('checked')
+        })
+        $('#selectall').on('click',function(){
+            $('input:checkbox').prop('checked', true)
         })
 
         //ajax提交查询商家食物列表

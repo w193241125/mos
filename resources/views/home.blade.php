@@ -67,7 +67,7 @@
         <ol class="breadcrumb">
             <li><a href="/" >本周点餐</a></li>
             <li><a href="/home/show">查询</a></li>
-            @if($dayWeek==5)
+            @if($dayWeek==5||$dayWeek==6||$dayWeek==7 )
                 <li><a href="/nextweek" >下周点餐</a></li>
                 <li><a href="/home/showNextWeek">查询下周</a></li>
             @endif

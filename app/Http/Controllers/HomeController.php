@@ -57,7 +57,7 @@ class HomeController extends Controller
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
                 if ($shop == 0){
-                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark])->delete();
+                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear])->update(['ostate'=>2]);
                 }
             }
         }
@@ -132,7 +132,7 @@ class HomeController extends Controller
                 }
 
                 $data['food'] = trim($data['food'],'+');
-                $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->get()->toArray();
+                $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->where('ostate','=',1)->get()->toArray();
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
@@ -154,7 +154,7 @@ class HomeController extends Controller
         $fmods = fmod($weekOfYear,2);
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
-        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->get()->toArray();
+        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->where('ostate','=',1)->get()->toArray();
         $type = DB::table('types')->get()->toArray();
         return view('show',['order'=>$order,'type'=>$type]);
     }
@@ -190,7 +190,7 @@ class HomeController extends Controller
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
                 if ($shop == 0){
-                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark])->delete();
+                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$data['week_of_year'],])->update(['ostate'=>2]);
                 }
             }
         }
@@ -257,7 +257,7 @@ class HomeController extends Controller
         $fmods = fmod($weekOfYear,2);
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
-        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->get()->toArray();
+        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->where('ostate','=',1)->get()->toArray();
         $type = DB::table('types')->get()->toArray();
         return view('showNextWeek',['order'=>$order,'type'=>$type,'fmods'=>$fmods]);
     }
