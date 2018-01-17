@@ -184,9 +184,10 @@ class HomeController extends Controller
         $data['uid'] = Auth::user()->uid;
         $data['total'] = 0;
         $data['food'] = '';
-        $data['created_at'] = date('Y-m-d H:i:s');
-        $data['week_of_year'] = $weekOfYear + 1;//设置周数为下周
 
+        $data['week_of_year'] = $weekOfYear + 1;// 设置周数为下周*
+
+        //判断是否取消订餐
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
                 if ($shop == 0){
@@ -194,6 +195,7 @@ class HomeController extends Controller
                 }
             }
         }
+
 
         if (isset($request->order)){
             $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
@@ -235,10 +237,11 @@ class HomeController extends Controller
                 }
 
                 $data['food'] = trim($data['food'],'+');
-                $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->get()->toArray();
+                $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$data['week_of_year'],'uid'=>$data['uid'],'ostate'=>1,])->get()->toArray();
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
+                    $data['created_at'] = date('Y-m-d H:i:s');
                     DB::table('orders')->insert($data);
                 }
                 $data['total'] = 0;

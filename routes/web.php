@@ -58,8 +58,6 @@ Route::group(['middleware'=>'admin'],function (){
 Route::group(['middleware'=>'shops'],function (){
     Route::get('/admin', 'Admin\IndexController@show')->name('admin');
     Route::get('/admin/myorder','Admin\OrderController@myOrder');
-    Route::get('/admin/myordercount','Admin\OrderController@dayOrder');
-    Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
     Route::get('/admin/order/shopexport/{start?}/{end?}','Admin\OrderController@shopExport');
 });
 

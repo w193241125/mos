@@ -56,6 +56,7 @@ class OrderController extends Controller
         return view('admin.order.order', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,]);
     }
 
+
     public function showTdate(Request $request)
     {
         //获取本周是今年第几周
@@ -86,12 +87,12 @@ class OrderController extends Controller
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->where('week_of_year','=',$weekOfYear)->where('ostate','=',1)->get()->toArray();
         } else {
             $excelName = substr($start,0,10).' 到 '.substr($end,0,10).' 的订单';
-            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('created_at',[$start,$end])->get()->toArray();
+            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('date',[$start,$end])->where('ostate','=',1)->get()->toArray();
         }
 
-        $cellData[0] = ['用户名称','商家','食物','订单类型','订单时间','价格',];
+        $cellData[0] = ['用户编号','用户名称','商家','食物','订单类型','订单时间','价格',];
         foreach ($order as $item) {
-            array_push($cellData,[$item->realname,$item->sname,$item->food,$item->tname,$item->date,$item->total]);
+            array_push($cellData,[$item->uname,$item->realname,$item->sname,$item->food,$item->tname,$item->date,$item->total]);
         }
         //dd($cellData);
         Excel::create($excelName,function($excel) use ($cellData){
@@ -101,6 +102,7 @@ class OrderController extends Controller
         })->export('xls');
     }
 
+    //所有订单展示
     public function allShow(Request $request)
     {
         //获取本周是今年第几周
@@ -210,10 +212,10 @@ class OrderController extends Controller
             $date = new \DateTime;
             $weekOfYear = date_get_week_number($date);
 
-            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->where(['week_of_year'=>$weekOfYear,'sname'=>$realname])->get()->toArray();
+            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->where(['week_of_year'=>$weekOfYear,'sname'=>$realname,'ostate'=>1])->get()->toArray();
         } else {
             $excelName = substr($start,0,10).' 到 '.substr($end,0,10).' 的订单';
-            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('created_at',[$start,$end])->where('ostate','=',1)->get()->toArray();
+            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('date',[$start,$end])->where('ostate','=',1)->get()->toArray();
         }
 
         $cellData[0] = ['用户名称','商家','食物','订单类型','订单时间','价格',];
@@ -228,6 +230,7 @@ class OrderController extends Controller
         })->export('xls');
     }
 
+    //订单统计
     public function dayOrder(Request $request)
     {
         $state = Auth::user()->state;
@@ -259,7 +262,7 @@ class OrderController extends Controller
         }
 
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
-        $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid where {$where} GROUP BY o.sid");
+        $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid where {$where}  GROUP BY o.sid");
 
         return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,]);
     }

@@ -48,6 +48,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                     <tr>
+                                        <th>编号</th>
                                         <th>用户名称</th>
                                         <th>商家</th>
                                         <th>食物</th>
@@ -62,6 +63,7 @@
                                         <tr class="gradeA">
                                             @foreach($user as $u)
                                                 @if($u->uid == $o->uid)
+                                                    <td>{{$u->uname}}</td>
                                                     <td>{{$u->realname}}</td>
                                                 @endif
                                             @endforeach
