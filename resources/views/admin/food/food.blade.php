@@ -35,7 +35,18 @@
                                     <strong>操作失败!</strong>
                                 </div>
                             @endif
-                            <a href="/admin/food/add" class="btn btn-primary">添加食物</a>
+
+
+                                <form action="/admin/food" method="post" class="list-inline">
+                                    {{ csrf_field() }}
+                                    商家：<select name="sid" id="">
+                                        @foreach($shop as $s)
+                                        <option value="{{$s->sid}}">{{$s->sname}}</option>
+                                            @endforeach
+                                    </select>
+                                    <button class="btn btn-info right">提交</button>
+                                    <a href="/admin/food/add" class="btn btn-info right">添加食物</a>
+                                </form>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -58,7 +69,9 @@
                                             <td>{{$f->fname}}</td>
                                             <td>{{$f->price}}</td>
                                             <td>@if($f->state==1)启用@elseif($f->state==2)禁用@else其他@endif</td>
-                                            <td><a href="food/edit/{{$f->fid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
+                                            <td>
+                                                <a href="food/edit/{{$f->fid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a>
+                                            </td>
                                         </tr>
                                     @endforeach
                                     </tbody>

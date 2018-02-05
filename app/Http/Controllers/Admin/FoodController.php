@@ -13,10 +13,17 @@ class FoodController extends Controller
         //dd($request->user());
         $this->middleware('auth');
     }
-    public function show()
+    public function show(Request $request)
     {
-        $food = DB::table('foods as f')->leftJoin('shops as s','s.sid','=','f.sid')->orderBy('price','desc')->get();
-        return view('admin.food.food', compact('food'));
+        if ($request->sid){
+            $sid = ['s.sid'=>$request->sid];
+            $food = DB::table('foods as f')->leftJoin('shops as s','s.sid','=','f.sid')->where($sid)->orderBy('price','desc')->get();
+        }else{
+            $food = DB::table('foods as f')->leftJoin('shops as s','s.sid','=','f.sid')->orderBy('price','desc')->get();
+        }
+        $shop = DB::table('shops')->where('state','!=',3)->get();
+
+        return view('admin.food.food', ['food'=>$food,'shop'=>$shop]);
     }
 
     public function add()

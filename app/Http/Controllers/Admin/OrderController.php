@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -162,7 +163,8 @@ class OrderController extends Controller
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
         $where['week_of_year'] = $weekOfYear;
-        $orderBy = 'o.uid';
+        $where['ostate'] = 1;
+        $orderBy = ' o.uid ';
 
         $sdate = $request->date?$request->date:'';
         $tmark = $request->tmark?$request->tmark:'';
@@ -175,26 +177,23 @@ class OrderController extends Controller
             $end = $request->end;
             $where[] = ['date','>=',$start];
             $where[] = ['date','<=',$end];
-            $orderBy = 'o.date';
+            $orderBy = ' o.date ';
         }
 
         if ($request->tmark&&$request->date){
             $where[]= ['o.tmark','=',$request->tmark];
-            $orderBy = 'o.date';
-            echo 1;
+            $orderBy = ' o.date ';
         }
 
         if($request->tmark&& !$request->date){
-            $where['o.tmark'] = $request->tmark;
-            $orderBy = 'o.uid';
-            echo 2;
+            $where[] = ['o.tmark','=',$request->tmark];
+            $orderBy = ' o.uid ';
         }
+        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->orderBy('o.uid')->orderBy('o.tmark')->paginate(20);
 
-        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->where('ostate','=',1)->orderBy($orderBy)->paginate(20);
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $type = DB::table('types')->get()->toArray();
-
         $user = DB::table('users')->get()->toArray();
 
         return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'date'=>$sdate,'start'=>$start,'end'=>$end]);
@@ -265,5 +264,40 @@ class OrderController extends Controller
         $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid where {$where}  GROUP BY o.sid");
 
         return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,]);
+    }
+
+    //处理`包大哥`订单为分类统计
+    public function countBySort()
+    {
+        ////获取本周是今年第几周
+        //$date = new \DateTime;
+        //$weekOfYear = date_get_week_number($date);
+        //$dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+
+        $date = date('Y-m-d',time());//获取今天天日期
+        $edate = date('Y-m-d',time()+86400);//获取明天天日期
+
+        $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>4,'ostate'=>1])->get()->toArray();
+        $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>4,'ostate'=>1])->get()->toArray();
+        $food_arr_today = [];
+        foreach ($today_order as $o) {
+            $food_arr_tmp = explode('+',$o->food);
+            foreach ($food_arr_tmp as $f) {
+                array_push($food_arr_today,$f);
+            }
+        }
+
+        $food_arr_next = [];
+        foreach ($next_order as $o) {
+            $food_arr_tmp = explode('+',$o->food);
+            foreach ($food_arr_tmp as $f) {
+                array_push($food_arr_next,$f);
+            }
+        }
+
+        $food_count_today = array_count_values($food_arr_today);
+        $food_count_next = array_count_values($food_arr_next);
+
+        return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next]);
     }
 }

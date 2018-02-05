@@ -41,6 +41,12 @@
                                             <option value="1">本周</option>
                                             <option value="2">下周</option>
                                         </select>
+                                        按商家：<select name="sid" id="">
+                                            <option value="">--选择商家--</option>
+                                            @foreach($shop as $s)
+                                                <option value="{{$s->sid}}">{{$s->sname}}</option>
+                                            @endforeach
+                                        </select>
                                         <button type="submit" class="btn btn-primary">提交</button>
                                     </form>
                             </div>

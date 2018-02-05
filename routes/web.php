@@ -29,6 +29,7 @@ Route::group(['middleware'=>'admin'],function (){
 
 //食物设置
     Route::get('/admin/food','Admin\FoodController@show');
+    Route::post('/admin/food','Admin\FoodController@show');
     Route::get('/admin/food/edit/{fid?}','Admin\FoodController@edit');
     Route::get('/admin/food/add','Admin\FoodController@add');
     Route::post('/admin/food/doedit','Admin\FoodController@doedit');
@@ -58,7 +59,10 @@ Route::group(['middleware'=>'admin'],function (){
 Route::group(['middleware'=>'shops'],function (){
     Route::get('/admin', 'Admin\IndexController@show')->name('admin');
     Route::get('/admin/myorder','Admin\OrderController@myOrder');
+    Route::get('/admin/myordercount','Admin\OrderController@dayOrder');
+    Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
     Route::get('/admin/order/shopexport/{start?}/{end?}','Admin\OrderController@shopExport');
+    Route::get('admin/order/countbysort','Admin\OrderController@countBySort');
 });
 
 //导出到excel(测试用)

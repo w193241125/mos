@@ -16,26 +16,43 @@ class MenuController extends Controller
 
     public function show(Request $request)
     {
-        if (!empty($request->mweek)){
-            $mweek = $request->mweek;
-            $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->where('m.mweek','=',$mweek)->orderBy('m.tmark')->get();
-        }else{
-            $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->orderBy('m.tmark')->get();
+        $where = [];
+        if ($request->mweek){
+            $where['m.mweek'] = $request->mweek;
         }
+        if ($request->sid){
+            $where['m.sid'] = $request->sid;
+        }
+
+        //if (!empty($request->mweek)){
+        //    $mweek = $request->mweek;
+        //    $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->where('m.mweek','=',$mweek)->orderBy('m.tmark')->get();
+        //}else{
+        //    $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->orderBy('m.tmark')->get();
+        //}
+        $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->where($where)->orderBy('m.tmark')->get();
         $tmp = '';
         foreach ($menu as &$item) {
+            //$res = DB::table('foods')->whereIn('fid',[1])->get(['fname'])->toArray();
+            //dd($res);
+
             if ($item->fid) {
                 $arr = explode(',', $item->fid);
-                foreach ($arr as $fid) {
-                    $res = DB::table('foods')->where('fid', '=', $fid)->get(['fname'])->toArray();
-                    $tmp .= $res[0]->fname . ',';
+                $res = DB::table('foods')->whereIn('fid', $arr)->get(['fname'])->toArray();
+                //foreach ($arr as $fid) {
+                //    $res = DB::table('foods')->whereIn('fid', $arr)->get(['fname'])->toArray();
+                //    $tmp .= $res[0]->fname . ',';
+                //}
+                foreach ($res as $re) {
+                    $tmp .= $re->fname . ',';
                 }
+
             }
                 $item->list = $tmp;
                 $tmp = '';
         }
-
-        return view('admin.menu.menu',compact('menu'));
+        $shop = DB::table('shops')->where('sid','!=',0)->where('state','=',1)->get();
+        return view('admin.menu.menu',['menu'=>$menu,'shop'=>$shop]);
     }
 
     public function add()
@@ -83,6 +100,7 @@ class MenuController extends Controller
 
     public function doedit(Request $request)
     {
+        //dd($request);
         $data['fid'] = $request->fid?implode(',',$request->fid):'';
         $data['tmark'] = $request->tmark;
         $data['mweek'] = $request->mweek?$request->mweek:1;
