@@ -51,8 +51,18 @@ Route::group(['middleware'=>'admin'],function (){
     Route::post('/admin/menu/doadd','Admin\MenuController@doadd');
     Route::post('/admin/menu/doedit','Admin\MenuController@doedit');
 
+
+    Route::post('/admin/menu/setBreakfast','Admin\MenuController@setBreakfast');
     Route::get('/admin/menu/ajaxReq/{sid}','Admin\MenuController@ajaxReq');
     Route::get('/admin/menu/ajaxFind/{sid}/{tmark}/{mweek}','Admin\MenuController@fingMenuOfCurrentTime');
+
+    //订餐时间设置
+    Route::get('admin/setting/timelimited','Admin\SettingController@showTimeLimited');
+    Route::get('admin/setting/timelimitedadd','Admin\SettingController@timeLimitedAdd');
+    Route::post('admin/setting/timelimiteddoadd','Admin\SettingController@timeLimitedDoAdd');
+    Route::get('admin/setting/timelimiteddel/{id}','Admin\SettingController@timeLimitedDel');
+    Route::get('admin/setting/timelimitededit/{id}','Admin\SettingController@timeLimitedEdit');
+    Route::post('admin/setting/timelimiteddoedit','Admin\SettingController@timeLimitedDoEdit');
 
 });
 
@@ -63,6 +73,23 @@ Route::group(['middleware'=>'shops'],function (){
     Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
     Route::get('/admin/order/shopexport/{start?}/{end?}','Admin\OrderController@shopExport');
     Route::get('admin/order/countbysort','Admin\OrderController@countBySort');
+
+    //菜单设置
+    Route::get('/admin/menu','Admin\MenuController@show')->name('menu');
+    Route::get('/admin/menu/add/{sid?}','Admin\MenuController@add');
+    Route::get('/admin/menu/edit/{mid?}','Admin\MenuController@edit');
+    Route::post('/admin/menu/doadd','Admin\MenuController@doadd');
+    Route::post('/admin/menu/doedit','Admin\MenuController@doedit');
+    Route::get('/admin/menu/ajaxReq/{sid}','Admin\MenuController@ajaxReq');
+    Route::get('/admin/menu/ajaxFind/{sid}/{tmark}/{mweek}','Admin\MenuController@fingMenuOfCurrentTime');
+
+    //食物设置
+    Route::get('/admin/food','Admin\FoodController@show');
+    Route::post('/admin/food','Admin\FoodController@show');
+    Route::get('/admin/food/edit/{fid?}','Admin\FoodController@edit');
+    Route::get('/admin/food/add','Admin\FoodController@add');
+    Route::post('/admin/food/doedit','Admin\FoodController@doedit');
+    Route::post('/admin/food/doadd','Admin\FoodController@doadd');
 });
 
 //导出到excel(测试用)

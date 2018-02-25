@@ -35,20 +35,20 @@ class HomeController extends Controller
         $food = DB::table('foods')->orderBy('price','desc')->get();
         $shop = DB::table('shops')->get();
         $menu = DB::table('menus')->where(['mweek'=>1,'mstate'=>1])->get()->toArray();
+        $time_limited = DB::table('time_limited')->get()->toArray();
         foreach ($menu as &$v) {
             $v->food = explode(',',trim($v->fid,','));
         }
         $type = DB::table('types')->get();
-        //$dayType = DB::table('menus')->select('tid')->distinct()->orderBy('tid', 'asc')->get();
-        //dd($menu);
-        //return view('home',compact('menu'));
-        return view('home', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type,'fmods'=>$fmods]);
+        return view('home', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type,'fmods'=>$fmods,'timelimited'=>$time_limited]);
     }
 
     public function upd(Request $request)
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $data['uid'] = Auth::user()->uid;
         $data['total'] = 0;
         $data['food'] = '';
@@ -75,6 +75,7 @@ class HomeController extends Controller
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+6 day"));}
                 }elseif($dayWeek ==2){
                     if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=$today;}
@@ -89,6 +90,7 @@ class HomeController extends Controller
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
                 }elseif($dayWeek ==4){
                     if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-3 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
@@ -96,6 +98,7 @@ class HomeController extends Controller
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=$today;}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
                 }elseif($dayWeek ==5){
                     if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-4 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-3 day"));}
@@ -103,6 +106,7 @@ class HomeController extends Controller
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=$today;}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                 }elseif($dayWeek ==6){
                     if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-5 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-4 day"));}
@@ -110,13 +114,15 @@ class HomeController extends Controller
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=$today;}
-                }elseif($dayWeek ==7){
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
+                }elseif($dayWeek ==7 || $dayWeek==0){
                     if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                     if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+6 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+7 day"));}
                 }
 
                 if (is_array($item)){
@@ -147,14 +153,18 @@ class HomeController extends Controller
 
     public function show()
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $uid = Auth::user()->uid;
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
+        //var_dump($weekOfYear);
         $fmods = fmod($weekOfYear,2);
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->where('ostate','=',1)->get()->toArray();
+        //var_dump($order);
         $type = DB::table('types')->get()->toArray();
         return view('show',['order'=>$order,'type'=>$type]);
     }
@@ -179,14 +189,14 @@ class HomeController extends Controller
 
     public function updNextWeek(Request $request)
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
         $data['uid'] = Auth::user()->uid;
         $data['total'] = 0;
         $data['food'] = '';
-
         $data['week_of_year'] = $weekOfYear + 1;// 设置周数为下周*
-
+        if ($dayWeek==7 || $dayWeek==0){$data['week_of_year'] = $weekOfYear;}//周日是新一周的开始
         //判断是否取消订餐
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
@@ -208,6 +218,7 @@ class HomeController extends Controller
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+6 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+7 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+8 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+9 day"));}
                 }elseif($dayWeek ==6){
                     if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
@@ -215,13 +226,15 @@ class HomeController extends Controller
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+6 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+7 day"));}
-                }elseif($dayWeek ==7){
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+8 day"));}
+                }elseif($dayWeek ==7 || $dayWeek==0){
                     if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                     if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+6 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+7 day"));}
                 }
 
                 if (is_array($item)){
@@ -253,10 +266,12 @@ class HomeController extends Controller
 
     public function showNextWeek()
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $uid = Auth::user()->uid;
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date) + 1;//结果加1 为下周
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date);}
         $fmods = fmod($weekOfYear,2);
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();

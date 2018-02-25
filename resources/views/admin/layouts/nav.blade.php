@@ -61,11 +61,16 @@
             <li>
                 <a href="{{url('admin/user')}}"><i class="fa fa-user"></i>用户列表</a>
             </li>
+                <li>
+                <a href="{{url('admin/setting/timelimited')}}"><i class="fa fa-user"></i>订餐时间设置</a>
+            </li>
                 @endif
             @if(Auth::user()->state == 4)
                 <li>
                     <a href="{{url('admin/myorder')}}"><i class="fa fa-desktop"></i> 我的订单列表</a>
                     <a href="{{url('admin/myordercount')}}"><i class="fa fa-desktop"></i>订单统计</a>
+                    <a href="{{url('admin/food')}}"><i class="fa fa-desktop"></i>食物设置</a>
+                    <a href="{{url('admin/menu')}}"><i class="fa fa-desktop"></i>菜单设置</a>
                     @if(Auth::user()->realname == '包大哥')
                     <a href="{{url('admin/order/countbysort')}}"><i class="fa fa-desktop"></i>分类统计</a>
                     @endif

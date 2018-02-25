@@ -20,9 +20,11 @@ class OrderController extends Controller
 
     public function show(Request $request)
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $where = ['week_of_year'=>$weekOfYear];
         $orderBy = 'o.uid';
         if ($request->tmark){
@@ -60,9 +62,11 @@ class OrderController extends Controller
 
     public function showTdate(Request $request)
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $tmark=$request->tmark;
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
@@ -106,9 +110,11 @@ class OrderController extends Controller
     //所有订单展示
     public function allShow(Request $request)
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $sid = $request->sid?$request->sid:'';
         $sdate = $request->date?$request->date:'';
         $start = 1;
@@ -134,34 +140,17 @@ class OrderController extends Controller
         return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end]);
     }
 
-    //public function search(Request $request)
-    //{
-    //    $sdate = $request->date;
-    //    $start = substr($request->date,0,10);
-    //    $end = substr($request->date,-10);
-    //    $tmark = $request->tmark?$request->tmark:'';
-    //    $sid = $request->sid?$request->sid:'';
-    //
-    //    //获取本周是今年第几周
-    //    $date = new \DateTime;
-    //    $weekOfYear = date_get_week_number($date);
-    //
-    //    $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->whereBetween('date',[$start,$end])->paginate(20);
-    //    $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
-    //    $user = DB::table('users')->get()->toArray();
-    //
-    //    return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'date'=>$sdate,'tmark'=>$tmark,'sid'=>$sid,]);
-    //}
 
     //商家获取自己的订单列表
     public function myOrder(Request $request)
     {
-
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $realname = Auth::user()->realname;
         $where['sname'] = $realname;
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $where['week_of_year'] = $weekOfYear;
         $where['ostate'] = 1;
         $orderBy = ' o.uid ';
@@ -202,6 +191,7 @@ class OrderController extends Controller
 
     public function shopExport(Request $request)
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $realname = Auth::user()->realname;
         $start = $request->route('start');
         $end = $request->route('end');
@@ -210,6 +200,7 @@ class OrderController extends Controller
             $excelName = '本周订单';
             $date = new \DateTime;
             $weekOfYear = date_get_week_number($date);
+            if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
 
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->where(['week_of_year'=>$weekOfYear,'sname'=>$realname,'ostate'=>1])->get()->toArray();
         } else {
@@ -232,12 +223,14 @@ class OrderController extends Controller
     //订单统计
     public function dayOrder(Request $request)
     {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $state = Auth::user()->state;
         $sname = Auth::user()->realname;
 
         //获取本周是今年第几周
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $where['week_of_year'] = $weekOfYear;
         $sdate = $request->date?$request->date:'';
         $tdate = $request->date?$request->date:'本周';

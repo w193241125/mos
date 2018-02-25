@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class MenuController extends Controller
@@ -22,6 +23,9 @@ class MenuController extends Controller
         }
         if ($request->sid){
             $where['m.sid'] = $request->sid;
+        }
+        if(Auth::user()->state==4){
+            $where['s.sname'] = Auth::user()->realname;
         }
         $menu = DB::table('menus as m')->leftJoin('shops as s','s.sid','=','m.sid')->join('types as t','t.tmark','=','m.tmark')->where('m.sid','!=',0)->where($where)->orderBy('m.tmark')->get();
         $tmp = '';
@@ -43,7 +47,11 @@ class MenuController extends Controller
 
     public function add()
     {
-        $shop = DB::table('shops')->where('sid','!=',0)->where('state','=',1)->get();
+        $where['state'] = 1;
+        if(Auth::user()->state==4){
+            $where['sname'] = Auth::user()->realname;
+        }
+        $shop = DB::table('shops')->where('sid','!=',0)->where($where)->get();
         $type = DB::table('types')->get();
         return view('admin.menu.add',['shop'=>$shop,'type'=>$type,]);
 
@@ -77,7 +85,12 @@ class MenuController extends Controller
         $mid = $request->route('mid');
         $menu = DB::table('menus')->where('mid','=',$mid)->get()->toArray();
         //dd($menu);
-        $shop = DB::table('shops')->where('sid','!=',0)->get()->toArray();
+
+        $where['state'] = 1;
+        if(Auth::user()->state==4){
+            $where['sname'] = Auth::user()->realname;
+        }
+        $shop = DB::table('shops')->where('sid','!=',0)->where($where)->get()->toArray();
         $food = DB::table('foods')->where('sid','=',$menu[0]->sid)->orderBy('price','desc')->get();
         $fidArr = explode(',',$menu[0]->fid);
         //dd($shop);
@@ -138,5 +151,20 @@ class MenuController extends Controller
         }
         $msg = json_encode($menu,true);
         return $msg;
+    }
+
+    //一键设置早餐菜单
+    public function setBreakfast()
+    {
+        //shops表当前早餐商家id为4 ,若更改商家,则需要修改where 条件 todo
+        $id_arr = DB::table('foods')->select(['fid'])->where('sid','=',4)->get();
+        $id = '';
+        foreach ($id_arr as $item) {
+            $id .= $item->fid.',';
+        }
+        $id = trim($id,',');
+        $update = DB::table('menus')->where('sid','=',4)->update(['fid'=>$id]);
+        echo json_encode(['menuMsg'=>1]);
+
     }
 }

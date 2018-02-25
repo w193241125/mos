@@ -67,7 +67,7 @@
         <ol class="breadcrumb">
             <li><a href="/" >本周点餐</a></li>
             <li><a href="/home/show">查询</a></li>
-            @if($dayWeek==5||$dayWeek==6||$dayWeek==7 )
+            @if($dayWeek==5||$dayWeek==6||$dayWeek==7||$dayWeek==0)
                 <li><a href="/nextweek" >下周点餐</a></li>
                 <li><a href="/home/showNextWeek">查询下周</a></li>
             @endif
@@ -154,6 +154,11 @@
         </form>
     </div>
         @endif
+</div>
+<div id="time_limited">
+    @foreach($timelimited as $tl)
+        <span id="time_limited_{{$tl->time_mark}}" timelimited="{{$tl->time_limited}}"></span>
+    @endforeach
 </div>
 
 @endsection
@@ -269,24 +274,26 @@
                 var morning = new Date(),
                     mid = new Date(),
                     dinner = new Date();
-                var morningTime = [7, 0, 0, 0], midTime = [10, 30, 0, 0], dinnerTime = [16, 0, 0, 0];
+                //07:00:00
+                var morningTime = $('#time_limited_1').attr('timelimited'), midTime = $('#time_limited_2').attr('timelimited'), dinnerTime = $('#time_limited_3').attr('timelimited');
+                console.log(morningTime);
                 if(errand == 0) {
                     if(index == 0) {
                         var mt = Date.parse(setTime(morning, morningTime))
                         if(now > mt) {
-                            showTip('早餐请在7:00之前下单哦！！');
+                            showTip('早餐请在'+morningTime+'之前下单哦！！');
                             return false;
                         }
                     } else if (index == 1) {
                         var midT = Date.parse(setTime(mid, midTime));
                         if(now > midT) {
-                            showTip('中餐请在10:30之前下单哦！！');
+                            showTip('中餐请在'+midTime+'之前下单哦！！');
                             return false;
                         }
                     } else if (index == 2) {
                         var dinnerT = Date.parse(setTime(dinner, dinnerTime))
                         if(now > dinnerT) {
-                            showTip('晚餐请在16:00之前下单哦！！');
+                            showTip('晚餐请在'+dinnerTime+'之前下单哦！！');
                             return false;
                         }
                     }
@@ -295,10 +302,11 @@
             }
         }
         function setTime(object, time) {
-            object.setHours(time[0]);
-            object.setMinutes(time[1]);
-            object.setSeconds(time[2]);
-            object.setMilliseconds(time[3] ? time[3] : 0);
+            var times = time.split(':');
+            object.setHours(times[0]);
+            object.setMinutes(times[1]);
+            object.setSeconds(times[2]?times[2]:0);
+            object.setMilliseconds(times[3] ? times[3] : 0);
             return object;
         }
     </script>

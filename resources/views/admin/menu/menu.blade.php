@@ -12,9 +12,7 @@
                     菜单列表 <small>Responsive tables</small>
                 </h1>
                 <ol class="breadcrumb">
-                    <li><a href="#">主页</a></li>
-                    <li><a href="#">菜单设置</a></li>
-                    <li class="active">菜单列表</li>
+                    <a href="JavaScript:void();" onclick="setBreakfast();" class="btn btn-primary">早餐一键设置</a>&nbsp;&nbsp;&nbsp;
                 </ol>
 
             </div>
@@ -41,12 +39,14 @@
                                             <option value="1">本周</option>
                                             <option value="2">下周</option>
                                         </select>
+                                        @if(Auth::user()->state != 4)
                                         按商家：<select name="sid" id="">
                                             <option value="">--选择商家--</option>
                                             @foreach($shop as $s)
                                                 <option value="{{$s->sid}}">{{$s->sname}}</option>
                                             @endforeach
                                         </select>
+                                        @endif
                                         <button type="submit" class="btn btn-primary">提交</button>
                                     </form>
                             </div>
@@ -90,3 +90,28 @@
         </div>
         <!-- /. PAGE INNER  -->
 @stop
+@section('scripts')
+    <script>
+        function setBreakfast() {
+            $.ajax({
+                type: "POST",//方法类型
+                dataType: "json",//预期服务器返回的数据类型
+                url: "/admin/menu/setBreakfast" ,//url
+                data: '',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (result) {
+                    console.log(result);//打印服务端返回的数据(调试用)
+                    if (result.menuMsg == 1) {
+                        alert("设置成功");
+                        location.reload();
+                    }
+                },
+                error : function() {
+                    alert("设置失败！");
+                }
+            });
+        }
+    </script>
+    @stop

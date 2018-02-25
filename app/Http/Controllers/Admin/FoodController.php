@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class FoodController extends Controller
@@ -21,14 +22,21 @@ class FoodController extends Controller
         }else{
             $food = DB::table('foods as f')->leftJoin('shops as s','s.sid','=','f.sid')->orderBy('price','desc')->get();
         }
-        $shop = DB::table('shops')->where('state','!=',3)->get();
+
+        if(Auth::user()->state==4){
+            $where['sname'] = Auth::user()->realname;
+        }
+        $shop = DB::table('shops')->where('state','!=',3)->where($where)->get();
 
         return view('admin.food.food', ['food'=>$food,'shop'=>$shop]);
     }
 
     public function add()
     {
-        $shop = DB::table('shops')->where('state','!=',3)->get();
+        if(Auth::user()->state==4){
+            $where['sname'] = Auth::user()->realname;
+        }
+        $shop = DB::table('shops')->where('state','!=',3)->where($where)->get();
         return view('admin.food.add',['shop'=>$shop]);
     }
 
@@ -51,7 +59,11 @@ class FoodController extends Controller
     {
         $fid = $request->route('fid');
         $food = DB::table('foods')->where('fid','=',$fid)->get()->toArray();
-        $shop = DB::table('shops')->where('state','!=',3)->get()->toArray();
+
+        if(Auth::user()->state==4){
+            $where['sname'] = Auth::user()->realname;
+        }
+        $shop = DB::table('shops')->where('state','!=',3)->where($where)->get()->toArray();
         return view('admin.food.edit',['food'=>$food[0],'shop'=>$shop]);
     }
 
