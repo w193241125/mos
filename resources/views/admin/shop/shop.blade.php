@@ -36,7 +36,7 @@
                                  @endif
                                     <a href="/admin/shop/add" class="btn btn-primary">添加商家</a>
                             </div>
-                            <div class="panel-body">a
+                            <div class="panel-body">
                                 <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                         <thead>

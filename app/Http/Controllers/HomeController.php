@@ -27,11 +27,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $date = new \DateTime;
-        $weekOfYear = date_get_week_number($date);
+        $weekOfYear = date('W',time());//获取本周是今年的第几周, 每周从周一开始,
+        //dd(Carbon::parse(date('Y-m-d',time())));
         $fmods = fmod($weekOfYear,2);
-
-        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+        $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $food = DB::table('foods')->orderBy('price','desc')->get();
         $shop = DB::table('shops')->get();
         $menu = DB::table('menus')->where(['mweek'=>1,'mstate'=>1])->get()->toArray();
@@ -39,16 +38,23 @@ class HomeController extends Controller
         foreach ($menu as &$v) {
             $v->food = explode(',',trim($v->fid,','));
         }
-        $type = DB::table('types')->get();
+        if ($fmods==1){
+            $limit = 15;
+        }else{
+            $limit = 18;
+        }
+        $type = DB::table('types')->limit($limit)->get();
+
         return view('home', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type,'fmods'=>$fmods,'timelimited'=>$time_limited]);
     }
 
     public function upd(Request $request)
     {
-        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
-        $date = new \DateTime;
-        $weekOfYear = date_get_week_number($date);
-        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
+        //$dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
+        //$date = new \DateTime;
+        //$weekOfYear = date_get_week_number($date);
+        $weekOfYear = date('W',time());
+        //if ($dayWeek==7 || $dayWeek == 0){$weekOfYear = date('W',time())-1;}
         $data['uid'] = Auth::user()->uid;
         $data['total'] = 0;
         $data['food'] = '';
@@ -63,7 +69,7 @@ class HomeController extends Controller
         }
 
         if (isset($request->order)){
-            $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+            $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
             $today = date('Y-m-d');//获取今天日期
 
             foreach ($request->order as $key=>$item) {
@@ -153,16 +159,17 @@ class HomeController extends Controller
 
     public function show()
     {
-        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+        //$dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $uid = Auth::user()->uid;
         //获取本周是今年第几周
-        $date = new \DateTime;
-        $weekOfYear = date_get_week_number($date);
-        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
+        //$date = new \DateTime;
+        //$weekOfYear = date_get_week_number($date);
+        $weekOfYear = date('W',time());
+        //if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date('W',time());}
         //var_dump($weekOfYear);
         $fmods = fmod($weekOfYear,2);
 
-        $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
+        //$food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->where('ostate','=',1)->get()->toArray();
         //var_dump($order);
         $type = DB::table('types')->get()->toArray();
@@ -171,11 +178,12 @@ class HomeController extends Controller
 
     public function nextWeekIndex()
     {
-        $date = new \DateTime;
-        $weekOfYear = date_get_week_number($date) +1;
+        //$date = new \DateTime;
+        //$weekOfYear = date_get_week_number($date) +1;
+        $weekOfYear = date('W',time())+1;
         $fmods = fmod($weekOfYear,2);
 
-        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+        $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $food = DB::table('foods')->orderBy('price','desc')->get();
         $shop = DB::table('shops')->get();
         $menu = DB::table('menus')->where(['mweek'=>2,'mstate'=>1])->get()->toArray();
@@ -189,14 +197,15 @@ class HomeController extends Controller
 
     public function updNextWeek(Request $request)
     {
-        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
-        $date = new \DateTime;
-        $weekOfYear = date_get_week_number($date);
+        //$dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
+        //$date = new \DateTime;
+        //$weekOfYear = date_get_week_number($date);
+        $weekOfYear = date('W',time());
         $data['uid'] = Auth::user()->uid;
         $data['total'] = 0;
         $data['food'] = '';
         $data['week_of_year'] = $weekOfYear + 1;// 设置周数为下周*
-        if ($dayWeek==7 || $dayWeek==0){$data['week_of_year'] = $weekOfYear;}//周日是新一周的开始
+        //if ($dayWeek==7 || $dayWeek==0){$data['week_of_year'] = $weekOfYear;}//周日是新一周的开始
         //判断是否取消订餐
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
@@ -208,7 +217,7 @@ class HomeController extends Controller
 
 
         if (isset($request->order)){
-            $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+            $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
             foreach ($request->order as $key=>$item) {
                 $data['tmark'] = $key;
                 if($dayWeek ==5){
@@ -254,7 +263,7 @@ class HomeController extends Controller
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
-                    $data['created_at'] = date('Y-m-d H:i:s');
+                    $data['created_at'] = date('Y-m-d H:i:s',time());
                     DB::table('orders')->insert($data);
                 }
                 $data['total'] = 0;
@@ -266,15 +275,16 @@ class HomeController extends Controller
 
     public function showNextWeek()
     {
-        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+        //$dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $uid = Auth::user()->uid;
         //获取本周是今年第几周
-        $date = new \DateTime;
-        $weekOfYear = date_get_week_number($date) + 1;//结果加1 为下周
-        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date);}
+        //$date = new \DateTime;
+        //$weekOfYear = date_get_week_number($date) + 1;//结果加1 为下周
+        $weekOfYear = date('W',time());
+        //if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date);}
         $fmods = fmod($weekOfYear,2);
 
-        $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
+        //$food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->where('ostate','=',1)->get()->toArray();
         $type = DB::table('types')->get()->toArray();
         return view('showNextWeek',['order'=>$order,'type'=>$type,'fmods'=>$fmods]);
