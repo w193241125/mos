@@ -31,7 +31,7 @@ class HomeController extends Controller
         //dd(Carbon::parse(date('Y-m-d',time())));
         $fmods = fmod($weekOfYear,2);
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
-        $food = DB::table('foods')->orderBy('price','desc')->get();
+        $food = DB::table('foods')->orderBy('price','desc')->where('state','=',1)->get();
         $shop = DB::table('shops')->get();
         $menu = DB::table('menus')->where(['mweek'=>1,'mstate'=>1])->get()->toArray();
         $time_limited = DB::table('time_limited')->get()->toArray();
@@ -50,7 +50,8 @@ class HomeController extends Controller
 
     public function upd(Request $request)
     {
-        //$dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
+        $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
+        if ($dayWeek==7|| $dayWeek == 0){die('周日无法点之前的餐了!请到`下周点餐`去点餐.');}
         //$date = new \DateTime;
         //$weekOfYear = date_get_week_number($date);
         $weekOfYear = date('W',time());
@@ -184,13 +185,18 @@ class HomeController extends Controller
         $fmods = fmod($weekOfYear,2);
 
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
-        $food = DB::table('foods')->orderBy('price','desc')->get();
+        $food = DB::table('foods')->orderBy('price','desc')->where('state','=',1)->get();
         $shop = DB::table('shops')->get();
         $menu = DB::table('menus')->where(['mweek'=>2,'mstate'=>1])->get()->toArray();
         foreach ($menu as &$v) {
             $v->food = explode(',',trim($v->fid,','));
         }
-        $type = DB::table('types')->get();
+        if ($fmods==1){
+            $limit = 15;
+        }else{
+            $limit = 18;
+        }
+        $type = DB::table('types')->limit($limit)->get();
 
         return view('nextweek', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type,'fmods'=>$fmods]);
     }
@@ -280,7 +286,7 @@ class HomeController extends Controller
         //获取本周是今年第几周
         //$date = new \DateTime;
         //$weekOfYear = date_get_week_number($date) + 1;//结果加1 为下周
-        $weekOfYear = date('W',time());
+        $weekOfYear = date('W',time())+1;
         //if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date);}
         $fmods = fmod($weekOfYear,2);
 

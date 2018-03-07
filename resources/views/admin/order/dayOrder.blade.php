@@ -62,7 +62,9 @@
                                             <td>{{$d->num}}</td>
                                             <td>{{$tdate}}</td>
                                             {{--<td>@if($o->week_of_year-$thisWeek==0)本周@elseif($o->week_of_year-$thisWeek==1)下周@else其他时间@endif</td>--}}
-                                            <td>@if($d->sid==2){{$d->total + $d->num*2}}@else{{$d->total}}@endif</td>
+                                            <td>
+                                                    @if($d->sid==2){{$d->total + $d->num}}@else{{$d->total}}@endif
+                                            </td>
                                         </tr>
                                         @endforeach
                                         {{--<td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>--}}

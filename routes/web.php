@@ -111,6 +111,9 @@ Route::any('/home/showNextWeek', 'HomeController@showNextWeek');
 Route::get('user','UsersController@show');
 Route::post('user/reset','UsersController@reset');
 
+
+Route::get('other/shopping','ShoppingController@index');
+
 Auth::routes();
 
 
