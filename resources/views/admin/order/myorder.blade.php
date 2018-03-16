@@ -24,7 +24,7 @@
                         <div class="panel-heading">
                             <form action="/admin/myorder/" method="get" class="list-inline">
                                     <label for="date1" >
-                                        <small><span class="">开始时间：</span><input class="layui-input date-item" type="text" id="date1" name="start" placeholder="yyyy-MM-dd" lay-key="1" value="{{$start or ''}}"></small>
+                                        <small><span class="">开始时间：</span><input class="layui-input date-item" type="text" id="date1" name="start" placeholder="yyyy-MM-dd" lay-key="1" value="{{$start or '1'}}"></small>
                                     </label>
 
                                 <label for="date2" >
@@ -39,7 +39,7 @@
                                 </select> </small>
                                 </label>
                                 <button type="submit" class="btn btn-info right">查询</button>
-                                {{--<a href="/admin/order/shopexport/1/1" class="btn btn-info right">导出本周Excel表</a>--}}
+                                <a href="/admin/order/shopexport/@if($start==0)1 @else{{$start}}@endif/@if($end==0)1 @else{{$end}}@endif" class="btn btn-info right">导出Excel表</a>*先选开始/结束时间查询后,再导出
                             </form>
                         </div>
 

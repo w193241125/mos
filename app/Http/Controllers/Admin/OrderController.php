@@ -188,6 +188,8 @@ class OrderController extends Controller
         return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'date'=>$sdate,'start'=>$start,'end'=>$end]);
 
     }
+    //商家导出自己的excel
+
 
     public function shopExport(Request $request)
     {
@@ -196,7 +198,7 @@ class OrderController extends Controller
         $start = $request->route('start');
         $end = $request->route('end');
 
-        if ($start==1 && $end==1){
+        if ($start==1 && $end==1 || $start == 0 || $end == 0){
             $excelName = '本周订单';
             $date = new \DateTime;
             $weekOfYear = date_get_week_number($date);
@@ -205,12 +207,12 @@ class OrderController extends Controller
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->where(['week_of_year'=>$weekOfYear,'sname'=>$realname,'ostate'=>1])->get()->toArray();
         } else {
             $excelName = substr($start,0,10).' 到 '.substr($end,0,10).' 的订单';
-            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('date',[$start,$end])->where('ostate','=',1)->get()->toArray();
+            $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('date',[$start,$end])->where(['ostate'=>1,'sname'=>$realname])->get()->toArray();
         }
 
-        $cellData[0] = ['用户名称','商家','食物','订单类型','订单时间','价格',];
+        $cellData[0] = ['用户编号','商家','食物','订单类型','订单时间','价格',];
         foreach ($order as $item) {
-            array_push($cellData,[$item->realname,$item->sname,$item->food,$item->tname,$item->date,$item->total]);
+            array_push($cellData,[$item->uname,$item->sname,$item->food,$item->tname,$item->date,$item->total]);
         }
         //dd($cellData);
         Excel::create($excelName,function($excel) use ($cellData){

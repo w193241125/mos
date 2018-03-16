@@ -59,6 +59,12 @@ class MenuController extends Controller
 
     public function doadd(Request $request)
     {
+        if (Auth::user()->state == 4){
+            $s = DB::table('shops')->select('sid')->where('sname','=',Auth::user()->realname)->get()->toArray();
+            if ($s[0]->sid != $request->sid){
+                return back()->with(['error'=>'服务器繁忙,请稍后再试!']);
+            }
+        }
         $data['fid'] = $request->fid?implode(',',$request->fid):'';
         $data['tmark'] = $request->tmark;
         $data['mstate'] = $request->mstate;
@@ -99,6 +105,12 @@ class MenuController extends Controller
 
     public function doedit(Request $request)
     {
+        if (Auth::user()->state == 4){
+            $s = DB::table('shops')->select('sid')->where('sname','=',Auth::user()->realname)->get()->toArray();
+            if ($s[0]->sid != $request->sid){
+                return back()->with(['error'=>'服务器繁忙,请稍后再试!']);
+            }
+        }
         //dd($request);
         $data['fid'] = $request->fid?implode(',',$request->fid):'';
         $data['tmark'] = $request->tmark;
