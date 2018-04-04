@@ -16,7 +16,6 @@ class HomeController extends Controller
      */
     public function __construct(Request $request)
     {
-        //dd($request->user());
         $this->middleware('auth');
     }
 
@@ -32,7 +31,7 @@ class HomeController extends Controller
         $fmods = fmod($weekOfYear,2);
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $food = DB::table('foods')->orderBy('price','desc')->where('state','=',1)->get();
-        $shop = DB::table('shops')->get();
+        $shop = DB::table('shops')->where('state','!=',2)->get();
         $menu = DB::table('menus')->where(['mweek'=>1,'mstate'=>1])->get()->toArray();
         $time_limited = DB::table('time_limited')->get()->toArray();
         foreach ($menu as &$v) {
@@ -41,7 +40,7 @@ class HomeController extends Controller
         if ($fmods==1){
             $limit = 15;
         }else{
-            $limit = 18;
+            $limit = 21;//周日点餐需要修改这limit,为21
         }
         $type = DB::table('types')->limit($limit)->get();
 
@@ -50,6 +49,7 @@ class HomeController extends Controller
 
     public function upd(Request $request)
     {
+        if(Auth::user()->state==2){die('您已被禁止访问,请联系管理员~');}
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         if ($dayWeek==7|| $dayWeek == 0){die('周日无法点之前的餐了!请到`下周点餐`去点餐.');}
         //$date = new \DateTime;
@@ -84,52 +84,32 @@ class HomeController extends Controller
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
                     if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+6 day"));}
                 }elseif($dayWeek ==2){
-                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
                     if ($key=='D'||$key=='E'||$key=='F'){$data['date']=$today;}
                     if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
                 }elseif($dayWeek ==3){
-                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
-                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
                     if ($key=='G'||$key=='H'||$key=='I'){$data['date']=$today;}
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
                     if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
                 }elseif($dayWeek ==4){
-                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-3 day"));}
-                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
-                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
                     if ($key=='J'||$key=='K'||$key=='L'){$data['date']=$today;}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                     if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
                 }elseif($dayWeek ==5){
-                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-4 day"));}
-                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-3 day"));}
-                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
-                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
                     if ($key=='M'||$key=='N'||$key=='O'){$data['date']=$today;}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                     if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
                 }elseif($dayWeek ==6){
-                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("-5 day"));}
-                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("-4 day"));}
-                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("-3 day"));}
-                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("-2 day"));}
-                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("-1 day"));}
                     if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=$today;}
                     if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
                 }elseif($dayWeek ==7 || $dayWeek==0){
-                    if ($key=='A'||$key=='B'||$key=='C'){$data['date']=date("Y-m-d",strtotime("+1 day"));}
-                    if ($key=='D'||$key=='E'||$key=='F'){$data['date']=date("Y-m-d",strtotime("+2 day"));}
-                    if ($key=='G'||$key=='H'||$key=='I'){$data['date']=date("Y-m-d",strtotime("+3 day"));}
-                    if ($key=='J'||$key=='K'||$key=='L'){$data['date']=date("Y-m-d",strtotime("+4 day"));}
-                    if ($key=='M'||$key=='N'||$key=='O'){$data['date']=date("Y-m-d",strtotime("+5 day"));}
-                    if ($key=='P'||$key=='Q'||$key=='R'){$data['date']=date("Y-m-d",strtotime("+6 day"));}
-                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=date("Y-m-d",strtotime("+7 day"));}
+                    if ($key=='S'||$key=='T'||$key=='U'){$data['date']=$today;}
                 }
 
                 if (is_array($item)){
@@ -203,6 +183,7 @@ class HomeController extends Controller
 
     public function updNextWeek(Request $request)
     {
+        if(Auth::user()->state==2){die('您已被禁止访问,请联系管理员~');}
         //$dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         //$date = new \DateTime;
         //$weekOfYear = date_get_week_number($date);
