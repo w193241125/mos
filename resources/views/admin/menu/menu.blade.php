@@ -72,7 +72,10 @@
                                             <td>{{$m->tname}}</td>
                                             <td>@if($m->mweek==1)本周@elseif($m->mweek==2)下周@endif</td>
                                             <td>@if($m->mstate==1)启用@elseif($m->mstate==2)禁用@endif</td>
-                                            <td><a href="menu/edit/{{$m->mid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
+                                            <td>
+                                                <a href="menu/edit/{{$m->mid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a>
+                                                @if(Auth::user()->state == 3)<a href="javascript:;" onclick="delMenu({{$m->mid}});" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i>删除</a>@endif
+                                            </td>
                                         </tr>
                                         @endforeach
                                         </tbody>
@@ -112,6 +115,30 @@
                     alert("设置失败！");
                 }
             });
+        }
+        
+        function delMenu(mid) {
+            if (confirm("确认删除吗?请谨慎操作!")) {
+                $.ajax({
+                    type: "POST",//方法类型
+                    dataType: "json",//预期服务器返回的数据类型
+                    url: "/admin/menu/delMenu/"+mid ,//url
+                    data: '',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (result) {
+                        // console.log(result);//打印服务端返回的数据(调试用)
+                        if (result.menuMsg == 1) {
+                            alert("删除成功");
+                            location.reload();
+                        }
+                    },
+                    error : function() {
+                        alert("删除失败！");
+                    }
+                });
+            }
         }
     </script>
     @stop

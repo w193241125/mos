@@ -295,4 +295,137 @@ class OrderController extends Controller
 
         return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next]);
     }
+    
+    //批量取消本周订单 todo
+    public function cancelOrder(Request $request)
+    {
+        $tmark = $request->tmark;
+        $tmarkArr = [
+            'A'=>1,
+            'B'=>1,
+            'C'=>1,
+            'D'=>2,
+            'E'=>2,
+            'F'=>2,
+            'G'=>3,
+            'H'=>3,
+            'I'=>3,
+            'J'=>4,
+            'K'=>4,
+            'L'=>4,
+            'M'=>5,
+            'N'=>5,
+            'O'=>5,
+            'P'=>6,
+            'Q'=>6,
+            'R'=>6,
+            'S'=>0,
+            'T'=>0,
+            'U'=>0,
+        ];
+        $morningArr = ['A','D','G','J','M','P','S',];
+        $noonArr    = ['B','E','H','K','N','Q','T',];
+        $eveningArr = ['C','F','I','L','O','R','U',];
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+        $today = date('Y-m-d');//获取今天日期
+        $time_now = date('His',time());
+        switch ($dayWeek){
+            case '1':
+                if ($tmark=='A'||$tmark=='B'||$tmark=='C'){$date=$today;}
+                if ($tmark=='D'||$tmark=='E'||$tmark=='F'){$date=date("Y-m-d",strtotime("+1 day"));}
+                if ($tmark=='G'||$tmark=='H'||$tmark=='I'){$date=date("Y-m-d",strtotime("+2 day"));}
+                if ($tmark=='J'||$tmark=='K'||$tmark=='L'){$date=date("Y-m-d",strtotime("+3 day"));}
+                if ($tmark=='M'||$tmark=='N'||$tmark=='O'){$date=date("Y-m-d",strtotime("+4 day"));}
+                if ($tmark=='P'||$tmark=='Q'||$tmark=='R'){$date=date("Y-m-d",strtotime("+5 day"));}
+                if ($tmark=='S'||$tmark=='T'||$tmark=='U'){$date=date("Y-m-d",strtotime("+6 day"));}
+                break;
+            case '2':
+                if ($tmark=='D'||$tmark=='E'||$tmark=='F'){$date=$today;}
+                if ($tmark=='G'||$tmark=='H'||$tmark=='I'){$date=date("Y-m-d",strtotime("+1 day"));}
+                if ($tmark=='J'||$tmark=='K'||$tmark=='L'){$date=date("Y-m-d",strtotime("+2 day"));}
+                if ($tmark=='M'||$tmark=='N'||$tmark=='O'){$date=date("Y-m-d",strtotime("+3 day"));}
+                if ($tmark=='P'||$tmark=='Q'||$tmark=='R'){$date=date("Y-m-d",strtotime("+4 day"));}
+                if ($tmark=='S'||$tmark=='T'||$tmark=='U'){$date=date("Y-m-d",strtotime("+5 day"));}
+                break;
+            case '3':
+                if ($tmark=='G'||$tmark=='H'||$tmark=='I'){$date=$today;}
+                if ($tmark=='J'||$tmark=='K'||$tmark=='L'){$date=date("Y-m-d",strtotime("+1 day"));}
+                if ($tmark=='M'||$tmark=='N'||$tmark=='O'){$date=date("Y-m-d",strtotime("+2 day"));}
+                if ($tmark=='P'||$tmark=='Q'||$tmark=='R'){$date=date("Y-m-d",strtotime("+3 day"));}
+                if ($tmark=='S'||$tmark=='T'||$tmark=='U'){$date=date("Y-m-d",strtotime("+4 day"));}
+            break;
+            case '4':
+                if ($tmark=='J'||$tmark=='K'||$tmark=='L'){$date=$today;}
+                if ($tmark=='M'||$tmark=='N'||$tmark=='O'){$date=date("Y-m-d",strtotime("+1 day"));}
+                if ($tmark=='P'||$tmark=='Q'||$tmark=='R'){$date=date("Y-m-d",strtotime("+2 day"));}
+                if ($tmark=='S'||$tmark=='T'||$tmark=='U'){$date=date("Y-m-d",strtotime("+3 day"));}
+            break;
+            case '5':
+                if ($tmark=='M'||$tmark=='N'||$tmark=='O'){$date=$today;}
+                if ($tmark=='P'||$tmark=='Q'||$tmark=='R'){$date=date("Y-m-d",strtotime("+1 day"));}
+                if ($tmark=='S'||$tmark=='T'||$tmark=='U'){$date=date("Y-m-d",strtotime("+2 day"));}
+            break;
+            case '6':
+                if ($tmark=='P'||$tmark=='Q'||$tmark=='R'){$date=$today;}
+                if ($tmark=='S'||$tmark=='T'||$tmark=='U'){$date=date("Y-m-d",strtotime("+1 day"));}
+            break;
+            case '7':
+                if ($tmark=='S'||$tmark=='T'||$tmark=='U'){$date=$today;}
+            break;
+            case '0':
+                if ($tmark=='S'||$tmark=='T'||$tmark=='U'){$date=$today;}
+            break;
+
+        }
+//if($time_now>1){
+//    $returnArr = ['msg'=>(in_array($tmark,$morningArr)),'code'=>300];
+//    return json_encode($returnArr);
+//}
+        /*
+         * 周日的$dayWeek值为0, 所以以下判断都是基于此.(周日去取消周一到周六的餐的操作, 在这里不会有判断, 也不会有返回值, 在前台直接返回error函数的内容)
+         * */
+        if($tmarkArr[$tmark]<$dayWeek && $dayWeek!=0 && $tmarkArr[$tmark]!=0){//所有在今天之前的订单都不能取消(周一到周六的操作)
+            //不能取消
+            $returnArr = ['msg'=>'时间已过无法取消1','code'=>300];
+            return json_encode($returnArr);
+        }elseif ($tmarkArr[$tmark]==$dayWeek){//当天的和周日,按今天三餐时间判断是否能够取消(周日的操作只走这里)
+            //分时段
+            if ($time_now<103000 && in_array($tmark,$noonArr)){
+                //取消中午订餐
+                $where = ['tmark'=>$tmark,'date'=>$date];
+                DB::table('orders')->where($where)->update(['ostate'=>2]);
+                $returnArr = ['msg'=>'取消成功..','code'=>200];
+                return json_encode($returnArr);
+            }elseif ($time_now<163000 && in_array($tmark,$eveningArr)){
+                //取消晚上订餐
+                $where = ['tmark'=>$tmark,'date'=>$date];
+                DB::table('orders')->where($where)->update(['ostate'=>2]);
+                $returnArr = ['msg'=>'取消成功...','code'=>200];
+                return json_encode($returnArr);
+            }elseif($time_now<070000 && in_array($tmark,$morningArr)){
+                //取消早上订餐
+                $where = ['tmark'=>$tmark,'date'=>$date];
+                DB::table('orders')->where($where)->update(['ostate'=>2]);
+                $returnArr = ['msg'=>'取消成功.','code'=>200];
+                return json_encode($returnArr);
+            }else{
+                //不能取消
+                $returnArr = ['msg'=>'时间已过无法取消2','code'=>300];
+                return json_encode($returnArr);
+            }
+
+        }elseif ($tmarkArr[$tmark]>$dayWeek && $dayWeek!=0){//除周日外, 大于今天的都可以取消
+            //取消订餐
+            $where = ['tmark'=>$tmark,'date'=>$date];
+            DB::table('orders')->where($where)->update(['ostate'=>2]);
+            $returnArr = ['msg'=>'取消成功','code'=>200];
+            return json_encode($returnArr);
+        }elseif($dayWeek!=0 && $tmark==0){//所有周日之前的都可以取消周日的(操作周日的)
+            //取消订餐
+            $where = ['tmark'=>$tmark,'date'=>$date];
+            DB::table('orders')->where($where)->update(['ostate'=>2]);
+            $returnArr = ['msg'=>'取消成功','code'=>200];
+            return json_encode($returnArr);
+        }
+    }
 }

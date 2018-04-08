@@ -179,4 +179,15 @@ class MenuController extends Controller
         echo json_encode(['menuMsg'=>1]);
 
     }
+    //删除菜单
+    public function delMenu(Request $request)
+    {
+        $mid = $request->mid;
+        $res = DB::table('menus')->where('mid','=',$mid)->delete();
+        if ($res){
+            echo json_encode(['menuMsg'=>1]);
+        }else{
+            echo json_encode(['menuMsg'=>2]);
+        }
+    }
 }

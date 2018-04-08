@@ -51,11 +51,8 @@ class HomeController extends Controller
     {
         if(Auth::user()->state==2){die('您已被禁止访问,请联系管理员~');}
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
-        if ($dayWeek==7|| $dayWeek == 0){die('周日无法点之前的餐了!请到`下周点餐`去点餐.');}
-        //$date = new \DateTime;
-        //$weekOfYear = date_get_week_number($date);
+        //if ($dayWeek==7|| $dayWeek == 0){die('周日无法点之前的餐了!请到`下周点餐`去点餐.');}
         $weekOfYear = date('W',time());
-        //if ($dayWeek==7 || $dayWeek == 0){$weekOfYear = date('W',time())-1;}
         $data['uid'] = Auth::user()->uid;
         $data['total'] = 0;
         $data['food'] = '';
@@ -166,7 +163,7 @@ class HomeController extends Controller
 
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $food = DB::table('foods')->orderBy('price','desc')->where('state','=',1)->get();
-        $shop = DB::table('shops')->get();
+        $shop = DB::table('shops')->where('state','!=',2)->get();
         $menu = DB::table('menus')->where(['mweek'=>2,'mstate'=>1])->get()->toArray();
         foreach ($menu as &$v) {
             $v->food = explode(',',trim($v->fid,','));

@@ -14,12 +14,47 @@
                 订单列表 <small>本周</small>
             </h1>
             <ol class="breadcrumb">
-                <li><a href="#">主页</a></li>
-                <li><a href="#">订单设置</a></li>
-                <li class="active">订单列表</li>
+                <li><h3>批量取消:</h3></li>
+                    <form action="/admin/order/" method="get" class="list-inline">
+                        时间:<select name="time_mark" id="time_tmark">
+                            <option value="">---请选择---</option>
+                            @foreach($type as $t)
+                                <option value="{{$t->tmark}}">{{$t->tname}}</option>
+                            @endforeach
+                        </select>
+                        <a href="javascript:;" onclick="cancelOrder();" class="btn btn-info right">取消订单</a>
+                    </form>
             </ol>
-
         </div>
+        <script>
+            function cancelOrder() {
+                var tmark = $('#time_tmark ').val();
+                if (confirm("确认取消吗?请谨慎操作!")) {
+                    $.ajax({
+                        type: "POST",//方法类型
+                        dataType: "json",//预期服务器返回的数据类型
+                        url: "/admin/cancelOrder/"+tmark ,//url
+                        data: '',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (result) {
+                            // console.log(result);//打印服务端返回的数据(调试用)
+                            if (result.cose == 200) {
+                                alert(result.msg);
+                                location.reload();
+                            }else{
+                                alert(result.msg);
+                            }
+                        },
+                        error : function(result) {
+                            alert("取消失败！所选时间不能取消或者登陆状态超时!");
+                            location.reload();
+                        }
+                    });
+                }
+            }
+        </script>
 
         <div id="page-inner">
 

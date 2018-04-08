@@ -39,6 +39,7 @@ Route::group(['middleware'=>'admin'],function (){
     Route::get('/admin/order','Admin\OrderController@show');
     Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
     Route::get('/admin/allOrder','Admin\OrderController@allShow');
+    Route::post('/admin/cancelOrder/{tmark}','Admin\OrderController@cancelOrder');
     //Route::get('/admin/order/search','Admin\OrderController@search');
 //Route::get('/admin/order/allExport/{start?}/{end?}','Admin\OrderController@search');
     Route::get('/admin/order/export/{start?}/{end?}','Admin\OrderController@export');
@@ -50,7 +51,7 @@ Route::group(['middleware'=>'admin'],function (){
     Route::get('/admin/menu/edit/{mid?}','Admin\MenuController@edit');
     Route::post('/admin/menu/doadd','Admin\MenuController@doadd');
     Route::post('/admin/menu/doedit','Admin\MenuController@doedit');
-
+    Route::post('/admin/menu/delMenu/{mid}', 'Admin\MenuController@delMenu');
 
     Route::post('/admin/menu/setBreakfast','Admin\MenuController@setBreakfast');
     Route::get('/admin/menu/ajaxReq/{sid}','Admin\MenuController@ajaxReq');
