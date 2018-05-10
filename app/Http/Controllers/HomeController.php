@@ -38,9 +38,9 @@ class HomeController extends Controller
             $v->food = explode(',',trim($v->fid,','));
         }
         if ($fmods==1){
-            $limit = 15;
+            $limit = 18;
         }else{
-            $limit = 21;//周日点餐需要修改这limit,为21
+            $limit = 18;//周日点餐需要修改这limit,为21
         }
         $type = DB::table('types')->limit($limit)->get();
 
@@ -169,7 +169,7 @@ class HomeController extends Controller
             $v->food = explode(',',trim($v->fid,','));
         }
         if ($fmods==1){
-            $limit = 15;
+            $limit = 18;
         }else{
             $limit = 18;
         }

@@ -64,6 +64,7 @@
                 <li>
                 <a href="{{url('admin/setting/timelimited')}}"><i class="fa fa-user"></i>订餐时间设置</a>
             </li>
+                <li> <a href="{{url('admin/order/countbysort')}}"><i class="fa fa-desktop"></i>早餐分类统计</a></li>
                 @endif
             @if(Auth::user()->state == 4)
                 <li>
