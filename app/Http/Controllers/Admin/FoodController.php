@@ -90,4 +90,15 @@ class FoodController extends Controller
         }
 
     }
+
+    public function delFood(Request $request)
+    {
+        $fid = $request->fid;
+        $res = DB::table('foods')->where('fid','=',$fid)->delete();
+        if ($res){
+            echo json_encode(['menuMsg'=>1]);
+        }else{
+            echo json_encode(['menuMsg'=>2]);
+        }
+    }
 }

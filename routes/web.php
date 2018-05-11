@@ -34,7 +34,7 @@ Route::group(['middleware'=>'admin'],function (){
     Route::get('/admin/food/add','Admin\FoodController@add');
     Route::post('/admin/food/doedit','Admin\FoodController@doedit');
     Route::post('/admin/food/doadd','Admin\FoodController@doadd');
-
+    Route::post('/admin/food/delFood/{fid}', 'Admin\FoodController@delFood');
 //订单
     Route::get('/admin/order','Admin\OrderController@show');
     Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
@@ -83,7 +83,7 @@ Route::group(['middleware'=>'shops'],function (){
     Route::post('/admin/menu/doedit','Admin\MenuController@doedit');
     Route::get('/admin/menu/ajaxReq/{sid}','Admin\MenuController@ajaxReq');
     Route::get('/admin/menu/ajaxFind/{sid}/{tmark}/{mweek}','Admin\MenuController@fingMenuOfCurrentTime');
-
+    Route::post('/admin/menu/delMenu/{mid}', 'Admin\MenuController@delMenu');
     //食物设置
     Route::get('/admin/food','Admin\FoodController@show');
     Route::post('/admin/food','Admin\FoodController@show');
@@ -91,6 +91,7 @@ Route::group(['middleware'=>'shops'],function (){
     Route::get('/admin/food/add','Admin\FoodController@add');
     Route::post('/admin/food/doedit','Admin\FoodController@doedit');
     Route::post('/admin/food/doadd','Admin\FoodController@doadd');
+    Route::post('/admin/food/delFood/{fid}', 'Admin\FoodController@delFood');
 });
 
 //导出到excel(测试用)

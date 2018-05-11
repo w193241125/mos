@@ -71,6 +71,7 @@
                                             <td>@if($f->fstate==1)启用@elseif($f->fstate==2)禁用@else其他@endif</td>
                                             <td>
                                                 <a href="food/edit/{{$f->fid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a>
+                                                <a href="javascript:;" onclick="delFood({{$f->fid}});" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i>删除</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -89,3 +90,33 @@
     </div>
     <!-- /. PAGE INNER  -->
 @stop
+@section('scripts')
+    <script>
+        function delFood(fid) {
+            if (confirm("确认删除吗?请谨慎操作!")) {
+                $.ajax({
+                    type: "POST",//方法类型
+                    dataType: "json",//预期服务器返回的数据类型
+                    url: "/admin/food/delFood/"+fid ,//url
+                    data: '',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (result) {
+                        // console.log(result);//打印服务端返回的数据(调试用)
+                        if (result.menuMsg == 1) {
+                            alert("删除成功");
+                            location.reload();
+                        }else{
+                            alert("删除失败");
+                            location.reload();
+                        }
+                    },
+                    error : function() {
+                        alert("删除失败！");
+                    }
+                });
+            }
+        }
+    </script>
+    @stop
