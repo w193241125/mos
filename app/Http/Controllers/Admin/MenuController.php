@@ -134,7 +134,7 @@ class MenuController extends Controller
         //$type = DB::table('types')->get();
 
         $sid = $request->route('sid');
-        $food = DB::table('foods')->where('sid','=',$sid)->orderByDesc('price')->get();
+        $food = DB::table('foods')->where(['sid'=>$sid,'fstate'=>1])->orderByDesc('price')->get();
         $msg = json_encode($food,true);
         return $msg;
     }
@@ -169,7 +169,7 @@ class MenuController extends Controller
     public function setBreakfast()
     {
         //shops表当前早餐商家id为4 ,若更改商家,则需要修改where 条件 todo
-        $id_arr = DB::table('foods')->select(['fid'])->where('sid','=',4)->get();
+        $id_arr = DB::table('foods')->select(['fid'])->where(['sid'=>4,'fstate'=>1])->get();
         $id = '';
         foreach ($id_arr as $item) {
             $id .= $item->fid.',';

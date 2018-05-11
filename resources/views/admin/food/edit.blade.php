@@ -50,8 +50,8 @@
                                         </div>
                                         <div class="sub-title">是否启用</div>
                                         <div>
-                                            <input type="radio" name="state" class="radio3" value="1" {{$food->state == 1?'checked':''}}>启用
-                                            <input type="radio" name="state" class="radio3" value="2" {{$food->state == 2?'checked':''}}>禁用
+                                            <input type="radio" name="state" class="radio3" value="1" {{$food->fstate == 1?'checked':''}}>启用
+                                            <input type="radio" name="state" class="radio3" value="2" {{$food->fstate == 2?'checked':''}}>禁用
                                         </div>
 
                                         <div class="sub-title"></div>

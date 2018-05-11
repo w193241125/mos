@@ -68,7 +68,7 @@
                                             <td>{{$f->sname}}</td>
                                             <td>{{$f->fname}}</td>
                                             <td>{{$f->price}}</td>
-                                            <td>@if($f->state==1)启用@elseif($f->state==2)禁用@else其他@endif</td>
+                                            <td>@if($f->fstate==1)启用@elseif($f->fstate==2)禁用@else其他@endif</td>
                                             <td>
                                                 <a href="food/edit/{{$f->fid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a>
                                             </td>

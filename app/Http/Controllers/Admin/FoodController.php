@@ -17,7 +17,7 @@ class FoodController extends Controller
 
     public function show(Request $request)
     {
-        $sid[] = ['f.state','!=',0];
+        $sid[] = ['f.fstate','!=',0];
         if ($request->sid){
             $sid[] = ['s.sid','=',$request->sid];
         }
@@ -50,7 +50,7 @@ class FoodController extends Controller
     {
         $food['fname'] = $request->fname;
         $food['price'] = $request->price;
-        $food['state'] = $request->state;
+        $food['fstate'] = $request->state;
         $food['sid'] = $request->sid;
 
         $res = DB::table('foods')->insert($food);
@@ -80,7 +80,7 @@ class FoodController extends Controller
         $fid= $request->fid;
         $data['fname'] = $request->fname;
         $data['sid'] = $request->sid;
-        $data['state'] = $request->state;
+        $data['fstate'] = $request->state;
         $data['price'] = $request->price;
         $res = DB::table('foods')->where('fid','=',$fid)->update($data);
         if ($res){
