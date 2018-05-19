@@ -18,6 +18,8 @@ class MenuController extends Controller
     public function show(Request $request)
     {
         $where = [];
+        $sid = $request->sid?$request->sid:'';
+        $week = $request->mweek?$request->mweek:'';
         if ($request->mweek){
             $where['m.mweek'] = $request->mweek;
         }
@@ -42,7 +44,7 @@ class MenuController extends Controller
                 $tmp = '';
         }
         $shop = DB::table('shops')->where('sid','!=',0)->where('state','=',1)->get();
-        return view('admin.menu.menu',['menu'=>$menu,'shop'=>$shop]);
+        return view('admin.menu.menu',['menu'=>$menu,'shop'=>$shop,'sid'=>$sid,'week'=>$week]);
     }
 
     public function add()

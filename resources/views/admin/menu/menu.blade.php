@@ -36,14 +36,14 @@
                                         <a href="/admin/menu/add" class="btn btn-primary">添加菜单</a>&nbsp;&nbsp;&nbsp;
                                         按周查询：<select name="mweek">
                                             <option value="">--选择时间--</option>
-                                            <option value="1">本周</option>
-                                            <option value="2">下周</option>
+                                            <option value="1" @if($week == 1) selected @endif>本周</option>
+                                            <option value="2" @if($week == 2) selected @endif>下周</option>
                                         </select>
                                         @if(Auth::user()->state != 4)
                                         按商家：<select name="sid" id="">
                                             <option value="">--选择商家--</option>
                                             @foreach($shop as $s)
-                                                <option value="{{$s->sid}}">{{$s->sname}}</option>
+                                                <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
                                             @endforeach
                                         </select>
                                         @endif

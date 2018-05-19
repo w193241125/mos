@@ -63,7 +63,7 @@
                                             <td>{{$tdate}}</td>
                                             {{--<td>@if($o->week_of_year-$thisWeek==0)本周@elseif($o->week_of_year-$thisWeek==1)下周@else其他时间@endif</td>--}}
                                             <td>
-                                                    @if($d->sid==2 ||$d->sid==6){{$d->total + $d->num}}@else{{$d->total}}@endif
+                                                    @if($d->sid==2){{$d->total + $d->num}}@else{{$d->total}}@endif
                                             </td>
                                         </tr>
                                         @endforeach

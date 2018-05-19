@@ -18,6 +18,7 @@ class FoodController extends Controller
     public function show(Request $request)
     {
         $sid[] = ['f.fstate','!=',0];
+        $shopId = $request->sid?$request->sid:'';
         if ($request->sid){
             $sid[] = ['s.sid','=',$request->sid];
         }
@@ -25,15 +26,12 @@ class FoodController extends Controller
             $sid[] = ['s.sname','=',Auth::user()->realname];
         }
         $food = DB::table('foods as f')->leftJoin('shops as s','s.sid','=','f.sid')->where($sid)->orderBy('price','desc')->get();
-
-
-        $where[] = ['state','!=',3];
+        $where[] = ['state','=',1];
         if(Auth::user()->state==4){
             $where[] = ['sname','=',Auth::user()->realname];
         }
         $shop = DB::table('shops')->where($where)->get();
-
-        return view('admin.food.food', ['food'=>$food,'shop'=>$shop]);
+        return view('admin.food.food', ['food'=>$food,'shop'=>$shop,'shopId'=>$shopId]);
     }
 
     public function add()

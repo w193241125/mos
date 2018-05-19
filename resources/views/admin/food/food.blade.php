@@ -40,8 +40,9 @@
                                 <form action="/admin/food" method="post" class="list-inline">
                                     {{ csrf_field() }}
                                     商家：<select name="sid" id="">
+                                        <option value="">---全部---</option>
                                         @foreach($shop as $s)
-                                        <option value="{{$s->sid}}">{{$s->sname}}</option>
+                                        <option value="{{$s->sid}}" @if($s->sid == $shopId) selected @endif> {{$s->sname}}</option>
                                             @endforeach
                                     </select>
                                     <button class="btn btn-info right">提交</button>

@@ -67,13 +67,13 @@
                                 时间:<select name="tmark" id="">
                                     <option value="">---请选择---</option>
                                     @foreach($type as $t)
-                                    <option value="{{$t->tmark}}">{{$t->tname}}</option>
+                                    <option value="{{$t->tmark}}" @if($t->tmark == $tmark) selected @endif>{{$t->tname}}</option>
                                     @endforeach
                                 </select>
                                 &nbsp;商家:<select name="sid" id="">
                                     <option value="">---全部---</option>
                                     @foreach($shop as $s)
-                                        <option value="{{$s->sid}}">{{$s->sname}}</option>
+                                        <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
                                     @endforeach
                                 </select>
 
