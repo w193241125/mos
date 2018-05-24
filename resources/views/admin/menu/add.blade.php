@@ -121,13 +121,19 @@
                     $('#getFromAjax').empty();
                     for(var index in data){
                         var fid = data[index].fid;
+                        var ischecked = data[index].ischecked;
                         var fname = data[index].fname;
                         var price = data[index].price;
                         if(tmp != undefined && tmp != price){
                             $("#getFromAjax").append('<br/>')
                             $("#getFromAjax").append('<br/>')
                         }
-                        $("#getFromAjax").append('<input  id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<label for="checkbox-fa-light-'+i+'"><span style="color: #0a689d">'+fname+'</span>'+'<span style="color: red">'+ price+'</span><span style="color: #0a689d">元</span>，</label>&nbsp;');
+                        if(ischecked == 1){
+                            $("#getFromAjax").append('<input  id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<label for="checkbox-fa-light-'+i+'"><span style="color: #0a689d">'+fname+'</span>'+'<span style="color: red">'+ price+'</span><span style="color: #0a689d">元</span>，</label>&nbsp;');
+                        }else{
+                            $("#getFromAjax").append('<input  id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]" checked  value="'+fid+'">'+'<label for="checkbox-fa-light-'+i+'"><span style="color: #0a689d">'+fname+'</span>'+'<span style="color: red">'+ price+'</span><span style="color: #0a689d">元</span>，</label>&nbsp;');
+                        }
+
                         var tmp = price;
                         // console.log(fid)
                         i++;

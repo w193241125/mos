@@ -48,6 +48,7 @@ class FoodController extends Controller
     {
         $food['fname'] = $request->fname;
         $food['price'] = $request->price;
+        $food['ischecked'] = $request->ischecked;
         $food['fstate'] = $request->state;
         $food['sid'] = $request->sid;
 
@@ -78,6 +79,7 @@ class FoodController extends Controller
         $fid= $request->fid;
         $data['fname'] = $request->fname;
         $data['sid'] = $request->sid;
+        $data['ischecked'] = $request->ischecked;
         $data['fstate'] = $request->state;
         $data['price'] = $request->price;
         $res = DB::table('foods')->where('fid','=',$fid)->update($data);

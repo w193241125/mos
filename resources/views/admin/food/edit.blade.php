@@ -48,6 +48,11 @@
                                         <div>
                                             <input type="number" name="price" step="0.1" class="form-control" value="{{$food->price}}" required>
                                         </div>
+                                        <div class="sub-title">是否在设置菜单时自动勾选</div><span style="color:red;">* 选`是`之后会在设置菜单时自动勾选此食物, 建议饮料,米饭选`是`, 其它按需;</span>
+                                        <div>
+                                            <input type="radio" name="ischecked" class="radio3" value="1" {{$food->ischecked == 1?'checked':''}}>否
+                                            <input type="radio" name="ischecked" class="radio3" value="2" {{$food->ischecked == 2?'checked':''}}>是
+                                        </div>
                                         <div class="sub-title">是否启用</div>
                                         <div>
                                             <input type="radio" name="state" class="radio3" value="1" {{$food->fstate == 1?'checked':''}}>启用

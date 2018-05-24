@@ -74,7 +74,7 @@
                                             <td>@if($m->mstate==1)启用@elseif($m->mstate==2)禁用@endif</td>
                                             <td>
                                                 <a href="menu/edit/{{$m->mid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a>
-                                                @if(Auth::user()->state == 3)<a href="javascript:;" onclick="delMenu({{$m->mid}});" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i>删除</a>@endif
+                                                <a href="javascript:;" onclick="delMenu({{$m->mid}});" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i>删除</a>
                                             </td>
                                         </tr>
                                         @endforeach

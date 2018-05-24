@@ -50,7 +50,7 @@
                                             <button type="button" id="selectall" class="btn btn-default btn-sm">全选</button></div></div>
                                         <div id="getFromAjax">
                                             @foreach($food as $f)
-                                                <label for="foods{{$f->fid}}"><input id="foods{{$f->fid}}" type="checkbox" name="fid[]" class="checkbox3" value="{{$f->fid}}" {{in_array($f->fid,$fidArr)?'checked':''}}> <span style="color: #0a689d">{{$f->fname}}</span><span style="color: red">{{$f->price}}</span> <span style="color: #0a689d">元，</span></label>
+                                                <label for="foods{{$f->fid}}"><input id="foods{{$f->fid}}" type="checkbox" name="fid[]" class="checkbox3" value="{{$f->fid}}" @if(in_array($f->fid,$fidArr)||$f->ischecked==2) checked @endif> <span style="color: #0a689d">{{$f->fname}}</span><span style="color: red">{{$f->price}}</span> <span style="color: #0a689d">元，</span></label>
                                                 @endforeach
                                         </div>
                                         <div class="sub-title">选择设置时间</div>
