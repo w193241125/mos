@@ -37,7 +37,7 @@
                                     <input type="hidden" name="mid" value="{{$menu->mid}}">
                                     {{ csrf_field() }}
                                     <div class="panel-body">
-                                        <div class="sub-title">选择商家</div>
+                                        <div class="sub-title" >选择商家 <span style="color:red">*选择第一个选项后,再重新选择商家, 可以重置菜单, 并勾选预设了`设置菜单时勾选`的食物哦</span></div>
                                         <div id="domark">
                                             <select class="selectbox" name="sid" style="width: auto;" id="selectshop">
                                                 <option value="">--请选择商家--</option>
@@ -113,13 +113,19 @@
                     $('#getFromAjax').empty();
                     for(var index in data){
                         var fid = data[index].fid;
+                        var ischecked = data[index].ischecked;
                         var fname = data[index].fname;
                         var price = data[index].price;
                         if(tmp != undefined && tmp != price){
                             $("#getFromAjax").append('<br/>')
                             $("#getFromAjax").append('<br/>')
                         }
-                        $("#getFromAjax").append('<input id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<lable for="checkbox-fa-light-'+i+'">'+fname+ price+'元</lable>&nbsp;');
+                        if(ischecked == 1){
+                            $("#getFromAjax").append('<input  id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<label for="checkbox-fa-light-'+i+'"><span style="color: #0a689d">'+fname+'</span>'+'<span style="color: red">'+ price+'</span><span style="color: #0a689d">元</span>，</label>&nbsp;');
+                        }else{
+                            $("#getFromAjax").append('<input  id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]" checked  value="'+fid+'">'+'<label for="checkbox-fa-light-'+i+'"><span style="color: #0a689d">'+fname+'</span>'+'<span style="color: red">'+ price+'</span><span style="color: #0a689d">元</span>，</label>&nbsp;');
+                        }
+//                        $("#getFromAjax").append('<input id="checkbox-fa-light-'+i+'" type="checkbox"  name="fid[]"  value="'+fid+'">'+'<lable for="checkbox-fa-light-'+i+'">'+fname+ price+'元</lable>&nbsp;');
                         var tmp = price;
                         // console.log(fid)
                         i++;
