@@ -32,17 +32,17 @@
             .btn {float: right;position:fixed;bottom:5px;right: 5%;}
         }
         /*屏幕宽度不小于700时提交按钮显示位置*/
-        @media screen and (min-width: 500px) {
+        @media screen and (min-width: 700px) {
             .btn {float: right;position:fixed;bottom:5px;right: 5%;}
         }
 
-        /* 屏幕宽度不小于1920时提交按钮显示位置*/
+        /* 屏幕宽度不小于1440时提交按钮显示位置*/
         @media screen and (min-width: 1440px) {
             .btn {float: right;position:fixed;bottom:10px;right: 17%;}
         }
 
-        /* 屏幕宽度不小于1920时提交按钮显示位置*/
-        @media screen and (min-width: 1920px) {
+        /* 屏幕宽度不小于1900时提交按钮显示位置*/
+        @media screen and (min-width: 1900px) {
             .btn {float: right;position:fixed;bottom:10px;right: 22%;}
         }
 
@@ -80,27 +80,42 @@
             background: rgba(0,0,0,.8);
             display: none;
         }
-        /* 屏幕宽度不小于1920时提交按钮显示位置*/
-        @media screen and (min-width: 1920px) {
+        /*屏幕宽度不大于500时提交按钮显示位置*/
+        @media screen and (max-width: 500px) {
+            .elevator_list{
+                position: fixed;
+                right: 2%;
+                top:40%;
+                background-color: #f6f9fa;
+                border: 1px solid #e5e9ef;
+                overflow: hidden;
+                border-radius: 4px;
+                width: 50px;
+                height: 196px;
+                z-index: 999;
+            }
+        }
+        /* 屏幕宽度不da于1023时提交按钮显示位置*/
+        @media screen and (max-width: 1023px) {
+            .elevator_list{
+                position: fixed;right: 5%;top:40%;background-color: #f6f9fa;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;width: 50px;height: 196px;z-index: 999;
+            }
+        }
+
+        /* 屏幕宽度不小于1023时提交按钮显示位置*/
+        @media screen and (min-width: 1023px) {
+            .elevator_list{
+                position: fixed;right: 5%;top:40%;background-color: #f6f9fa;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;width: 50px;height: 196px;z-index: 999;
+            }
+        }
+
+        /* 屏幕宽度不小于1900时提交按钮显示位置*/
+        @media screen and (min-width: 1900px) {
             .elevator_list{
                 position: fixed;right: 20%;top:40%;background-color: #f6f9fa;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;width: 50px;height: 196px;z-index: 999;
             }
         }
-        /*屏幕宽度不大于500时提交按钮显示位置*/
-        @media screen and (max-width: 500px) {
-        .elevator_list{
-            position: fixed;
-            right: 2%;
-            top:40%;
-            background-color: #f6f9fa;
-            border: 1px solid #e5e9ef;
-            overflow: hidden;
-            border-radius: 4px;
-            width: 50px;
-            height: 196px;
-            z-index: 999;
-        }
-        }
+
         .elevator{
             background-color: #f6f9fa;border-radius: 10px;text-align: center;line-height:32px;width: 48px;height: 32px;
         }

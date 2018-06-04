@@ -22,8 +22,30 @@
             padding-bottom: 60px;
         }
         .btn {
-            float: right
+            float: right;
+            position:fixed;
+            bottom:10px;
+            right: 17%;
         }
+        /*屏幕宽度不大于500时提交按钮显示位置*/
+        @media screen and (max-width: 500px) {
+            .btn {float: right;position:fixed;bottom:5px;right: 5%;}
+        }
+        /*屏幕宽度不小于700时提交按钮显示位置*/
+        @media screen and (min-width: 700px) {
+            .btn {float: right;position:fixed;bottom:5px;right: 5%;}
+        }
+
+        /* 屏幕宽度不小于1440时提交按钮显示位置*/
+        @media screen and (min-width: 1440px) {
+            .btn {float: right;position:fixed;bottom:10px;right: 17%;}
+        }
+
+        /* 屏幕宽度不小于1900时提交按钮显示位置*/
+        @media screen and (min-width: 1900px) {
+            .btn {float: right;position:fixed;bottom:10px;right: 22%;}
+        }
+
         b {
             color: #007bc1
         }
@@ -58,6 +80,49 @@
             background: rgba(0,0,0,.8);
             display: none;
         }
+        /*屏幕宽度不大于500时提交按钮显示位置*/
+        @media screen and (max-width: 500px) {
+            .elevator_list{
+                position: fixed;
+                right: 2%;
+                top:40%;
+                background-color: #f6f9fa;
+                border: 1px solid #e5e9ef;
+                overflow: hidden;
+                border-radius: 4px;
+                width: 50px;
+                height: 196px;
+                z-index: 999;
+            }
+        }
+        /* 屏幕宽度不da于1023时提交按钮显示位置*/
+        @media screen and (max-width: 1023px) {
+            .elevator_list{
+                position: fixed;right: 5%;top:40%;background-color: #f6f9fa;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;width: 50px;height: 196px;z-index: 999;
+            }
+        }
+
+        /* 屏幕宽度不小于1023时提交按钮显示位置*/
+        @media screen and (min-width: 1023px) {
+            .elevator_list{
+                position: fixed;right: 5%;top:40%;background-color: #f6f9fa;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;width: 50px;height: 196px;z-index: 999;
+            }
+        }
+
+        /* 屏幕宽度不小于1900时提交按钮显示位置*/
+        @media screen and (min-width: 1900px) {
+            .elevator_list{
+                position: fixed;right: 20%;top:40%;background-color: #f6f9fa;border: 1px solid #e5e9ef;overflow: hidden;border-radius: 4px;width: 50px;height: 196px;z-index: 999;
+            }
+        }
+
+        .elevator{
+            background-color: #f6f9fa;border-radius: 10px;text-align: center;line-height:32px;width: 48px;height: 32px;
+        }
+        .elevator:hover{
+            cursor: pointer;
+            background-color: #9acfea;
+        }
     </style>
     @show
 @section('content')
@@ -71,6 +136,14 @@
         </ol>
     </div>
     @if(Auth::user()->state != 4)
+        <div class="elevator_list">
+            <a href="#A"><div class="elevator">一</div></a>
+            <a href="#D"><div class="elevator">二</div></a>
+            <a href="#G"><div class="elevator">三</div></a>
+            <a href="#J"><div class="elevator">四</div></a>
+            <a href="#M"><div class="elevator">五</div></a>
+            <a href="#P"><div class="elevator">六</div></a>
+        </div>
     <div class="row">
         <div class="shade">
         </div>
@@ -83,40 +156,8 @@
         <div class="col-md-10 col-md-offset-1">
             {{--外层循环 每周菜单--}}
             @foreach($type as $t)
-                {{--@if($t->tmark=='P'||$t->tmark=='Q'||$t->tmark=='R')--}}
-                    {{--@if($fmods!=1)--}}
-                        {{--<div class="panel panel-default meal" style="">--}}
-                            {{--<div class="panel-heading" style="text-align:center"><b style="font-size: large">{{$t->tname}}</b></div>--}}
-                            {{--@foreach($shop as $s)--}}{{--shop--}}
-                            {{--@foreach($menu as $m)--}}{{--menu--}}
-                            {{--@if($t->tmark === $m->tmark && $s->sid === $m->sid)--}}{{--同一餐, 同一商店--}}
-                            {{--<div class="panel-heading" ><span style="color:deepskyblue"></span></div>--}}
-                            {{--<div class="one-option">--}}
-                                {{--<div class="panel-heading">--}}
-                                    {{--餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" ><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元@endif <div class="price"></div></label>--}}
-                                {{--</div>--}}
-
-                                {{--@if($t->tmark == $m->tmark && $s->sid == $m->sid && $m->sid!=0)--}}
-                                    {{--<div class="panel-body">--}}
-                                        {{--@foreach($food as $f)--}}
-                                            {{--@if(in_array($f->fid,$m->food)&&$s->sid == $f->sid)--}}
-                                                {{--<label>--}}
-                                                    {{--<input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}">--}}
-                                                    {{--<span class="des">{{$f->fname}}<i>{{$f->price}}</i> 元</span>--}}
-                                                {{--</label>--}}
-                                            {{--@endif--}}
-                                        {{--@endforeach--}}
-                                    {{--</div>--}}
-                                {{--@endif--}}
-                            {{--</div>--}}
-                            {{--@endif--}}
-                            {{--@endforeach--}}{{--menu--}}
-                            {{--@endforeach--}}{{--shop--}}
-                        {{--</div>--}}
-                    {{--@endif--}}
-                {{--@else--}}
                     <div class="panel panel-default meal" style="">
-                        <div class="panel-heading" style="text-align:center"><b style="font-size: large">{{$t->tname}}</b></div>
+                        <div class="panel-heading" style="text-align:center"><a name="{{$t->tmark}}"></a><b style="font-size: large">{{$t->tname}}</b></div>
                         @foreach($shop as $s){{--shop--}}
                         @foreach($menu as $m){{--menu--}}
                         @if($t->tmark === $m->tmark && $s->sid === $m->sid){{--同一餐, 同一商店--}}

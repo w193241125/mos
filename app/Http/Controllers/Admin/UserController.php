@@ -17,7 +17,7 @@ class UserController extends Controller
 
     public function show()
     {
-        $user = DB::table('users')->get();
+        $user = DB::table('users')->orderBy('uid','desc')->get();
         return view('admin.user.user',compact('user'));
     }
 
