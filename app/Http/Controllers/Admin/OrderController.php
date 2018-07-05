@@ -117,10 +117,16 @@ class OrderController extends Controller
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $sid = $request->sid?$request->sid:'';
         $sdate = $request->date?$request->date:'';
+        $uname = $request->uname?$request->uname:'';
         $start = 1;
         $end = 1;
-        $where = !empty($request->sid)?[['o.sid','=',$request->sid]]:[['o.sid','!=',0]];
-
+        $where = [];
+        if ($uname){
+            $id = DB::table('users')->select('uid')->where(['uname'=>$uname])->get();
+            $uid = $id[0]->uid;
+            array_push($where,['o.uid','=',$uid]);
+        }
+        !empty($request->sid)?array_push($where,['o.sid','=',$request->sid]): array_push($where,['o.sid','!=',0]);
         if ($request->date){
 
             $start = substr($request->date,0,10);
@@ -137,7 +143,7 @@ class OrderController extends Controller
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
         $user = DB::table('users')->get()->toArray();
 
-        return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end]);
+        return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end,'uname'=>$uname]);
     }
 
 

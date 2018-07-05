@@ -38,6 +38,9 @@
                                         <option value="{{$s->sid}}">{{$s->sname}}</option>
                                     @endforeach
                                 </select>
+                                用户名：<label for="uname">
+                                    <input type="number" name="uname" placeholder="请输入用户编号" class="small" min="1" value="{{$uname or NULL}}">
+                                </label>
                                 <small><button class="btn btn-primary">提交</button></small>
                                 <a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>
                             </form>
