@@ -35,7 +35,7 @@
                                     <div class="panel-body">
                                         <div class="sub-title">用户名</div>
                                         <div>
-                                            <input type="text" name="uname" class="form-control" placeholder="请输入用户名" required>
+                                            <input type="number" name="uname" class="form-control" placeholder="请输入用户名" required value="{{$uid}}">
                                         </div>
                                         <div class="sub-title">真实姓名</div>
                                         <div>

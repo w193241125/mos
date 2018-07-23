@@ -25,13 +25,13 @@
                     <!-- Advanced Tables -->
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                @if(session('userMsg') == 1)
+                                @if(session('userMsg'))
                                     <div class="alert alert-success">
-                                        <strong> 操作成功!</strong>
+                                        <strong> {{session('userMsg')}}!</strong>
                                     </div>
-                                @elseif(session('userMsg') == 2)
+                                @elseif(session('userMsgErr'))
                                     <div class="alert alert-danger">
-                                        <strong>操作失败或未执行任何修改!</strong>
+                                        <strong>{{session('userMsgErr')}}!</strong>
                                     </div>
                                  @endif
                                     <a href="/admin/user/add" class="btn btn-primary">添加用户</a>

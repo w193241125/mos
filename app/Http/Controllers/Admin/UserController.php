@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -23,7 +24,8 @@ class UserController extends Controller
 
     public function add()
     {
-        return view('admin.user.add');
+        $uid = DB::table('users')->orderBy('uid','desc')->first();
+        return view('admin.user.add')->with('uid', $uid->uname + 1);
     }
 
     public function doadd(Request $request)
@@ -33,11 +35,15 @@ class UserController extends Controller
         $password = $request->password?$request->password:'123456';
         $data['password'] = Hash::make($password);
         $data['state'] = $request->state;
+        if ($data['state']==3 && Auth::user()->uname != 350){
+            return redirect('admin/user')->with('userMsgErr','只有超级管理员才能设置管理员');
+        }
+
         $res = DB::table('users')->insert($data);
         if ($res){
-            return redirect('admin/user')->with('userMsg',1);
+            return redirect('admin/user')->with('userMsg','操作成功！');
         }else {
-            return redirect('admin/user')->with('userMsg',2);
+            return redirect('admin/user')->with('userMsgErr','操作失败或未更改！');
         }
     }
     public function edit(Request $request)
@@ -51,15 +57,21 @@ class UserController extends Controller
         $data['uname'] = $request->uname;
         $data['realname'] = $request->realname;
         $data['state'] = $request->state;
+        if ($data['state']==3 && Auth::user()->uname != 350){
+            return redirect('admin/user')->with('userMsgErr','只有超级管理员才能设置管理员');
+        }
+        if ($request->uid == 1){
+            return redirect('admin/user')->with('userMsgErr','无法更改超级管理员信息');
+        }
         if (isset($request->password)){
             $data['password'] = Hash::make($request->password);
         }
         //dd($data);
         $res = DB::table('users')->where('uid','=',$request->uid)->update($data);
         if ($res){
-            return redirect('admin/user')->with('userMsg',1);
+            return redirect('admin/user')->with('userMsg','操作成功！');
         }else {
-            return redirect('admin/user')->with('userMsg',2);
+            return redirect('admin/user')->with('userMsgErr','操作失败或未更改！');
         }
     }
 
