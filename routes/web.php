@@ -104,6 +104,7 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index');
 Route::any('/home/upd', 'HomeController@upd');
 Route::any('/home/show', 'HomeController@show');
+Route::any('/home/jishubu', 'HomeController@jishubu');
 //下周点餐
 Route::get('/nextweek', 'HomeController@nextWeekIndex');
 Route::any('/home/updNextWeek', 'HomeController@updNextWeek');

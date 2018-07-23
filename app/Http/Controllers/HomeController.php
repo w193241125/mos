@@ -137,19 +137,11 @@ class HomeController extends Controller
 
     public function show()
     {
-        //$dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $uid = Auth::user()->uid;
         //获取本周是今年第几周
-        //$date = new \DateTime;
-        //$weekOfYear = date_get_week_number($date);
         $weekOfYear = date('W',time());
-        //if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date('W',time());}
-        //var_dump($weekOfYear);
         $fmods = fmod($weekOfYear,2);
-
-        //$food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->where('ostate','=',1)->get()->toArray();
-        //var_dump($order);
         $type = DB::table('types')->get()->toArray();
         return view('show',['order'=>$order,'type'=>$type]);
     }
@@ -274,4 +266,17 @@ class HomeController extends Controller
         return view('showNextWeek',['order'=>$order,'type'=>$type,'fmods'=>$fmods]);
     }
 
+    public function jishubu()
+    {
+        $uname = [18=>16, 19=>17, 20=>18,21=>19,22=>20,47=>41];
+        $name = [18=>'何海平', 19=>'闵小明', 20=>'梁燕珊',21=>'刘冠生',22=>'杨南峰',47=>'樊君泽'];
+        $uid = [18,19,20,21,22,47];
+        //获取本周是今年第几周
+        $weekOfYear = date('W',time());
+        $fmods = fmod($weekOfYear,2);
+        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear])->whereIn('uid',$uid)->where('ostate','=',1)->get()->toArray();
+        $type = DB::table('types')->get()->toArray();
+//        dd($order);
+        return view('jishubu',['order'=>$order,'type'=>$type, 'name'=>$name, 'uname'=>$uname]);
+    }
 }
