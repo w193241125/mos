@@ -274,12 +274,14 @@ class OrderController extends Controller
         //$date = new \DateTime;
         //$weekOfYear = date_get_week_number($date);
         //$dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
-
+        $sname = Auth::user()->realname;
+        $sidObj = DB::table('shops')->where(['sname'=>$sname])->get();
+        $sid = $sidObj[0]->sid;
         $date = date('Y-m-d',time());//获取今天天日期
         $edate = date('Y-m-d',time()+86400);//获取明天天日期
 
-        $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>4,'ostate'=>1])->get()->toArray();
-        $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>4,'ostate'=>1])->get()->toArray();
+        $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>$sid,'ostate'=>1])->get()->toArray();
+        $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>$sid,'ostate'=>1])->get()->toArray();
         $food_arr_today = [];
         foreach ($today_order as $o) {
             $food_arr_tmp = explode('+',$o->food);

@@ -54,7 +54,7 @@
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                     <tr>
-                                        <th>序号</th>
+                                        <th><label for="selectAll"><input type="checkbox" id="selectAll" class="checkbox-inline"> 序号</label></th>
                                         <th>商家名称</th>
                                         <th>食物名称</th>
                                         <th>价格(元)</th>
@@ -66,7 +66,14 @@
                                     <tbody>
                                     @foreach($food as $f)
                                         <tr class="gradeA">
-                                            <td>{{$f->fid}}</td>
+
+
+                                                <label for="fid_{{$f->fid}}">
+                                                    <td class="selectId">
+                                                        <input type="checkbox" value="{{$f->fid}}" class="foodId" id="fid_{{$f->fid}}">{{$f->fid}}
+                                                    </td>
+                                                </label>
+
                                             <td>{{$f->sname}}</td>
                                             <td>{{$f->fname}}</td>
                                             <td>{{$f->price}}</td>
@@ -121,5 +128,9 @@
                 });
             }
         }
+
+        $('.selectId').on('click',function () {
+            console.log(11111)
+        })
     </script>
     @stop

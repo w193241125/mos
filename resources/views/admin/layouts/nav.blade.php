@@ -72,7 +72,7 @@
                     <a href="{{url('admin/myordercount')}}"><i class="fa fa-desktop"></i>订单统计</a>
                     <a href="{{url('admin/food')}}"><i class="fa fa-desktop"></i>食物设置</a>
                     <a href="{{url('admin/menu')}}"><i class="fa fa-desktop"></i>菜单设置</a>
-                    @if(Auth::user()->realname == '包大哥')
+                    @if(Auth::user()->realname == '包大哥' ||  Auth::user()->realname == '石磨肠粉')
                     <a href="{{url('admin/order/countbysort')}}"><i class="fa fa-desktop"></i>分类统计</a>
                     @endif
                 </li>
