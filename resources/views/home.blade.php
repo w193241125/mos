@@ -266,7 +266,7 @@
         });
 
         function verify() {
-            var total = 0//中晚餐总价
+            var total = 0 //中晚餐总价
             var arr = [];
             var din = $('.dining-room')
             din.each(function(i) {

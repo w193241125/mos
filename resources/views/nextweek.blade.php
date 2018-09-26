@@ -296,42 +296,6 @@
             $('.tip').fadeIn();
             return;
         }
-        // function beforeDay(day, index) {
-        //     var start = new Date();
-        //     var errand = start.getDay() - day;
-        //     var now = Date.now()
-        //     if(errand > 0) {
-        //         showTip('不能选择今天之前的餐厅哦！！');
-        //         return false;
-        //     } else {
-        //         var morning = new Date(),
-        //             mid = new Date(),
-        //             dinner = new Date();
-        //         var morningTime = [7, 0, 0, 0], midTime = [10, 30, 0, 0], dinnerTime = [16, 0, 0, 0];
-        //         if(errand == 0) {
-        //             if(index == 0) {
-        //                 var mt = Date.parse(setTime(morning, morningTime))
-        //                 if(now > mt) {
-        //                     showTip('早餐请在7:00之前下单哦！！');
-        //                     return false;
-        //                 }
-        //             } else if (index == 1) {
-        //                 var midT = Date.parse(setTime(mid, midTime));
-        //                 if(now > midT) {
-        //                     showTip('中餐请在10:30之前下单哦！！');
-        //                     return false;
-        //                 }
-        //             } else if (index == 2) {
-        //                 var dinnerT = Date.parse(setTime(dinner, dinnerTime))
-        //                 if(now > dinnerT) {
-        //                     showTip('晚餐请在16:00之前下单哦！！');
-        //                     return false;
-        //                 }
-        //             }
-        //         }
-        //         return true
-        //     }
-        // }
         function setTime(object, time) {
             object.setHours(time[0]);
             object.setMinutes(time[1]);

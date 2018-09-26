@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+//Route::get('/helper', 'Admin\MenuController@geiUserMD5_IMEI')->name('helper');
 Route::group(['middleware'=>'admin'],function (){
     //后台主页
     Route::get('/admin', 'Admin\IndexController@show');

@@ -29,8 +29,11 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <form action="/admin/dayorder" class="form-inline" method="get">
-                                <label for="test6" >
-                                    <small><span class="">范围选择：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$date or ''}}"></small>
+                                <label for="date" >
+                                    <small><span class="">开始时间：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$date or ''}}"></small>
+                                </label>
+                                <label for="dates" >
+                                    <small><span class="">结束时间：</span><input class="layui-input" type="text" id="dates" name="dates" placeholder="yyyy-MM-dd" lay-key="2" value="{{$dates or ''}}"></small>
                                 </label>
                                 @if(Auth::user()->state == 3)商家:<select name="sid" id="">
                                     <option value="">---全部---</option>
@@ -87,11 +90,13 @@
 
 @section('scripts')
     <script>
-        //日期范围
+        //常规用法
         laydate.render({
             elem: '#date'
-            ,range: true
         });
-
+        //国际版
+        laydate.render({
+            elem: '#dates'
+        });
     </script>
 @stop

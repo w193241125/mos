@@ -9,6 +9,28 @@ use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
+
+    protected $day_type = [
+            1=>['A','B','C'],
+            2=>['D','E','F'],
+            3=>['G','H','I'],
+            4=>['J','K','L'],
+            5=>['M','N','O'],
+            6=>['P','Q','R'],
+            7=>['S','T','U'],
+        ];
+    protected $time_type = [
+        'A'=>1,'D'=>1,'G'=>1,'J'=>1,'M'=>1,'P'=>1,'S'=>1,
+        'B'=>2,'E'=>2,'H'=>2,'K'=>2,'N'=>2,'Q'=>2,'T'=>2,
+        'C'=>3,'F'=>3,'I'=>3,'L'=>3,'O'=>3,'R'=>3,'U'=>3,
+    ];
+    protected $week_type = [
+        'A'=>1,'D'=>2,'G'=>3,'J'=>4,'M'=>5,'P'=>6,'S'=>0,
+        'B'=>1,'E'=>2,'H'=>3,'K'=>4,'N'=>5,'Q'=>6,'T'=>0,
+        'C'=>1,'F'=>2,'I'=>3,'L'=>4,'O'=>5,'R'=>6,'U'=>0,
+    ];
+    protected $money_limited = [];
+
     /**
      * Create a new controller instance.
      *
@@ -26,6 +48,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+
         $weekOfYear = date('W',time());//获取本周是今年的第几周, 每周从周一开始,
         //dd(Carbon::parse(date('Y-m-d',time())));
         $fmods = fmod($weekOfYear,2);
@@ -34,11 +57,12 @@ class HomeController extends Controller
         $shop = DB::table('shops')->where('state','!=',2)->get();
         $menu = DB::table('menus')->where(['mweek'=>1,'mstate'=>1])->get()->toArray();
         $time_limited = DB::table('time_limited')->get()->toArray();
+
         foreach ($menu as &$v) {
             $v->food = explode(',',trim($v->fid,','));
         }
         if ($fmods==1){
-            $limit = 18;
+            $limit = 21;
         }else{
             $limit = 18;//周日点餐需要修改这limit,为21
         }
@@ -51,7 +75,22 @@ class HomeController extends Controller
     {
         if(Auth::user()->state==2){die('您已被禁止访问,请联系管理员~');}
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
+
+        //获取每天禁止点餐时间
+        $time_limited = DB::table('time_limited')->get()->toArray();
+        $t_limit = [];
+        foreach ($time_limited as $item) {
+            $t_limit[$item->time_mark] = $item->time_limited;//  [1 => "07:00"]
+        }
+
+        //获取商家，并构建商家限额数组
+        $sop = DB::table('shops')->where('state','!=',2)->get();
+        foreach ($sop as $item) {
+            $money_limit[$item->sid] = $item->limit_money;
+        }
+
         //if ($dayWeek==7|| $dayWeek == 0){die('周日无法点之前的餐了!请到`下周点餐`去点餐.');}
+
         $weekOfYear = date('W',time());
         $data['uid'] = Auth::user()->uid;
         $data['total'] = 0;
@@ -120,7 +159,16 @@ class HomeController extends Controller
                         }
                     }
                 }
-
+                // 判断点餐时间是否超时
+                if ($dayWeek == $this->week_type[$data['tmark']]  &&  time()>strtotime($t_limit[$this->time_type[$data['tmark']]]) ){
+                    return redirect('home/show')->with(['error_msg'=>'点餐失败，超过点餐时限']);
+                }elseif($dayWeek > $this->week_type[$data['tmark']] && $this->week_type[$data['tmark']] != 0){//排除周日的
+                    return redirect('home/show')->with(['error_msg'=>'点餐失败，不能点今天之前的餐']);
+                }
+                //判断点餐金额是否超额度 todo
+                if ($money_limit[$data['sid']]<$data['total']){
+                    return redirect('home/show')->with(['error_msg'=>'点餐失败，点餐金额超过限额']);
+                }
                 $data['food'] = trim($data['food'],'+');
                 $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->where('ostate','=',1)->get()->toArray();
                 if ($res){
@@ -132,7 +180,7 @@ class HomeController extends Controller
                 $data['food'] = '';
             }
         }
-        return redirect('home/show')->with(['message'=>'1']);
+        return redirect('home/show')->with(['message'=>'点餐成功']);
     }
 
     public function show()
@@ -190,7 +238,11 @@ class HomeController extends Controller
                 }
             }
         }
-
+        //获取商家，并构建商家限额数组
+        $sop = DB::table('shops')->where('state','!=',2)->get();
+        foreach ($sop as $item) {
+            $money_limit[$item->sid] = $item->limit_money;
+        }
 
         if (isset($request->order)){
             $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
@@ -233,7 +285,10 @@ class HomeController extends Controller
                         }
                     }
                 }
-
+                //判断点餐金额是否超额度 todo
+                if ($money_limit[$data['sid']]<$data['total']){
+                    return redirect('home/showNextWeek')->with(['error_msg'=>'点餐失败，点餐金额超过限额']);
+                }
                 $data['food'] = trim($data['food'],'+');
                 $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$data['week_of_year'],'uid'=>$data['uid'],'ostate'=>1,])->get()->toArray();
                 if ($res){
@@ -268,9 +323,9 @@ class HomeController extends Controller
 
     public function jishubu()
     {
-        $uname = [18=>16, 19=>17, 20=>18,21=>19,22=>20,47=>41];
-        $name = [18=>'何海平', 19=>'闵小明', 20=>'梁燕珊',21=>'刘冠生',22=>'杨南峰',47=>'樊君泽'];
-        $uid = [18,19,20,21,22,47];
+        $uname = [18=>16, 19=>17, 20=>18,21=>19,22=>20,47=>41,93=>83,94=>84];
+        $name = [18=>'何海平', 19=>'闵小明', 20=>'梁燕珊',21=>'刘冠生',22=>'杨南峰',47=>'樊君泽',93=>'郭志昊',94=>'吴顺'];
+        $uid = [18,19,20,21,22,47,93,94];
         //获取本周是今年第几周
         $weekOfYear = date('W',time());
         $fmods = fmod($weekOfYear,2);

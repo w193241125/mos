@@ -2,6 +2,15 @@
 
 @section('content')
     <div class="container">
+        @if(session('message'))
+            <div class="alert alert-success">
+                <strong> {{session('message')}}!</strong>
+            </div>
+        @elseif(session('error_msg'))
+            <div class="alert alert-danger">
+                <strong>{{session('error_msg')}}!</strong>
+            </div>
+        @endif
         <div class="header">
             <ol class="breadcrumb">
                 <li><a href="/nextweek" >下周点餐</a></li>
