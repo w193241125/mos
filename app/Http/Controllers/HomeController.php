@@ -62,7 +62,7 @@ class HomeController extends Controller
             $v->food = explode(',',trim($v->fid,','));
         }
         if ($fmods==1){
-            $limit = 21;
+            $limit = 15;
         }else{
             $limit = 18;//周日点餐需要修改这limit,为21
         }
@@ -100,7 +100,7 @@ class HomeController extends Controller
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
                 if ($shop == 0){
-                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear])->update(['ostate'=>2]);
+                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }
             }
         }
@@ -234,7 +234,7 @@ class HomeController extends Controller
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
                 if ($shop == 0){
-                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$data['week_of_year'],])->update(['ostate'=>2]);
+                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$data['week_of_year'],])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }
             }
         }
@@ -323,9 +323,9 @@ class HomeController extends Controller
 
     public function jishubu()
     {
-        $uname = [18=>16, 19=>17, 20=>18,21=>19,22=>20,47=>41,93=>83,94=>84];
-        $name = [18=>'何海平', 19=>'闵小明', 20=>'梁燕珊',21=>'刘冠生',22=>'杨南峰',47=>'樊君泽',93=>'郭志昊',94=>'吴顺'];
-        $uid = [18,19,20,21,22,47,93,94];
+        $uname = [18=>16, 19=>17, 20=>18,21=>19,22=>20,47=>41,93=>83,94=>84,95=>85];
+        $name = [18=>'何海平', 19=>'闵小明', 20=>'梁燕珊',21=>'刘冠生',22=>'杨南峰',47=>'樊君泽',93=>'郭志昊',94=>'吴顺',95=>'陈裕升'];
+        $uid = [18,19,20,21,22,47,93,94,95];
         //获取本周是今年第几周
         $weekOfYear = date('W',time());
         $fmods = fmod($weekOfYear,2);
