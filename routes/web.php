@@ -20,6 +20,7 @@ Route::group(['middleware'=>'admin'],function (){
     Route::get('/admin/user/edit/{uid?}', 'Admin\UserController@edit');
     Route::post('/admin/user/doadd', 'Admin\UserController@doadd');
     Route::post('/admin/user/doedit', 'Admin\UserController@doedit');
+    Route::get('/admin/user/ajaxReq/{cid}','Admin\UserController@ajaxReq');
 
 //后台商家设置
     Route::get('/admin/shop', 'Admin\ShopController@show');

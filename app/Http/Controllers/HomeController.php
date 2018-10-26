@@ -99,6 +99,7 @@ class HomeController extends Controller
         $data['week_of_year'] = $weekOfYear;
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
+                if(Auth::user()->company !=1 && !in_array($mark,['A','D','G','J','M','P','S'])){ continue; }
                 if ($shop == 0){
                     DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }
@@ -221,7 +222,10 @@ class HomeController extends Controller
     public function updNextWeek(Request $request)
     {
         if(Auth::user()->state==2){die('您已被禁止访问,请联系管理员~');}
-        //$dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
+        $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
+        if($dayWeek == 1 || $dayWeek==2 || $dayWeek==3 || $dayWeek==4){
+            die('现在不能点下周的餐哦~');
+        }
         //$date = new \DateTime;
         //$weekOfYear = date_get_week_number($date);
         $weekOfYear = date('W',time());
@@ -233,6 +237,7 @@ class HomeController extends Controller
         //判断是否取消订餐
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
+                if(Auth::user()->company !=1 && !in_array($mark,['A','D','G','J','M','P','S'])){ continue; }
                 if ($shop == 0){
                     DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$data['week_of_year'],])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }

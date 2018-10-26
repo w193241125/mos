@@ -33,9 +33,18 @@
                                 <form action="/admin/user/doadd" method="post">
                                     {{ csrf_field() }}
                                     <div class="panel-body">
+                                        <div class="sub-title">所属公司</div>
+                                        <div >
+                                            <select name="company" id="selectcompany" style="width: 160px">
+                                                <option value="0" >--请选择--</option>
+                                                <option value="1">三五零</option>
+                                                <option value="2">旭力</option>
+                                                <option value="3">瑞鲨</option>
+                                            </select>
+                                        </div>
                                         <div class="sub-title">用户名</div>
                                         <div>
-                                            <input type="number" name="uname" class="form-control" placeholder="请输入用户名" required value="{{$uid}}">
+                                            <input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名" required value="{{$uid}}">
                                         </div>
                                         <div class="sub-title">真实姓名</div>
                                         <div>
@@ -71,4 +80,24 @@
     </div>
     <!-- /. PAGE INNER  -->
 @stop
+@section('scripts')
+    <script>
+        //ajax提交查询商家食物列表
+        $("#selectcompany").change(function () {
+            cid = $("#selectcompany  option:selected").val();
+            console.log(cid)
+            $.ajax({
+                type: "get",
+                url: "/admin/user/ajaxReq/"+cid,
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+                },
+                success: function(data){
+                    $('#uname').val(data);
 
+                }
+            });
+        });
+    </script>
+    @endsection

@@ -156,6 +156,7 @@
         <div class="col-md-10 col-md-offset-1">
             {{--外层循环 每周菜单--}}
             @foreach($type as $t)
+                @if(Auth::user()->company !=1 && !in_array($t->tmark,['A','D','G','J','M','P','S'])) @continue  @endif
                     <div class="panel panel-default meal" style="">
                         <div class="panel-heading" style="text-align:center"><a name="{{$t->tmark}}"></a><b style="font-size: large">{{$t->tname}}</b></div>
                         @foreach($shop as $s){{--shop--}}
@@ -164,7 +165,7 @@
                         <div class="panel-heading" ><span style="color:deepskyblue"></span></div>
                         <div class="one-option">
                             <div class="panel-heading">
-                                餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" ><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元@endif <div class="price"></div></label>
+                                餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" tweek="{{$t->tweek}}"/><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元@endif <div class="price"></div></label>
                             </div>
 
                             @if($t->tmark == $m->tmark && $s->sid == $m->sid && $m->sid!=0)

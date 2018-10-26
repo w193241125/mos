@@ -25,16 +25,25 @@ class UserController extends Controller
     public function add()
     {
         $uid = DB::table('users')->orderBy('uid','desc')->first();
-        return view('admin.user.add')->with('uid', $uid->uname + 1);
+        if( is_numeric($uid->uname)){
+            $uids = $uid->uname + 1;
+        }else{
+            $uids = substr($uid->uname,1) + 1;
+            $uids = str_pad($uids,2,"0",STR_PAD_LEFT);
+            $uids = $uid->uname[0].$uids;
+        }
+        return view('admin.user.add')->with('uid', $uids);
     }
 
     public function doadd(Request $request)
     {
         $data['uname'] = $request->uname;
+        $data['company'] = $request->company;
         $data['realname'] = $request->realname;
         $password = $request->password?$request->password:'123456';
         $data['password'] = Hash::make($password);
         $data['state'] = $request->state;
+
         if ($data['state']==3 && Auth::user()->uname != 350){
             return redirect('admin/user')->with('userMsgErr','只有超级管理员才能设置管理员');
         }
@@ -56,6 +65,7 @@ class UserController extends Controller
     {
         $data['uname'] = $request->uname;
         $data['realname'] = $request->realname;
+        $data['company'] = $request->company;
         $data['state'] = $request->state;
         if ($data['state']==3 && Auth::user()->uname != 350){
             return redirect('admin/user')->with('userMsgErr','只有超级管理员才能设置管理员');
@@ -73,6 +83,22 @@ class UserController extends Controller
         }else {
             return redirect('admin/user')->with('userMsgErr','操作失败或未更改！');
         }
+    }
+
+    public function ajaxReq(Request $request)
+    {
+        $cid = $request->route('cid');
+        $user = DB::table('users')->select(['uname'])->where(['company'=>$cid])->orderByDesc('uid','desc')->first();
+        $users = json_decode(json_encode($user),true);
+        if( is_numeric($users['uname'])){
+            $uids = $users['uname'] + 1;
+        }else{
+            $uids = substr($users['uname'],1) + 1;
+            $uids = str_pad($uids,2,"0",STR_PAD_LEFT);
+            $uids = $users['uname'][0].$uids;
+        }
+        $msg = json_encode($uids,true);
+        return $msg;
     }
 
 }
