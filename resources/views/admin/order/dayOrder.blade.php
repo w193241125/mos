@@ -35,12 +35,20 @@
                                 <label for="dates" >
                                     <small><span class="">结束时间：</span><input class="layui-input" type="text" id="dates" name="dates" placeholder="yyyy-MM-dd" lay-key="2" value="{{$dates or ''}}"></small>
                                 </label>
-                                @if(Auth::user()->state == 3)商家:<select name="sid" id="">
+                                @if(Auth::user()->state == 3)
+                                    商家:<select name="sid" id="">
                                     <option value="">---全部---</option>
                                     @foreach($shop as $s)
-                                        <option value="{{$s->sid}}">{{$s->sname}}</option>
+                                        <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
                                     @endforeach
-                                </select>@endif
+                                    </select>
+
+                                    公司:<select name="company" id="">
+                                        <option value="">---全部---</option>
+                                        <option value="2" @if($company==2) selected @endif>旭力</option>
+                                        <option value="3" @if($company==3) selected @endif>瑞鲨</option>
+                                    </select>
+                                @endif
                                 <small><button class="btn btn-primary">提交</button></small>
                                 {{--<a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>--}}
                             </form>

@@ -44,6 +44,15 @@
                                         <div>
                                             <input type="text" name="fname" class="form-control" value="{{$food->fname}}" required>
                                         </div>
+                                        <div class="sub-title">食物分类</div>
+                                        <div>
+                                            <select class="selectbox" name="ftype" style="width: auto;">
+                                                <option value="0">--食物分类--</option>
+                                                <option value="1" {{$food->ftype == 1?'selected':''}}>菜</option>
+                                                <option value="2" {{$food->ftype == 2?'selected':''}}>饭</option>
+                                                <option value="3" {{$food->ftype == 3?'selected':''}}>饮料</option>
+                                            </select>
+                                        </div>
                                         <div class="sub-title">价格</div>
                                         <div>
                                             <input type="number" name="price" step="0.1" class="form-control" value="{{$food->price}}" required>

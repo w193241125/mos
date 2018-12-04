@@ -29,6 +29,11 @@ class HomeController extends Controller
         'B'=>1,'E'=>2,'H'=>3,'K'=>4,'N'=>5,'Q'=>6,'T'=>0,
         'C'=>1,'F'=>2,'I'=>3,'L'=>4,'O'=>5,'R'=>6,'U'=>0,
     ];
+    protected $week_name = [
+        'A'=>'星期一早上','D'=>'星期二早上','G'=>'星期三早上','J'=>'星期四早上','M'=>'星期五早上','P'=>'星期六早上','S'=>'星期天早上',
+        'B'=>'星期一中午','E'=>'星期二中午','H'=>'星期三中午','K'=>'星期四中午','N'=>'星期五中午','Q'=>'星期六中午','T'=>'星期天中午',
+        'C'=>'星期一晚上','F'=>'星期二晚上','I'=>'星期三晚上','L'=>'星期四晚上','O'=>'星期五晚上','R'=>'星期六晚上','U'=>'星期天晚上',
+    ];
     protected $money_limited = [];
 
     /**
@@ -89,10 +94,9 @@ class HomeController extends Controller
             $money_limit[$item->sid] = $item->limit_money;
         }
 
-        //if ($dayWeek==7|| $dayWeek == 0){die('周日无法点之前的餐了!请到`下周点餐`去点餐.');}
-
         $weekOfYear = date('W',time());
         $data['uid'] = Auth::user()->uid;
+        $data['uname'] = Auth::user()->uname;
         $data['total'] = 0;
         $data['food'] = '';
         $data['created_at'] = date('Y-m-d H:i:s');
@@ -152,9 +156,15 @@ class HomeController extends Controller
                 if (is_array($item)){
                     foreach ($item as $k=>$v) {
                         $data['sid'] = $k;
+                        $drink = 0;
                         foreach ($v as $fid=>$price) {
                             $re = DB::table('foods')->where('fid','=',$fid)->get()->toArray();
-                            //dd($re[0]->fname);
+                            if ($re[0]->ftype==3){
+                                $drink ++;
+                                if ($drink >1){
+                                    return redirect('home/show')->with(['error_msg'=>$this->week_name[$data['tmark']].'开始点的餐都失败了哦，每餐不能点超过1个饮料']);
+                                }
+                            }
                             $data['food'] .= $re[0]->fname.'+';
                             $data['total'] += $price;
                         }
@@ -166,10 +176,12 @@ class HomeController extends Controller
                 }elseif($dayWeek > $this->week_type[$data['tmark']] && $this->week_type[$data['tmark']] != 0){//排除周日的
                     return redirect('home/show')->with(['error_msg'=>'点餐失败，不能点今天之前的餐']);
                 }
+
                 //判断点餐金额是否超额度 todo
                 if ($money_limit[$data['sid']]<$data['total']){
                     return redirect('home/show')->with(['error_msg'=>'点餐失败，点餐金额超过限额']);
                 }
+
                 $data['food'] = trim($data['food'],'+');
                 $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->where('ostate','=',1)->get()->toArray();
                 if ($res){
@@ -226,10 +238,9 @@ class HomeController extends Controller
         if($dayWeek == 1 || $dayWeek==2 || $dayWeek==3 || $dayWeek==4){
             die('现在不能点下周的餐哦~');
         }
-        //$date = new \DateTime;
-        //$weekOfYear = date_get_week_number($date);
         $weekOfYear = date('W',time());
         $data['uid'] = Auth::user()->uid;
+        $data['uname'] = Auth::user()->uname;
         $data['total'] = 0;
         $data['food'] = '';
         $data['week_of_year'] = $weekOfYear + 1;// 设置周数为下周*
@@ -282,9 +293,16 @@ class HomeController extends Controller
                 if (is_array($item)){
                     foreach ($item as $k=>$v) {
                         $data['sid'] = $k;
+                        $drink = 0;
                         foreach ($v as $fid=>$price) {
                             $re = DB::table('foods')->where('fid','=',$fid)->get()->toArray();
                             //dd($re[0]->fname);
+                            if ($re[0]->ftype==3){
+                                $drink ++;
+                                if ($drink >1){
+                                    return redirect('home/showNextWeek')->with(['error_msg'=>$this->week_name[$data['tmark']].'开始点的餐都失败了哦，每餐不能点超过1个饮料']);
+                                }
+                            }
                             $data['food'] .= $re[0]->fname.'+';
                             $data['total'] += $price;
                         }
@@ -328,9 +346,9 @@ class HomeController extends Controller
 
     public function jishubu()
     {
-        $uname = [18=>16, 19=>17, 20=>18,21=>19,22=>20,47=>41,93=>83,94=>84,95=>85];
-        $name = [18=>'何海平', 19=>'闵小明', 20=>'梁燕珊',21=>'刘冠生',22=>'杨南峰',47=>'樊君泽',93=>'郭志昊',94=>'吴顺',95=>'陈裕升'];
-        $uid = [18,19,20,21,22,47,93,94,95];
+        $uname = [18=>16, 19=>17, 20=>18,21=>19,22=>20,47=>41,93=>83,94=>84,95=>85,121=>89];
+        $name = [18=>'何海平', 19=>'闵小明', 20=>'梁燕珊',21=>'刘冠生',22=>'杨南峰',47=>'樊君泽',93=>'郭志昊',94=>'吴顺',95=>'陈裕升',121=>'冼永豪'];
+        $uid = [18,19,20,21,22,47,93,94,95,121];
         //获取本周是今年第几周
         $weekOfYear = date('W',time());
         $fmods = fmod($weekOfYear,2);

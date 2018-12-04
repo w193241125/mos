@@ -39,6 +39,7 @@ Route::group(['middleware'=>'admin'],function (){
     Route::post('/admin/food/delFood/{fid}', 'Admin\FoodController@delFood');
     Route::post('/admin/food/delFoods', 'Admin\FoodController@delFoods');
 //订单
+    Route::get('/admin/companyorder','Admin\OrderController@getCompanyOrder');
     Route::get('/admin/order','Admin\OrderController@show');
     Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
     Route::get('/admin/allOrder','Admin\OrderController@allShow');

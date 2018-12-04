@@ -47,6 +47,9 @@
                 <a href="{{url('admin/order')}}"><i class="fa fa-desktop"></i> 本周订单列表</a>
             </li>
             <li>
+                <a href="{{url('admin/companyorder')}}"><i class="fa fa-desktop"></i> 瑞鲨旭力订单统计</a>
+            </li>
+            <li>
                 <a href="{{url('admin/allOrder')}}"><i class="fa fa-desktop"></i> 所有订单列表</a>
             </li>
             <li>

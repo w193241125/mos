@@ -128,7 +128,6 @@ class OrderController extends Controller
         }
         !empty($request->sid)?array_push($where,['o.sid','=',$request->sid]): array_push($where,['o.sid','!=',0]);
         if ($request->date){
-
             $start = substr($request->date,0,10);
             $end = substr($request->date,-10);
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->whereBetween('date',[$start,$end])->where($where)->where('ostate','=',1)->paginate(20);
@@ -261,11 +260,13 @@ class OrderController extends Controller
         if ($request->sid){
             $where .= " and o.sid = $sid ";
         }
-
+        if ($request->company){
+            $where .= " and u.company = $request->company ";
+        }
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
-        $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid where {$where}  GROUP BY o.sid");
+        $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid JOIN users as u ON u.uid=o.uid where {$where}  GROUP BY o.sid");
 
-        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'dates'=>$edate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,]);
+        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'dates'=>$edate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,'company'=>$request->company,]);
     }
 
     //处理早餐订单订单为分类统计
@@ -483,5 +484,52 @@ class OrderController extends Controller
             $returnArr = ['msg'=>'取消成功','code'=>200];
             return json_encode($returnArr);
         }
+    }
+
+    //获取兄弟公司订单
+    public function getCompanyOrder(Request $request)
+    {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+        //获取本周是今年第几周
+        $date = new \DateTime;
+        $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
+        $where = ['o.week_of_year'=>$weekOfYear];
+        $orderBy = 'o.uid';
+        if ($request->tmark){
+            $where['o.tmark'] = $request->tmark;
+            $orderBy = 'o.uid';
+        }
+        if ($request->sid){
+            $where['o.sid'] = $request->sid;
+        }
+        $rdate = $request->input('date');
+        $tmark = $request->tmark?$request->tmark:'';
+        $sid = $request->sid?$request->sid:'';
+        $query = DB::table('orders as o');
+        $order = $query
+            ->leftJoin('users as u','o.uid','=','u.uid')
+            ->where($where)->where('ostate','=',1)
+            ->whereIn('u.company',[2,3])
+            ->when($rdate,function ($query) use ($rdate){
+                $start = substr($rdate,0,10);
+                $end = substr($rdate,-10);
+                return $query->whereBetween('date',[$start,$end]);
+            })
+            ->orderBy($orderBy)
+            ->paginate(20);
+        //类别
+        $type = DB::table('types')->get()->toArray();
+        foreach ($type as $t) {
+            $types[$t->tmark] = $t->tname;
+        }
+        //商家搜索条件
+        $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
+        foreach ($shop as $s) {
+            $shops[$s->sid] = $s->sname;
+        }
+        //用户名
+        $user = DB::table('users')->get()->toArray();
+        return view('admin.order.companyOrder', ['order'=>$order,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'types'=>$types,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'shops'=>$shops,'rdate'=>$rdate,]);
     }
 }

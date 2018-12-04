@@ -51,6 +51,7 @@ class FoodController extends Controller
         $food['ischecked'] = $request->ischecked;
         $food['fstate'] = $request->state;
         $food['sid'] = $request->sid;
+        $food['ftype'] = $request->ftype;
 
         $res = DB::table('foods')->insert($food);
         if ($res){
@@ -82,6 +83,7 @@ class FoodController extends Controller
         $data['ischecked'] = $request->ischecked;
         $data['fstate'] = $request->state;
         $data['price'] = $request->price;
+        $data['ftype'] = $request->ftype;
         $res = DB::table('foods')->where('fid','=',$fid)->update($data);
         if ($res){
             return redirect('admin/food')->with(['foodMes'=>1]);

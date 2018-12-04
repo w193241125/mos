@@ -177,7 +177,7 @@
                                     @foreach($food as $f)
                                         @if(in_array($f->fid,$m->food)&&$s->sid == $f->sid){{--食物再食物列表,食物商家在商家表--}}
                                             <label>
-                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}">
+                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}" ftype="{{$f->ftype}}">
                                                 <span class="des">{{$f->fname}}<i>{{$f->price}}</i> 元</span>
                                             </label>
                                         @endif
@@ -262,6 +262,9 @@
                 }
             });
             $('.btn-default').click(function(e) {
+                if(!verifyDrink()){
+                    e.preventDefault();
+                }
                 if(!verify()){
                     e.preventDefault();
                 }
@@ -275,7 +278,7 @@
             din.each(function(i) {
                 if($(this).attr('checked') == 'checked'){
                     var maxPrice = parseFloat($(this).attr('limit'));
-                    var text = $(this).parents('.meal').find('b').text();
+                    var text = $(this).parents('.meal').find('b').text(); //获取 星期* 早上、中午、晚上
                     var menu = $(this).parents('.one-option').find('input:checkbox');
                     menu.each(function() {
                         var price = parseFloat($(this).next().find('i').text());
@@ -298,6 +301,39 @@
                     str += '<li>' + item + '</li>'
                 });
                 lStr = '<p>以下菜单超出限额,请您重新下单!!</p><ul>' + str + '</ul>';
+                showTip(lStr);
+            }
+        }
+        function verifyDrink() {
+            var total = 0; //饮料总数
+            var arr = [];
+            var din = $('.dining-room'); //获取当前点的哪一餐
+            din.each(function(i) {
+                if($(this).attr('checked') == 'checked'){
+                    var maxDrink = 1;//最多点多少瓶饮料
+                    var text = $(this).parents('.meal').find('b').text();//获取 星期* 早上、中午、晚上
+                    var menu = $(this).parents('.one-option').find('input:checkbox');
+                    menu.each(function() {
+                        var ftype = $(this).attr('ftype');
+                        if (ftype == 3 && $(this).attr('checked') == 'checked'){
+                            total ++;
+                        }
+                    });
+                    if(total > maxDrink) {
+                        arr.push(text);
+                    }
+                }
+                total = 0;
+            });
+            if(arr.length == 0) {
+                return true
+            } else {
+                var str = '';
+                var lStr = ''
+                arr.forEach(function(item) {
+                    str += '<li>' + item + '</li>'
+                });
+                lStr = '<p>以下菜单饮料点多了,请您重新下单!!</p><ul>' + str + '</ul>';
                 showTip(lStr);
             }
         }

@@ -57,6 +57,7 @@
                                         <th><label for="selectAll"><input type="checkbox" id="selectAll" class="checkbox-inline"> 序号</label></th>
                                         <th>商家名称</th>
                                         <th>食物名称</th>
+                                        <th>食物分类</th>
                                         <th>价格(元)</th>
                                         <th>是否自动勾选</th>
                                         <th>是否启用</th>
@@ -76,6 +77,7 @@
 
                                             <td>{{$f->sname}}</td>
                                             <td>{{$f->fname}}</td>
+                                            <td>@if($f->ftype==1)菜@elseif($f->ftype==2)饭@elseif($f->ftype==3)饮料@else未分类@endif</td>
                                             <td>{{$f->price}}</td>
                                             <td>@if($f->ischecked==1)否@elseif($f->ischecked==2)是@else其他@endif</td>
                                             <td>@if($f->fstate==1)启用@elseif($f->fstate==2)禁用@else其他@endif</td>

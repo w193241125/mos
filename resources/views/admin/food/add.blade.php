@@ -46,6 +46,15 @@
                                         <div>
                                             <input type="text" name="fname" class="form-control" placeholder="请输入食物名称" required>
                                         </div>
+                                        <div class="sub-title">食物分类</div>
+                                        <div>
+                                            <select class="selectbox" name="ftype" style="width: auto;">
+                                                <option value="0">--食物分类--</option>
+                                                <option value="1" >菜</option>
+                                                <option value="2" >饭</option>
+                                                <option value="3" >饮料</option>
+                                            </select>
+                                        </div>
                                         <div class="sub-title">价格</div>
                                         <div>
                                             <input type="number" name="price" class="form-control" step="0.1" placeholder="格式: 20" required>
