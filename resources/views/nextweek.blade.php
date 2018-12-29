@@ -173,7 +173,7 @@
                                     @foreach($food as $f)
                                         @if(in_array($f->fid,$m->food)&&$s->sid == $f->sid)
                                             <label>
-                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}">
+                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}" ftype="{{$f->ftype}}">
                                                 <span class="des">{{$f->fname}}<i>{{$f->price}}</i> 元</span>
                                             </label>
                                         @endif

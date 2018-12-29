@@ -333,7 +333,7 @@
                 arr.forEach(function(item) {
                     str += '<li>' + item + '</li>'
                 });
-                lStr = '<p>以下菜单饮料点多了,请您重新下单!!</p><ul>' + str + '</ul>';
+                lStr = '<p>以下菜单饮料点多了,每餐只能点一瓶,请您重新下单!!</p><ul>' + str + '</ul>';
                 showTip(lStr);
             }
         }

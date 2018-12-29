@@ -154,6 +154,7 @@ class HomeController extends Controller
                 }
 
                 if (is_array($item)){
+                    $m=0;
                     foreach ($item as $k=>$v) {
                         $data['sid'] = $k;
                         $drink = 0;
@@ -165,9 +166,15 @@ class HomeController extends Controller
                                     return redirect('home/show')->with(['error_msg'=>$this->week_name[$data['tmark']].'开始点的餐都失败了哦，每餐不能点超过1个饮料']);
                                 }
                             }
+                            if ($m>0){
+                                if ($sid != $re[0]->sid){
+                                    return redirect('home/showNextWeek')->with(['error_msg'=>'同一餐不能同时点2家哦！']);
+                                };
+                            }
                             $data['food'] .= $re[0]->fname.'+';
                             $data['total'] += $price;
                         }
+                        $m++;
                     }
                 }
                 // 判断点餐时间是否超时
@@ -291,9 +298,11 @@ class HomeController extends Controller
                 }
 
                 if (is_array($item)){
+                    $m = 0;
                     foreach ($item as $k=>$v) {
                         $data['sid'] = $k;
                         $drink = 0;
+
                         foreach ($v as $fid=>$price) {
                             $re = DB::table('foods')->where('fid','=',$fid)->get()->toArray();
                             //dd($re[0]->fname);
@@ -303,9 +312,16 @@ class HomeController extends Controller
                                     return redirect('home/showNextWeek')->with(['error_msg'=>$this->week_name[$data['tmark']].'开始点的餐都失败了哦，每餐不能点超过1个饮料']);
                                 }
                             }
+                            if ($m>0){
+                                if ($sid != $re[0]->sid){
+                                    return redirect('home/showNextWeek')->with(['error_msg'=>'同一餐不能同时点2家哦！']);
+                                };
+                            }
+                            $sid = $re[0]->sid;
                             $data['food'] .= $re[0]->fname.'+';
                             $data['total'] += $price;
                         }
+                        $m++;
                     }
                 }
                 //判断点餐金额是否超额度 todo
@@ -324,7 +340,7 @@ class HomeController extends Controller
                 $data['food'] = '';
             }
         }
-        return redirect('home/showNextWeek')->with(['message'=>'1']);
+        return redirect('home/showNextWeek')->with(['message'=>'点餐成功']);
     }
 
     public function showNextWeek()
