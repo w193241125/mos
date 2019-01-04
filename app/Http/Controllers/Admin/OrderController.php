@@ -25,7 +25,7 @@ class OrderController extends Controller
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
-        $where = ['week_of_year'=>$weekOfYear];
+        $where = ['week_of_year'=>$weekOfYear,'year'=>date('Y',time())];
         $orderBy = 'o.uid';
         if ($request->tmark){
             $where['o.tmark'] = $request->tmark;
@@ -157,6 +157,7 @@ class OrderController extends Controller
         $weekOfYear = date_get_week_number($date);
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $where['week_of_year'] = $weekOfYear;
+        $where['year'] = date('Y',time());
         $where['ostate'] = 1;
         $orderBy = ' o.uid ';
 
@@ -244,7 +245,7 @@ class OrderController extends Controller
         $tdate = $request->dates?$request->date.'到'.$request->dates:'本周';
         $sid = $request->sid?$request->sid:'';
 
-        $where = " week_of_year = $weekOfYear and ostate=1 ";
+        $where = " week_of_year = $weekOfYear and ostate=1 and year=".date('Y',time());
 
         $start = '';
         $end = '';
@@ -494,7 +495,7 @@ class OrderController extends Controller
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
-        $where = ['o.week_of_year'=>$weekOfYear];
+        $where = ['o.week_of_year'=>$weekOfYear,'o.year'=>date('Y',time())];
         $orderBy = 'o.uid';
         if ($request->tmark){
             $where['o.tmark'] = $request->tmark;

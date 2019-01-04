@@ -50,7 +50,7 @@
                                         <div>
                                             <select class="selectbox" name="ftype" style="width: auto;">
                                                 <option value="0">--食物分类--</option>
-                                                <option value="1" >菜</option>
+                                                <option value="1" selected >菜</option>
                                                 <option value="2" >饭</option>
                                                 <option value="3" >饮料</option>
                                             </select>

@@ -67,15 +67,19 @@ class HomeController extends Controller
             $v->food = explode(',',trim($v->fid,','));
         }
         if ($fmods==1){
-            $limit = 15;
+            $limit = 18;
         }else{
-            $limit = 18;//周日点餐需要修改这limit,为21
+            $limit = 15;//周日点餐需要修改这limit,为21
         }
         $type = DB::table('types')->limit($limit)->get();
 
         return view('home', ['menu' => $menu, 'food' => $food, 'shop' => $shop, 'dayWeek' => $dayWeek,'type'=>$type,'fmods'=>$fmods,'timelimited'=>$time_limited]);
     }
 
+    public function getAddDays()
+    {
+
+    }
     public function upd(Request $request)
     {
         if(Auth::user()->state==2){die('您已被禁止访问,请联系管理员~');}
@@ -103,9 +107,9 @@ class HomeController extends Controller
         $data['week_of_year'] = $weekOfYear;
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
-                if(Auth::user()->company !=1 && !in_array($mark,['A','D','G','J','M','P','S'])){ continue; }
+                if(Auth::user()->company !=1 && !in_array($mark,['A','D','G','J','M','P','S'])){ continue; }//非 350 用户只能点早餐
                 if ($shop == 0){
-                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
+                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear,'year'=>date('Y',time())])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }
             }
         }
@@ -190,7 +194,8 @@ class HomeController extends Controller
                 }
 
                 $data['food'] = trim($data['food'],'+');
-                $res = DB::table('orders')->where('tmark','=',$data['tmark'])->where('week_of_year','=',$weekOfYear)->where('uid','=',$data['uid'])->where('ostate','=',1)->get()->toArray();
+                $data['year'] = date('Y',time());
+                $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$weekOfYear,'uid'=>$data['uid'],'ostate'=>1, 'year'=>date('Y',time())])->get()->toArray();
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
@@ -208,8 +213,8 @@ class HomeController extends Controller
         $uid = Auth::user()->uid;
         //获取本周是今年第几周
         $weekOfYear = date('W',time());
-        $fmods = fmod($weekOfYear,2);
-        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->where('ostate','=',1)->get()->toArray();
+        $year = date('Y',time());
+        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid, 'year'=>$year])->where('ostate','=',1)->get()->toArray();
         $type = DB::table('types')->get()->toArray();
         return view('show',['order'=>$order,'type'=>$type]);
     }
@@ -231,7 +236,7 @@ class HomeController extends Controller
         if ($fmods==1){
             $limit = 18;
         }else{
-            $limit = 18;
+            $limit = 15;
         }
         $type = DB::table('types')->limit($limit)->get();
 
@@ -257,7 +262,7 @@ class HomeController extends Controller
             foreach ($request->shop as $mark=>$shop) {
                 if(Auth::user()->company !=1 && !in_array($mark,['A','D','G','J','M','P','S'])){ continue; }
                 if ($shop == 0){
-                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$data['week_of_year'],])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
+                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$data['week_of_year'],'year'=>date('Y',time())])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }
             }
         }
@@ -329,6 +334,7 @@ class HomeController extends Controller
                     return redirect('home/showNextWeek')->with(['error_msg'=>'点餐失败，点餐金额超过限额']);
                 }
                 $data['food'] = trim($data['food'],'+');
+                $data['year'] = date('Y',time());
                 $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$data['week_of_year'],'uid'=>$data['uid'],'ostate'=>1,])->get()->toArray();
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
@@ -353,9 +359,9 @@ class HomeController extends Controller
         $weekOfYear = date('W',time())+1;
         //if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date);}
         $fmods = fmod($weekOfYear,2);
-
+        $year = date('Y',time());
         //$food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
-        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid])->where('ostate','=',1)->get()->toArray();
+        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'uid'=>$uid, 'year'=>$year])->where('ostate','=',1)->get()->toArray();
         $type = DB::table('types')->get()->toArray();
         return view('showNextWeek',['order'=>$order,'type'=>$type,'fmods'=>$fmods]);
     }
@@ -368,7 +374,7 @@ class HomeController extends Controller
         //获取本周是今年第几周
         $weekOfYear = date('W',time());
         $fmods = fmod($weekOfYear,2);
-        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear])->whereIn('uid',$uid)->where('ostate','=',1)->get()->toArray();
+        $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'year'=>date('Y',time())])->whereIn('uid',$uid)->where('ostate','=',1)->get()->toArray();
         $type = DB::table('types')->get()->toArray();
 //        dd($order);
         return view('jishubu',['order'=>$order,'type'=>$type, 'name'=>$name, 'uname'=>$uname]);
