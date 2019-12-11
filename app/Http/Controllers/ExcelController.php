@@ -20,6 +20,6 @@ class ExcelController extends Controller
             $excel->sheet('score', function($sheet) use ($cellData){
                 $sheet->rows($cellData);
             });
-        })->export('xls');
+        })->export('xlsx');
     }
 }

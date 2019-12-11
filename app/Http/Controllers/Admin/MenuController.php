@@ -6,14 +6,16 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class MenuController extends Controller
 {
     public function __construct(Request $request)
     {
         //dd($request->user());
-        $this->middleware('auth');
+        //$this->middleware('auth');
     }
+
 
     public function show(Request $request)
     {
@@ -167,9 +169,11 @@ class MenuController extends Controller
         return $msg;
     }
 
-    //一键设置早餐菜单
+    //一键设置早餐菜单 todo
     public function setBreakfast()
     {
+        //获取用户 truename
+
         //shops表当前早餐商家id为4 ,若更改商家,则需要修改where 条件 todo
         $id_arr = DB::table('foods')->select(['fid'])->where(['sid'=>4,'fstate'=>1])->get();
         $id = '';
@@ -178,6 +182,17 @@ class MenuController extends Controller
         }
         $id = trim($id,',');
         $update = DB::table('menus')->where('sid','=',4)->update(['fid'=>$id]);
+        dd($update);
+
+        //shops表当前早餐商家id为7 ,若更改商家,则需要修改where 条件 todo
+        $id_arr = DB::table('foods')->select(['fid'])->where(['sid'=>7,'fstate'=>1])->get();
+        $id = '';
+        foreach ($id_arr as $item) {
+            $id .= $item->fid.',';
+        }
+        $id = trim($id,',');
+        $update = DB::table('menus')->where('sid','=',7)->update(['fid'=>$id]);
+
         echo json_encode(['menuMsg'=>1]);
 
     }
