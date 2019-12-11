@@ -10,15 +10,18 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+//Route::get('/helper', 'Admin\MenuController@geiUserMD5_IMEI')->name('helper');
 Route::group(['middleware'=>'admin'],function (){
     //后台主页
     Route::get('/admin', 'Admin\IndexController@show');
 //后台用户管理
     Route::get('/admin/user', 'Admin\UserController@show');
+    Route::post('/admin/user', 'Admin\UserController@show');
     Route::get('/admin/user/add', 'Admin\UserController@add');
     Route::get('/admin/user/edit/{uid?}', 'Admin\UserController@edit');
     Route::post('/admin/user/doadd', 'Admin\UserController@doadd');
     Route::post('/admin/user/doedit', 'Admin\UserController@doedit');
+    Route::get('/admin/user/ajaxReq/{cid}','Admin\UserController@ajaxReq');
 
 //后台商家设置
     Route::get('/admin/shop', 'Admin\ShopController@show');
@@ -37,6 +40,7 @@ Route::group(['middleware'=>'admin'],function (){
     Route::post('/admin/food/delFood/{fid}', 'Admin\FoodController@delFood');
     Route::post('/admin/food/delFoods', 'Admin\FoodController@delFoods');
 //订单
+    Route::get('/admin/companyorder','Admin\OrderController@getCompanyOrder');
     Route::get('/admin/order','Admin\OrderController@show');
     Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
     Route::get('/admin/allOrder','Admin\OrderController@allShow');

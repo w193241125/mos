@@ -25,7 +25,7 @@ class OrderController extends Controller
         $date = new \DateTime;
         $weekOfYear = date_get_week_number($date);
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
-        $where = ['week_of_year'=>$weekOfYear];
+        $where = ['week_of_year'=>$weekOfYear,'year'=>date('Y',time())];
         $orderBy = 'o.uid';
         if ($request->tmark){
             $where['o.tmark'] = $request->tmark;
@@ -118,6 +118,7 @@ class OrderController extends Controller
         $sid = $request->sid?$request->sid:'';
         $sdate = $request->date?$request->date:'';
         $uname = $request->uname?$request->uname:'';
+        $name = $request->name?$request->name:'';
         $start = 1;
         $end = 1;
         $where = [];
@@ -126,9 +127,14 @@ class OrderController extends Controller
             $uid = $id[0]->uid;
             array_push($where,['o.uid','=',$uid]);
         }
+        if ($name){
+            $id = DB::table('users')->select('uid')->where('realname','like',"%$name%")->get();
+            $uid = $id[0]->uid;
+            array_push($where,['o.uid','=',$uid]);
+        }
+
         !empty($request->sid)?array_push($where,['o.sid','=',$request->sid]): array_push($where,['o.sid','!=',0]);
         if ($request->date){
-
             $start = substr($request->date,0,10);
             $end = substr($request->date,-10);
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->whereBetween('date',[$start,$end])->where($where)->where('ostate','=',1)->paginate(20);
@@ -143,7 +149,7 @@ class OrderController extends Controller
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
         $user = DB::table('users')->get()->toArray();
 
-        return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end,'uname'=>$uname]);
+        return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end,'uname'=>$uname,'name'=>$name]);
     }
 
 
@@ -158,6 +164,7 @@ class OrderController extends Controller
         $weekOfYear = date_get_week_number($date);
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $where['week_of_year'] = $weekOfYear;
+        $where['year'] = date('Y',time());
         $where['ostate'] = 1;
         $orderBy = ' o.uid ';
 
@@ -240,17 +247,18 @@ class OrderController extends Controller
         $weekOfYear = date_get_week_number($date);
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $where['week_of_year'] = $weekOfYear;
-        $sdate = $request->date?$request->date:'';
-        $tdate = $request->date?$request->date:'本周';
+        $sdate = $request->date?$request->date:' ';
+        $edate = $request->dates?$request->dates:' ';
+        $tdate = $request->dates?$request->date.'到'.$request->dates:'本周';
         $sid = $request->sid?$request->sid:'';
 
-        $where = " week_of_year = $weekOfYear and ostate=1 ";
+        $where = " week_of_year = $weekOfYear and ostate=1 and year=".date('Y',time());
 
         $start = '';
         $end = '';
         if ($request->date){
-            $start = substr($request->date,0,10);
-            $end = substr($request->date,-10);
+            $start = $request->date;
+            $end = $request->dates;
             $where = " `date`>='$start' AND `date`<='$end' and ostate=1 ";
         }
         if ($state == 4){
@@ -260,48 +268,97 @@ class OrderController extends Controller
         if ($request->sid){
             $where .= " and o.sid = $sid ";
         }
-
+        if ($request->company){
+            $where .= " and u.company = $request->company ";
+        }
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
-        $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid where {$where}  GROUP BY o.sid");
+        $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid JOIN users as u ON u.uid=o.uid where {$where}  GROUP BY o.sid");
 
-        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,]);
+        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'dates'=>$edate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,'company'=>$request->company,]);
     }
 
-    //处理`包大哥`订单为分类统计
+    //处理早餐订单订单为分类统计
     public function countBySort()
     {
         ////获取本周是今年第几周
-        //$date = new \DateTime;
-        //$weekOfYear = date_get_week_number($date);
-        //$dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
-        $sname = Auth::user()->realname;
-        $sidObj = DB::table('shops')->where(['sname'=>$sname])->get();
-        $sid = $sidObj[0]->sid;
-        $date = date('Y-m-d',time());//获取今天天日期
-        $edate = date('Y-m-d',time()+86400);//获取明天天日期
+        $state = Auth::user()->state;
+        if ($state==3){
+            $sid = '';
+            $date = date('Y-m-d',time());//获取今天天日期
+            $edate = date('Y-m-d',time()+86400);//获取明天天日期
 
-        $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>$sid,'ostate'=>1])->get()->toArray();
-        $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>$sid,'ostate'=>1])->get()->toArray();
-        $food_arr_today = [];
-        foreach ($today_order as $o) {
-            $food_arr_tmp = explode('+',$o->food);
-            foreach ($food_arr_tmp as $f) {
-                array_push($food_arr_today,$f);
+            $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>4,'ostate'=>1])->get()->toArray();
+            $today_order7 = DB::table('orders')->where(['date'=>$date,'sid'=>7,'ostate'=>1])->get()->toArray();
+            $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>4,'ostate'=>1])->get()->toArray();
+            $next_order7 = DB::table('orders')->where(['date'=>$edate,'sid'=>7,'ostate'=>1])->get()->toArray();
+            $food_arr_today = [];
+            foreach ($today_order as $o) {
+                $food_arr_tmp = explode('+',$o->food);
+                foreach ($food_arr_tmp as $f) {
+                    array_push($food_arr_today,$f);
+                }
             }
+            $food_arr_today7 = [];
+            foreach ($today_order7 as $o) {
+                $food_arr_tmp7 = explode('+',$o->food);
+                foreach ($food_arr_tmp7 as $f) {
+                    array_push($food_arr_today7,$f);
+                }
+            }
+
+            $food_arr_next = [];
+            foreach ($next_order as $o) {
+                $food_arr_tmp = explode('+',$o->food);
+                foreach ($food_arr_tmp as $f) {
+                    array_push($food_arr_next,$f);
+                }
+            }
+
+            $food_arr_next7 = [];
+            foreach ($next_order7 as $o) {
+                $food_arr_tmp7 = explode('+',$o->food);
+                foreach ($food_arr_tmp7 as $f) {
+                    array_push($food_arr_next7,$f);
+                }
+            }
+
+            $food_count_today = array_count_values($food_arr_today);
+            $food_count_today7 = array_count_values($food_arr_today7);
+            $food_count_next7 = array_count_values($food_arr_next7);
+            $food_count_next = array_count_values($food_arr_next);
+
+            return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next,'food_count_today7'=>$food_count_today7,'food_count_next7'=>$food_count_next7]);
+        }elseif($state==4){
+            $sname = Auth::user()->realname;
+            $sidObj = DB::table('shops')->where(['sname'=>$sname])->get();
+            $sid = $sidObj[0]->sid;
+            $date = date('Y-m-d',time());//获取今天天日期
+            $edate = date('Y-m-d',time()+86400);//获取明天天日期
+
+            $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>$sid,'ostate'=>1])->get()->toArray();
+            $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>$sid,'ostate'=>1])->get()->toArray();
+            $food_arr_today = [];
+            foreach ($today_order as $o) {
+                $food_arr_tmp = explode('+',$o->food);
+                foreach ($food_arr_tmp as $f) {
+                    array_push($food_arr_today,$f);
+                }
+            }
+
+            $food_arr_next = [];
+            foreach ($next_order as $o) {
+                $food_arr_tmp = explode('+',$o->food);
+                foreach ($food_arr_tmp as $f) {
+                    array_push($food_arr_next,$f);
+                }
+            }
+
+            $food_count_today = array_count_values($food_arr_today);
+            $food_count_next = array_count_values($food_arr_next);
+
+            return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next]);
         }
 
-        $food_arr_next = [];
-        foreach ($next_order as $o) {
-            $food_arr_tmp = explode('+',$o->food);
-            foreach ($food_arr_tmp as $f) {
-                array_push($food_arr_next,$f);
-            }
-        }
-
-        $food_count_today = array_count_values($food_arr_today);
-        $food_count_next = array_count_values($food_arr_next);
-
-        return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next]);
     }
     
     //批量取消本周订单 todo
@@ -435,5 +492,52 @@ class OrderController extends Controller
             $returnArr = ['msg'=>'取消成功','code'=>200];
             return json_encode($returnArr);
         }
+    }
+
+    //获取兄弟公司订单
+    public function getCompanyOrder(Request $request)
+    {
+        $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
+        //获取本周是今年第几周
+        $date = new \DateTime;
+        $weekOfYear = date_get_week_number($date);
+        if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
+        $where = ['o.week_of_year'=>$weekOfYear,'o.year'=>date('Y',time())];
+        $orderBy = 'o.uid';
+        if ($request->tmark){
+            $where['o.tmark'] = $request->tmark;
+            $orderBy = 'o.uid';
+        }
+        if ($request->sid){
+            $where['o.sid'] = $request->sid;
+        }
+        $rdate = $request->input('date');
+        $tmark = $request->tmark?$request->tmark:'';
+        $sid = $request->sid?$request->sid:'';
+        $query = DB::table('orders as o');
+        $order = $query
+            ->leftJoin('users as u','o.uid','=','u.uid')
+            ->where($where)->where('ostate','=',1)
+            ->whereIn('u.company',[2,3])
+            ->when($rdate,function ($query) use ($rdate){
+                $start = substr($rdate,0,10);
+                $end = substr($rdate,-10);
+                return $query->whereBetween('date',[$start,$end]);
+            })
+            ->orderBy($orderBy)
+            ->paginate(20);
+        //类别
+        $type = DB::table('types')->get()->toArray();
+        foreach ($type as $t) {
+            $types[$t->tmark] = $t->tname;
+        }
+        //商家搜索条件
+        $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
+        foreach ($shop as $s) {
+            $shops[$s->sid] = $s->sname;
+        }
+        //用户名
+        $user = DB::table('users')->get()->toArray();
+        return view('admin.order.companyOrder', ['order'=>$order,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'types'=>$types,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'shops'=>$shops,'rdate'=>$rdate,]);
     }
 }

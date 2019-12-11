@@ -159,15 +159,18 @@
         <div class="col-md-10 col-md-offset-1">
             {{--外层循环 每周菜单--}}
             @foreach($type as $t)
-                    <div class="panel panel-default meal" style="">
+                    <div class="panel panel-default meal" style="" >
                         <div class="panel-heading" style="text-align:center"><a name="{{$t->tmark}}"></a><b style="font-size: large">{{$t->tname}}</b></div>
                         @foreach($shop as $s){{--shop--}}
                         @foreach($menu as $m){{--menu--}}
+                        {{--@if(Auth::user()->company !=1 && !in_array($m->tmark,['A','D','G','J','M','P','S'])) @continue  @endif--}}
                         @if($t->tmark === $m->tmark && $s->sid === $m->sid){{--同一餐, 同一商店--}}
-                        <div class="panel-heading" ><span style="color:red;font-weight:700;">@if($s->sid==2)请注意城市简餐的米饭现在要点了才有!!!!@endif</span></div>
+                        <div class="panel-heading" >
+                            <span style="color:red;font-weight:700;">@if($s->sid==2)请注意城市简餐的米饭现在要点了才有!!!!@endif</span>
+                        </div>
                         <div class="one-option">
                             <div class="panel-heading">
-                                餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" ><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元 @endif <div class="price"></div></label>
+                                餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" tweek="{{$t->tweek}}"><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元 @endif <div class="price"></div></label>
                             </div>
 
                             @if($t->tmark == $m->tmark && $s->sid == $m->sid && $m->sid!=0) {{--菜单时间在时间分类里面,菜单商家在商家表里面,商家不是测试商家--}}
@@ -175,7 +178,7 @@
                                     @foreach($food as $f)
                                         @if(in_array($f->fid,$m->food)&&$s->sid == $f->sid){{--食物再食物列表,食物商家在商家表--}}
                                             <label>
-                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}">
+                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}" ftype="{{$f->ftype}}">
                                                 <span class="des">{{$f->fname}}<i>{{$f->price}}</i> 元</span>
                                             </label>
                                         @endif
@@ -210,7 +213,8 @@
             // 选择一家餐厅后，其它餐厅菜单不可点击
             $('.dining-room').click(function() {
                 var index = $(this).parents('.meal').index();
-                var day = Math.floor(index/3) + 1;
+//                var day = Math.floor(index/3) + 1;
+                var day = $(this).attr('tweek');
                 var meal = index % 3;
                 if(beforeDay(day,  meal)) {
                     var w = $(this).parents('.one-option').siblings('.one-option');
@@ -259,6 +263,9 @@
                 }
             });
             $('.btn-default').click(function(e) {
+                if(!verifyDrink()){
+                    e.preventDefault();
+                }
                 if(!verify()){
                     e.preventDefault();
                 }
@@ -266,13 +273,13 @@
         });
 
         function verify() {
-            var total = 0//中晚餐总价
+            var total = 0 //中晚餐总价
             var arr = [];
             var din = $('.dining-room')
             din.each(function(i) {
                 if($(this).attr('checked') == 'checked'){
                     var maxPrice = parseFloat($(this).attr('limit'));
-                    var text = $(this).parents('.meal').find('b').text();
+                    var text = $(this).parents('.meal').find('b').text(); //获取 星期* 早上、中午、晚上
                     var menu = $(this).parents('.one-option').find('input:checkbox');
                     menu.each(function() {
                         var price = parseFloat($(this).next().find('i').text());
@@ -298,6 +305,39 @@
                 showTip(lStr);
             }
         }
+        function verifyDrink() {
+            var total = 0; //饮料总数
+            var arr = [];
+            var din = $('.dining-room'); //获取当前点的哪一餐
+            din.each(function(i) {
+                if($(this).attr('checked') == 'checked'){
+                    var maxDrink = {{$max_drink}};//最多点多少瓶饮料
+                    var text = $(this).parents('.meal').find('b').text();//获取 星期* 早上、中午、晚上
+                    var menu = $(this).parents('.one-option').find('input:checkbox');
+                    menu.each(function() {
+                        var ftype = $(this).attr('ftype');
+                        if (ftype == 3 && $(this).attr('checked') == 'checked'){
+                            total ++;
+                        }
+                    });
+                    if(total > maxDrink) {
+                        arr.push(text);
+                    }
+                }
+                total = 0;
+            });
+            if(arr.length == 0) {
+                return true
+            } else {
+                var str = '';
+                var lStr = ''
+                arr.forEach(function(item) {
+                    str += '<li>' + item + '</li>'
+                });
+                lStr = '<p>以下菜单饮料点多了,每餐只能点2瓶,请您重新下单!!</p><ul>' + str + '</ul>';
+                showTip(lStr);
+            }
+        }
         function showTip(message) {
             $('.mes').html(message);
             $('.shade').fadeIn();
@@ -319,7 +359,6 @@
                     dinner = new Date();
                 //07:00:00
                 var morningTime = $('#time_limited_1').attr('timelimited'), midTime = $('#time_limited_2').attr('timelimited'), dinnerTime = $('#time_limited_3').attr('timelimited');
-                console.log(morningTime);
                 if(errand == 0) {
                     if(index == 0) {
                         var mt = Date.parse(setTime(morning, morningTime))

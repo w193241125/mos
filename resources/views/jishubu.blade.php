@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('titles')
+    技术部
+@endsection
 @section('content')
     <div class="container">
         <div class="header">
@@ -26,7 +28,7 @@
                         <td>
                             @foreach($order as $o)
                                 @if($t->tmark == $o->tmark)
-                                    {{$uname[$o->uid]}}.{{$name[$o->uid]}}: {{$o->food}}<br>
+                                    {{$o->uname}}.{{$name[$o->uname]}}: {{$o->food}}<br>
                                 @endif
                             @endforeach
                         </td>
@@ -37,14 +39,7 @@
             </table>
         </div>
         <div class="row">
-            {{--@foreach($type as $t)--}}
-            {{--@foreach($order as $o)--}}
 
-            {{--@if($t->tmark == $o->tmark)--}}
-            {{--{{$t->tname}} :{{$o->food}}<br>--}}
-            {{--@endif--}}
-            {{--@endforeach--}}
-            {{--@endforeach--}}
         </div>
     </div>
 @endsection

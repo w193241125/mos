@@ -32,6 +32,15 @@
                                     <input type="hidden" name="uid" value="{{$user->uid}}">
                                     {{ csrf_field() }}
                                     <div class="panel-body">
+                                        <div class="sub-title">所属公司</div>
+                                        <div>
+                                            <select name="company" id="" style="width: 160px">
+                                                <option value="0" >--请选择--</option>
+                                                <option value="1" @if($user->company==1) selected @endif>三五零</option>
+                                                <option value="2" @if($user->company==2) selected @endif>旭力</option>
+                                                <option value="3" @if($user->company==3) selected @endif>瑞鲨</option>
+                                            </select>
+                                        </div>
                                         <div class="sub-title">用户名</div>
                                         <div>
                                             <input type="text" name="uname" class="form-control" placeholder="请输入用户名" value="{{$user->uname}}"  required>

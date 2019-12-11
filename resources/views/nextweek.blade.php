@@ -164,7 +164,7 @@
                         <div class="panel-heading" ><span style="color:deepskyblue"></span></div>
                         <div class="one-option">
                             <div class="panel-heading">
-                                餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" ><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元@endif <div class="price"></div></label>
+                                餐厅:<label><input class="dining-room" limit="{{$s->limit_money}}" type="radio" name="shop[{{$t->tmark}}]" value="{{$m->sid}}" tweek="{{$t->tweek}}"/><span>{{$s->sname}}</span> @if($s->sid != 0)　限额:{{$s->limit_money}}元@endif <div class="price"></div></label>
                             </div>
 
                             @if($t->tmark == $m->tmark && $s->sid == $m->sid && $m->sid!=0)
@@ -172,7 +172,7 @@
                                     @foreach($food as $f)
                                         @if(in_array($f->fid,$m->food)&&$s->sid == $f->sid)
                                             <label>
-                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}">
+                                                <input mark="food{{$t->tmark}}" type="checkbox" name="order[{{$t->tmark}}][{{$m->sid}}][{{$f->fid}}]" value="{{$f->price}}" ftype="{{$f->ftype}}">
                                                 <span class="des">{{$f->fname}}<i>{{$f->price}}</i> 元</span>
                                             </label>
                                         @endif
@@ -198,13 +198,8 @@
 @section('scripts')
     <script>
         $(function(){
-            // $('.panel-body input:checkbox').attr('disabled', 'disabled')
             // 选择一家餐厅后，其它餐厅菜单不可点击
             $('.dining-room').click(function() {
-                // var index = $(this).parents('.meal').index();
-                // var day = Math.floor(index/3) + 1;
-                // var meal = index % 3;
-                // if(beforeDay(day,  meal)) {
                     var w = $(this).parents('.one-option').siblings('.one-option');
                     var input = w.find('.panel-body input:checkbox');
                     w.find('input:radio').removeAttr('checked');
@@ -212,10 +207,6 @@
                     input.prop('checked', false).removeAttr('checked');
                     $(this).parents('.one-option').find('input:checkbox').attr("disabled",false);
                     w.find('input:radio').siblings('.price').html('')
-                //
-                // } else {
-                //     $(this).prop('checked', false).removeAttr('checked');
-                // }
             });
             $('.btn-success').click(function() {
                 $('.tip').fadeOut();
@@ -251,6 +242,9 @@
                 }
             });
             $('.btn-default').click(function(e) {
+                if(!verifyDrink()){
+                    e.preventDefault();
+                }
                 if(!verify()){
                     e.preventDefault();
                 }
@@ -290,48 +284,45 @@
                 showTip(lStr);
             }
         }
+        function verifyDrink() {
+            var total = 0; //饮料总数
+            var arr = [];
+            var din = $('.dining-room'); //获取当前点的哪一餐
+            din.each(function(i) {
+                if($(this).attr('checked') == 'checked'){
+                    var maxDrink = {{$max_drink}};//最多点多少瓶饮料
+                    var text = $(this).parents('.meal').find('b').text();//获取 星期* 早上、中午、晚上
+                    var menu = $(this).parents('.one-option').find('input:checkbox');
+                    menu.each(function() {
+                        var ftype = $(this).attr('ftype');
+                        if (ftype == 3 && $(this).attr('checked') == 'checked'){
+                            total ++;
+                        }
+                    });
+                    if(total > maxDrink) {
+                        arr.push(text);
+                    }
+                }
+                total = 0;
+            });
+            if(arr.length == 0) {
+                return true
+            } else {
+                var str = '';
+                var lStr = ''
+                arr.forEach(function(item) {
+                    str += '<li>' + item + '</li>'
+                });
+                lStr = '<p>以下菜单饮料点多了,请您重新下单!!</p><ul>' + str + '</ul>';
+                showTip(lStr);
+            }
+        }
         function showTip(message) {
             $('.mes').html(message);
             $('.shade').fadeIn();
             $('.tip').fadeIn();
             return;
         }
-        // function beforeDay(day, index) {
-        //     var start = new Date();
-        //     var errand = start.getDay() - day;
-        //     var now = Date.now()
-        //     if(errand > 0) {
-        //         showTip('不能选择今天之前的餐厅哦！！');
-        //         return false;
-        //     } else {
-        //         var morning = new Date(),
-        //             mid = new Date(),
-        //             dinner = new Date();
-        //         var morningTime = [7, 0, 0, 0], midTime = [10, 30, 0, 0], dinnerTime = [16, 0, 0, 0];
-        //         if(errand == 0) {
-        //             if(index == 0) {
-        //                 var mt = Date.parse(setTime(morning, morningTime))
-        //                 if(now > mt) {
-        //                     showTip('早餐请在7:00之前下单哦！！');
-        //                     return false;
-        //                 }
-        //             } else if (index == 1) {
-        //                 var midT = Date.parse(setTime(mid, midTime));
-        //                 if(now > midT) {
-        //                     showTip('中餐请在10:30之前下单哦！！');
-        //                     return false;
-        //                 }
-        //             } else if (index == 2) {
-        //                 var dinnerT = Date.parse(setTime(dinner, dinnerTime))
-        //                 if(now > dinnerT) {
-        //                     showTip('晚餐请在16:00之前下单哦！！');
-        //                     return false;
-        //                 }
-        //             }
-        //         }
-        //         return true
-        //     }
-        // }
         function setTime(object, time) {
             object.setHours(time[0]);
             object.setMinutes(time[1]);

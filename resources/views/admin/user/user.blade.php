@@ -34,7 +34,18 @@
                                         <strong>{{session('userMsgErr')}}!</strong>
                                     </div>
                                  @endif
-                                    <a href="/admin/user/add" class="btn btn-primary">添加用户</a>
+                                    <form action="/admin/user" class="form-inline" method="post">
+                                        {{csrf_field()}}
+                                        用户状态:<select name="state" id="">
+                                            <option value="">---全部---</option>
+                                            <option value="1">启用</option>
+                                            <option value="2">禁用</option>
+                                            <option value="3">管理员</option>
+                                            <option value="4">商家</option>
+                                        </select>
+                                        <small><button class="btn btn-primary">提交</button></small>
+                                        <a href="/admin/user/add" class="btn btn-primary">添加用户</a>
+                                    </form>
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
@@ -43,7 +54,7 @@
                                         <tr>
                                             <th>用户名</th>
                                             <th>真实姓名</th>
-                                            {{--<th>联系方式</th>--}}
+                                            <th>所属公司</th>
                                             <th>是否启用</th>
                                             <th>操作</th>
                                         </tr>
@@ -53,7 +64,7 @@
                                         <tr class="gradeA">
                                             <td>{{$u->uname}}</td>
                                             <td>{{$u->realname}}</td>
-{{--                                            <td>{{$u->phone}}</td>--}}
+                                            <td>@if($u->company ==1) 三五零 @elseif($u->company ==2) 旭力 @elseif($u->company ==3) 瑞鲨 @endif</td>
                                             <td>@if($u->state==1)启用@elseif($u->state==2)禁用@elseif($u->state==3)管理员@elseif($u->state==4)商家@endif</td>
                                             <td><a href="{{url('admin/user/edit/').'/'.$u->uid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
