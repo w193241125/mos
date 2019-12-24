@@ -342,8 +342,8 @@ class HomeController extends Controller
 
     public function jishubu()
     {
-        $uname = [16,17,19,20,41,83,84,85,89,96,102];
-        $name = [16=>'何海平',17=>'闵小明',19=>'刘冠生',20=>'杨南峰',41=>'樊君泽',83=>'郭志昊',84=>'吴顺',85=>'陈裕升',89=>'冼永豪',96=>'姚秋号',102=>'林尤鑫',];
+        $name = [16=>'何海平',17=>'闵小明',19=>'刘冠生',20=>'杨南峰',41=>'樊君泽',83=>'郭志昊',84=>'吴顺',85=>'陈裕升',89=>'冼永豪',96=>'姚秋号',102=>'林尤鑫',130=>'李锦明',110=>'陈诗友',44=>'范文彬'];
+        $uname = array_keys($name);
         //获取本周是今年第几周
         $weekOfYear = date('W',time());
         $order = DB::table('orders')->where(['week_of_year'=>$weekOfYear,'year'=>date('Y',time())])->whereIn('uname',$uname)->where('ostate','=',1)->get()->toArray();
