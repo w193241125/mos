@@ -84,7 +84,7 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['date'=>$date,'sid'=>$sid,'uname'=>$uanme,'name'=>$name])->links() }}
+                                {{ $order->appends(['date'=>$date,'sid'=>$sid,'uname'=>$uname,'name'=>$name])->links() }}
                             </div>
 
                         </div>
