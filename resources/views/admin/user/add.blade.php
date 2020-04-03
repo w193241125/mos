@@ -42,9 +42,9 @@
                                                 <option value="3">瑞鲨</option>
                                             </select>
                                         </div>
-                                        <div class="sub-title">用户名</div>
+                                        <div class="sub-title">用户名(上一个:{{$uid}})</div>
                                         <div>
-                                            <input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名" required value="{{$uid}}">
+                                            <input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名" required value="">
                                         </div>
                                         <div class="sub-title">真实姓名</div>
                                         <div>
@@ -100,4 +100,4 @@
             });
         });
     </script>
-    @endsection
+@endsection

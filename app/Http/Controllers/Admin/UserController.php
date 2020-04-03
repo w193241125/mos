@@ -31,13 +31,7 @@ class UserController extends Controller
     public function add()
     {
         $uid = DB::table('users')->orderBy('uid','desc')->whereNotIn('state',[4])->first();
-        if( is_numeric($uid->uname)){
-            $uids = $uid->uname + 1;
-        }else{
-            $uids = substr($uid->uname,1) + 1;
-            $uids = str_pad($uids,2,"0",STR_PAD_LEFT);
-            $uids = $uid->uname[0].$uids;
-        }
+        $uids = $uid->uname;
         return view('admin.user.add')->with('uid', $uids);
     }
 
