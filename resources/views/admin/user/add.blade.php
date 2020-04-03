@@ -40,6 +40,7 @@
                                                 <option value="1">三五零</option>
                                                 <option value="2">旭力</option>
                                                 <option value="3">瑞鲨</option>
+                                                <option value="4">牛越</option>
                                             </select>
                                         </div>
                                         <div class="sub-title">用户名(上一个:{{$uid}})</div>

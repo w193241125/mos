@@ -39,6 +39,7 @@
                                                 <option value="1" @if($user->company==1) selected @endif>三五零</option>
                                                 <option value="2" @if($user->company==2) selected @endif>旭力</option>
                                                 <option value="3" @if($user->company==3) selected @endif>瑞鲨</option>
+                                                <option value="4" @if($user->company==4) selected @endif>牛越</option>
                                             </select>
                                         </div>
                                         <div class="sub-title">用户名</div>
