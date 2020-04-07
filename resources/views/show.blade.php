@@ -27,7 +27,6 @@
                 </thead>
                 <tbody>
                 @foreach($type as $t)
-                    @if(Auth::user()->company !=1 && !in_array($t->tmark,['A','D','G','J','M','P','S'])) @continue  @endif
                 <tr>
                     <td>
                         {{$t->tname}}

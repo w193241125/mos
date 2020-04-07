@@ -163,7 +163,7 @@
                         <div class="panel-heading" style="text-align:center"><a name="{{$t->tmark}}"></a><b style="font-size: large">{{$t->tname}}</b></div>
                         @foreach($shop as $s){{--shop--}}
                         @foreach($menu as $m){{--menu--}}
-                        {{--@if(Auth::user()->company !=1 && !in_array($m->tmark,['A','D','G','J','M','P','S'])) @continue  @endif--}}
+                        @if(Auth::user()->company ==4 && !in_array($s->sid, [14,15])) @continue  @endif
                         @if($t->tmark === $m->tmark && $s->sid === $m->sid){{--同一餐, 同一商店--}}
                         <div class="panel-heading" >
                             <span style="color:red;font-weight:700;">@if($s->sid==2)请注意城市简餐的米饭现在要点了才有!!!!@endif</span>
