@@ -196,7 +196,7 @@ class OrderController extends Controller
             $where[] = ['o.tmark','=',$request->tmark];
             $orderBy = ' o.uid ';
         }
-        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->orderBy('o.uid')->orderBy('o.tmark')->paginate(20);
+        $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->orderBy('o.created_at')->orderBy('o.tmark')->paginate(20);
 
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
