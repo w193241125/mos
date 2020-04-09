@@ -28,9 +28,11 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                         </div>
-
+{{-- --------------------------------------今日餐--------------------------------------------}}
+                        @if(Auth::user()->state==4)
+                        @foreach($food_count_today as $mark=>$marks)
                         <div class="panel-body">
-                            <h1 class="page-header">今日:</h1>
+                            <h1 class="page-header">{{$week_name[$mark]}}:</h1>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
@@ -40,7 +42,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($food_count_today as $k=>$d)
+                                    @foreach($marks as $k=>$d)
                                         <tr class="gradeA">
                                             <td>{{$k}}</td>
                                             <td>{{$d}}</td>
@@ -50,8 +52,10 @@
                                     </tbody>
                                 </table>
                             </div>
+                            @endforeach
+                        @endif
 
-                            @if(Auth::user()->state==3)
+                        @if(Auth::user()->state==3)
                             <h1 class="page-header">今日:</h1>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -62,7 +66,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($food_count_today7 as $k7=>$d7)
+                                    @foreach($food_count_today as $k7=>$d7)
                                         <tr class="gradeA">
                                             <td>{{$k7}}</td>
                                             <td>{{$d7}}</td>
@@ -73,9 +77,32 @@
                                 </table>
                                 {{--{{ $order->appends(['date'=>$date,'sid'=>$sid,])->links() }}--}}
                             </div>
-                            @endif
+                                <h1 class="page-header">今日:</h1>
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                        <thead>
+                                        <tr>
+                                            <th>食物</th>
+                                            <th>数量</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($food_count_today7 as $k7=>$d7)
+                                            <tr class="gradeA">
+                                                <td>{{$k7}}</td>
+                                                <td>{{$d7}}</td>
+                                            </tr>
+                                        @endforeach
+                                        {{--<td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>--}}
+                                        </tbody>
+                                    </table>
+                                    {{--{{ $order->appends(['date'=>$date,'sid'=>$sid,])->links() }}--}}
+                                </div>
+                        @endif
 
-                            <h1 class="page-header">明日:</h1>
+                        @if(Auth::user()->state==4)
+                            @foreach($food_count_next as $mark=>$marks)
+                            <h1 class="page-header">{{$week_name[$mark]}}:</h1>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                     <thead>
@@ -85,7 +112,7 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($food_count_next as $key=>$dd)
+                                    @foreach($marks as $key=>$dd)
                                         <tr class="gradeA">
                                             <td>{{$key}}</td>
                                             <td>{{$dd}}</td>
@@ -94,10 +121,30 @@
                                     </tbody>
                                 </table>
                             </div>
-
-                            @if(Auth::user()->state==3)
+                            @endforeach
+                            @endif
+                        @if(Auth::user()->state==3)
                             <h1 class="page-header">明日:</h1>
                             <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                        <thead>
+                                        <tr>
+                                            <th>食物</th>
+                                            <th>数量</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($food_count_next as $key7=>$dd7)
+                                            <tr class="gradeA">
+                                                <td>{{$key7}}</td>
+                                                <td>{{$dd7}}</td>
+                                            </tr>
+                                        @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <h1 class="page-header">明日:</h1>
+                                <div class="table-responsive">
                                     <table class="table table-striped table-bordered table-hover" id="dataTables-example">
                                         <thead>
                                         <tr>

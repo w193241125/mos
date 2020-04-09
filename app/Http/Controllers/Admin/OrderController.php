@@ -12,6 +12,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class OrderController extends Controller
 {
+    protected $week_name = [
+        'A'=>'星期一早上','D'=>'星期二早上','G'=>'星期三早上','J'=>'星期四早上','M'=>'星期五早上','P'=>'星期六早上','S'=>'星期天早上',
+        'B'=>'星期一中午','E'=>'星期二中午','H'=>'星期三中午','K'=>'星期四中午','N'=>'星期五中午','Q'=>'星期六中午','T'=>'星期天中午',
+        'C'=>'星期一晚上','F'=>'星期二晚上','I'=>'星期三晚上','L'=>'星期四晚上','O'=>'星期五晚上','R'=>'星期六晚上','U'=>'星期天晚上',
+    ];
+
     public function __construct(Request $request)
     {
         //dd($request->user());
@@ -26,10 +32,9 @@ class OrderController extends Controller
         $weekOfYear = date_get_week_number($date);
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $where = ['week_of_year'=>$weekOfYear,'year'=>date('Y',time())];
-        $orderBy = 'o.uid';
+        $orderBy = 'o.created_at';
         if ($request->tmark){
             $where['o.tmark'] = $request->tmark;
-            $orderBy = 'o.uid';
         }
         if ($request->sid){
             $where['o.sid'] = $request->sid;
@@ -288,9 +293,9 @@ class OrderController extends Controller
             $edate = date('Y-m-d',time()+86400);//获取明天天日期
 
             $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>4,'ostate'=>1])->get()->toArray();
-            $today_order7 = DB::table('orders')->where(['date'=>$date,'sid'=>7,'ostate'=>1])->get()->toArray();
+            $today_order7 = DB::table('orders')->where(['date'=>$date,'sid'=>15,'ostate'=>1])->get()->toArray();
             $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>4,'ostate'=>1])->get()->toArray();
-            $next_order7 = DB::table('orders')->where(['date'=>$edate,'sid'=>7,'ostate'=>1])->get()->toArray();
+            $next_order7 = DB::table('orders')->where(['date'=>$edate,'sid'=>15,'ostate'=>1])->get()->toArray();
             $food_arr_today = [];
             foreach ($today_order as $o) {
                 $food_arr_tmp = explode('+',$o->food);
@@ -327,7 +332,7 @@ class OrderController extends Controller
             $food_count_next7 = array_count_values($food_arr_next7);
             $food_count_next = array_count_values($food_arr_next);
 
-            return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next,'food_count_today7'=>$food_count_today7,'food_count_next7'=>$food_count_next7]);
+            return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next,'food_count_today7'=>$food_count_today7,'food_count_next7'=>$food_count_next7,'week_name'=>$this->week_name]);
         }elseif($state==4){
             $sname = Auth::user()->realname;
             $sidObj = DB::table('shops')->where(['sname'=>$sname])->get();
@@ -341,25 +346,30 @@ class OrderController extends Controller
             foreach ($today_order as $o) {
                 $food_arr_tmp = explode('+',$o->food);
                 foreach ($food_arr_tmp as $f) {
-                    array_push($food_arr_today,$f);
+                   $food_arr_today[$o->tmark][]=$f;
                 }
             }
-
             $food_arr_next = [];
             foreach ($next_order as $o) {
                 $food_arr_tmp = explode('+',$o->food);
                 foreach ($food_arr_tmp as $f) {
-                    array_push($food_arr_next,$f);
+                    $food_arr_next[$o->tmark][]=$f;
                 }
             }
 
-            $food_count_today = array_count_values($food_arr_today);
-            $food_count_next = array_count_values($food_arr_next);
+            foreach ($food_arr_today as $k=>$item) {
+                $food_count_today[$k] = array_count_values($item);
+            }
 
-            return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next]);
+            foreach ($food_arr_next as $k=>$item) {
+                $food_count_next[$k] = array_count_values($item);
+            }
+
+            return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next,'week_name'=>$this->week_name]);
         }
 
     }
+
     
     //批量取消本周订单 todo
     public function cancelOrder(Request $request)
