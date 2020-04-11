@@ -342,6 +342,7 @@ class OrderController extends Controller
 
             $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>$sid,'ostate'=>1])->get()->toArray();
             $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>$sid,'ostate'=>1])->get()->toArray();
+
             $food_arr_today = [];
             foreach ($today_order as $o) {
                 $food_arr_tmp = explode('+',$o->food);
@@ -357,10 +358,12 @@ class OrderController extends Controller
                 }
             }
 
+            $food_count_today = [];
             foreach ($food_arr_today as $k=>$item) {
                 $food_count_today[$k] = array_count_values($item);
             }
 
+            $food_count_next = [];
             foreach ($food_arr_next as $k=>$item) {
                 $food_count_next[$k] = array_count_values($item);
             }
