@@ -142,7 +142,7 @@ class HomeController extends Controller
         $data['uname'] = $uname = Auth::user()->uname;
         $data['total'] = 0;
         $data['food'] = '';
-        $data['created_at'] = date('Y-m-d H:i:s');
+//        $data['created_at'] = date('Y-m-d H:i:s');
         $data['week_of_year'] = $weekOfYear;
 
         if (isset($request->shop)){
@@ -318,7 +318,7 @@ class HomeController extends Controller
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
-                    $data['created_at'] = date('Y-m-d H:i:s',time());
+                    //$data['created_at'] = date('Y-m-d H:i:s',time());
                     DB::table('orders')->insert($data);
                 }
                 $data['total'] = 0;
