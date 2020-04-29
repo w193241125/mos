@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Redis;
 
 class HomeController extends Controller
 {
-    protected $max_drink = 3;
+    protected $max_drink = 1;
     protected $day_type = [
             1=>['A','B','C'],
             2=>['D','E','F'],
