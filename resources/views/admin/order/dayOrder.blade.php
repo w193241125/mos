@@ -45,6 +45,7 @@
 
                                     公司:<select name="company" id="">
                                         <option value="">---全部---</option>
+                                        <option value="1" @if($company==1) selected @endif>350</option>
                                         <option value="2" @if($company==2) selected @endif>旭力</option>
                                         <option value="3" @if($company==3) selected @endif>瑞鲨</option>
                                         <option value="4" @if($company==4) selected @endif>牛越</option>
