@@ -36,14 +36,14 @@
                                     <small><span class="">结束时间：</span><input class="layui-input" type="text" id="dates" name="dates" placeholder="yyyy-MM-dd" lay-key="2" value="{{$dates or ''}}"></small>
                                 </label>
                                 @if(Auth::user()->state == 3)
-                                    商家:<select name="sid" id="">
+                                    商家:<select name="sid" id="sid">
                                     <option value="">---全部---</option>
                                     @foreach($shop as $s)
                                         <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
                                     @endforeach
                                     </select>
 
-                                    公司:<select name="company" id="">
+                                    公司:<select name="company" id="company">
                                         <option value="">---全部---</option>
                                         <option value="1" @if($company==1) selected @endif>350</option>
                                         <option value="2" @if($company==2) selected @endif>旭力</option>
@@ -52,7 +52,7 @@
                                     </select>
                                 @endif
                                 <small><button class="btn btn-primary">提交</button></small>
-                                {{--<a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>--}}
+                                <a href="javascript:;" id="export" class="btn btn-info right" data-toggle="tooltip"  title="默认本月,选择时间查询后可导出时间段订单">导出Excel表</a>
                             </form>
                         </div>
 
@@ -107,5 +107,13 @@
         laydate.render({
             elem: '#dates'
         });
+
+        $('#export').on('click',function () {
+            date = $('#date').val()
+            dates = $('#dates').val()
+            sid = $('#sid option:selected').val()
+            company = $('#company option:selected').val()
+            window.location.href = "/admin/export_summary/?date="+date+"&dates="+dates+"&company="+company+"&sid="+sid
+        })
     </script>
 @stop

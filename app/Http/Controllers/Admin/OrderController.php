@@ -556,10 +556,10 @@ class OrderController extends Controller
 
     public function order_summary(Request $request)
     {
-        $sid = $request->sid?$request->sid:'';
+        $sid = $request->sid ? $request->sid:'';
 
-        $sdate = $request->date?$request->date: date('Y-m-1');
-        $edate = $request->dates?$request->dates:date('Y-m-d');
+        $sdate = $request->date ? $request->date: date('Y-m-1');
+        $edate = $request->dates ? $request->dates:date('Y-m-d');
 
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
         $where = " date BETWEEN '$sdate' AND '$edate' ";
@@ -575,6 +575,38 @@ class OrderController extends Controller
 
         $dayOrder = DB::select("select o.date, count(o.oid) as num,sum(o.total) as total FROM orders as o LEFT JOIN users as u ON u.uid=o.uid  WHERE {$where}  GROUP BY date");
 
-        return view('admin.order.order_summary',['dayOrder'=>$dayOrder,'shop'=>$shop,'sid'=>$sid,'company'=>$request->company,'total'=>$total]);
+        return view('admin.order.order_summary',['dayOrder'=>$dayOrder,'shop'=>$shop,'sid'=>$sid,'company'=>$request->company,'total'=>$total,'date'=>$sdate,'dates'=>$edate]);
+    }
+
+    public function export_summary(Request $request)
+    {
+
+        $sdate = $request->date?$request->date: date('Y-m-1');
+        $edate = $request->dates?$request->dates:date('Y-m-d');
+
+        $where = " date BETWEEN '$sdate' AND '$edate' ";
+        $excelName = '按日统计';
+        if (!empty($request->sid)){
+            $where .= " and o.sid = $request->sid ";
+        }
+        if (!empty($request->company)){
+            $where .= " and u.company = $request->company ";
+        }
+
+        $total = DB::select("select count(o.oid) as num,sum(o.total) as total FROM orders as o LEFT JOIN users as u ON u.uid=o.uid  WHERE {$where}");
+
+        $dayOrder = DB::select("select o.date, count(o.oid) as num,sum(o.total) as total FROM orders as o LEFT JOIN users as u ON u.uid=o.uid  WHERE {$where}  GROUP BY date");
+
+        $cellData[0] = ['日期','数量','金额'];
+        $cellData[1] = ['汇总',$total[0]->num,$total[0]->total];
+        foreach ($dayOrder as $item) {
+            array_push($cellData,[$item->date,$item->num,$item->total]);
+        }
+
+        Excel::create($excelName,function($excel) use ($cellData){
+            $excel->sheet('order', function($sheet) use ($cellData){
+                $sheet->rows($cellData);
+            });
+        })->export('xls');
     }
 }
