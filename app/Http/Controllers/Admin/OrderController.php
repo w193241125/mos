@@ -557,10 +557,8 @@ class OrderController extends Controller
     public function order_summary(Request $request)
     {
         $sid = $request->sid?$request->sid:'';
-        $sdate = date('Y-m-1');
-        $edate = date('Y-m-d');
+
         $sdate = $request->date?$request->date: date('Y-m-1');
-        $sdate = '2020-05-01';
         $edate = $request->dates?$request->dates:date('Y-m-d');
 
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
