@@ -553,4 +553,30 @@ class OrderController extends Controller
         $user = DB::table('users')->get()->toArray();
         return view('admin.order.companyOrder', ['order'=>$order,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'types'=>$types,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'shops'=>$shops,'rdate'=>$rdate,]);
     }
+
+    public function order_summary(Request $request)
+    {
+        $sid = $request->sid?$request->sid:'';
+        $sdate = date('Y-m-1');
+        $edate = date('Y-m-d');
+        $sdate = $request->date?$request->date: date('Y-m-1');
+        $sdate = '2020-05-01';
+        $edate = $request->dates?$request->dates:date('Y-m-d');
+
+        $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
+        $where = " date BETWEEN '$sdate' AND '$edate' ";
+
+        if ($request->sid){
+            $where .= " and o.sid = $sid ";
+        }
+        if ($request->company){
+            $where .= " and u.company = $request->company ";
+        }
+
+        $total = DB::select("select count(o.oid) as num,sum(o.total) as total FROM orders as o LEFT JOIN users as u ON u.uid=o.uid  WHERE {$where}");
+
+        $dayOrder = DB::select("select o.date, count(o.oid) as num,sum(o.total) as total FROM orders as o LEFT JOIN users as u ON u.uid=o.uid  WHERE {$where}  GROUP BY date");
+
+        return view('admin.order.order_summary',['dayOrder'=>$dayOrder,'shop'=>$shop,'sid'=>$sid,'company'=>$request->company,'total'=>$total]);
+    }
 }

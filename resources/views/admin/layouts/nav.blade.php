@@ -44,6 +44,9 @@
                 <a href="{{url('admin/dayorder')}}"><i class="fa fa-desktop"></i> 订单统计</a>
             </li>
             <li>
+                <a href="{{url('admin/order_summary')}}"><i class="fa fa-desktop"></i> 订单分日统计</a>
+            </li>
+            <li>
                 <a href="{{url('admin/order')}}"><i class="fa fa-desktop"></i> 本周订单列表</a>
             </li>
             <li>
