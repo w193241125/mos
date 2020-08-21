@@ -377,7 +377,50 @@ class OrderController extends Controller
     //批量取消本周订单 todo
     public function cancelOrder(Request $request)
     {
-        $tmark = $request->tmark;
+        $tmark = $request->get('tmark');
+        $company = $request->get('company');
+        $date_ = $request->get('date');
+        if (empty($company)){
+            $returnArr = ['msg'=>'请选择公司','code'=>$company];
+            return json_encode($returnArr);
+        }
+
+        if (empty($tmark) && empty($date_)){
+            $returnArr = ['msg'=>'请选择时间','code'=>$company];
+            return json_encode($returnArr);
+        }
+
+        if ($company=='666'){
+            $company = false;
+        }
+        $query = DB::table('orders');
+        $where = ['ostate' => 1];
+        if (!empty($date_)){
+            $start = substr($date_,0,10);
+            $end = substr($date_,-10);
+
+            if (strtotime($start) < strtotime(date('Y-m-d 23:59:59')) || strtotime($end) < strtotime(date('Y-m-d 23:59:59'))){
+                $returnArr = ['msg'=>'日期时间需大于今天','code'=>200];
+                return json_encode($returnArr);
+            }
+
+            DB::enableQueryLog();
+            $res = $query->join('users','users.uid','=','orders.uid')
+                ->where($where)
+                ->when($company,function ($query) use ($company){
+                    return $query->where(['users.company'=>$company]);
+                })
+                ->when($date_,function ($query) use ($date_){
+                    $start = substr($date_,0,10);
+                    $end = substr($date_,-10);
+                    return $query->whereBetween('date',[$start,$end]);
+                })
+                ->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s')]);
+
+            $returnArr = ['msg'=>$res > 0 ? '成功':'失败','code'=>200];
+            return json_encode($returnArr);
+        }
+
         $tmarkArr = [
             'A'=>1,
             'B'=>1,
@@ -407,6 +450,7 @@ class OrderController extends Controller
         $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
         $today = date('Y-m-d');//获取今天日期
         $time_now = date('His',time());
+        $date = '';
         switch ($dayWeek){
             case '1':
                 if ($tmark=='A'||$tmark=='B'||$tmark=='C'){$date=$today;}
@@ -455,10 +499,7 @@ class OrderController extends Controller
             break;
 
         }
-//if($time_now>1){
-//    $returnArr = ['msg'=>(in_array($tmark,$morningArr)),'code'=>300];
-//    return json_encode($returnArr);
-//}
+
         /*
          * 周日的$dayWeek值为0, 所以以下判断都是基于此.(周日去取消周一到周六的餐的操作, 在这里不会有判断, 也不会有返回值, 在前台直接返回error函数的内容)
          * */
@@ -471,37 +512,49 @@ class OrderController extends Controller
             if ($time_now<103000 && in_array($tmark,$noonArr)){
                 //取消中午订餐
                 $where = ['tmark'=>$tmark,'date'=>$date];
-                DB::table('orders')->where($where)->update(['ostate'=>2]);
-                $returnArr = ['msg'=>'取消成功..','code'=>200];
-                return json_encode($returnArr);
             }elseif ($time_now<163000 && in_array($tmark,$eveningArr)){
                 //取消晚上订餐
                 $where = ['tmark'=>$tmark,'date'=>$date];
-                DB::table('orders')->where($where)->update(['ostate'=>2]);
-                $returnArr = ['msg'=>'取消成功...','code'=>200];
-                return json_encode($returnArr);
             }elseif($time_now<070000 && in_array($tmark,$morningArr)){
                 //取消早上订餐
                 $where = ['tmark'=>$tmark,'date'=>$date];
-                DB::table('orders')->where($where)->update(['ostate'=>2]);
-                $returnArr = ['msg'=>'取消成功.','code'=>200];
-                return json_encode($returnArr);
             }else{
                 //不能取消
                 $returnArr = ['msg'=>'时间已过无法取消2','code'=>300];
                 return json_encode($returnArr);
             }
 
+            $query->join('users','users.uid','=','orders.uid')
+                ->where($where)
+                ->when($company,function ($query) use ($company){
+                    return $query->where(['company'=>$company]);
+                })
+                ->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s')]);
+            $returnArr = ['msg'=>'取消成功..','code'=>200];
+            return json_encode($returnArr);
+
         }elseif ($tmarkArr[$tmark]>$dayWeek && $dayWeek!=0){//除周日外, 大于今天的都可以取消
+
             //取消订餐
             $where = ['tmark'=>$tmark,'date'=>$date];
-            DB::table('orders')->where($where)->update(['ostate'=>2]);
+            $query->join('users','users.uid','=','orders.uid')
+                ->where($where)
+                ->when($company,function ($query) use ($company){
+                    return $query->where(['company'=>$company]);
+                })
+                ->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s')]);
             $returnArr = ['msg'=>'取消成功','code'=>200];
             return json_encode($returnArr);
+
         }elseif($dayWeek!=0 && $tmark==0){//所有周日之前的都可以取消周日的(操作周日的)
             //取消订餐
             $where = ['tmark'=>$tmark,'date'=>$date];
-            DB::table('orders')->where($where)->update(['ostate'=>2]);
+            $query->join('users','users.uid','=','orders.uid')
+                ->where($where)
+                ->when($company,function ($query) use ($company){
+                    return $query->where(['company'=>$company]);
+                })
+                ->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s')]);
             $returnArr = ['msg'=>'取消成功','code'=>200];
             return json_encode($returnArr);
         }

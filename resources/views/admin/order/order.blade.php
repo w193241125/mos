@@ -16,12 +16,27 @@
             <ol class="breadcrumb">
                 <li><h3>批量取消:</h3></li>
                     <form action="/admin/order/" method="get" class="list-inline">
-                        时间:<select name="time_mark" id="time_tmark">
+                        <label for="date" >
+                        公司:<select name="company" id="company">
+                            <option value="">---请选择---</option>
+                            <option value="666">全部</option>
+                            <option value="1">350</option>
+                            <option value="2">旭力</option>
+                            <option value="3">瑞鲨</option>
+                            <option value="4">牛越</option>
+                        </select>
+                        </label>
+                        <label for="time_tmark" >
+                        时间(餐):<select name="time_mark" id="time_tmark">
                             <option value="">---请选择---</option>
                             @foreach($type as $t)
                                 <option value="{{$t->tmark}}">{{$t->tname}}</option>
                             @endforeach
                         </select>
+                        </label>
+                        <label for="date" >
+                            <small><span class="">时间(天)：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$rdate or ''}}"></small>
+                        </label>
                         <a href="javascript:;" onclick="cancelOrder();" class="btn btn-info right">取消订单</a>
                     </form>
             </ol>
@@ -29,12 +44,25 @@
         <script>
             function cancelOrder() {
                 var tmark = $('#time_tmark ').val();
+                var company = $('#company ').val();
+                var date_ = $('#date ').val();
+                console.log(tmark)
+                console.log(company)
+                console.log(date_)
+                if(tmark == '' && date_ ==''){
+                    alert('请选择时间!')
+                    return;
+                }
+                if(company == undefined || company == ''){
+                    alert('请选择公司!')
+                    return;
+                }
                 if (confirm("确认取消吗?请谨慎操作!")) {
                     $.ajax({
                         type: "POST",//方法类型
                         dataType: "json",//预期服务器返回的数据类型
-                        url: "/admin/cancelOrder/"+tmark ,//url
-                        data: '',
+                        url: "/admin/cancelOrder/" ,//url
+                        data: {tmark:tmark, company:company, date:date_},
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
@@ -64,6 +92,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <form action="/admin/order/" method="get" class="list-inline">
+
                                 时间:<select name="tmark" id="">
                                     <option value="">---请选择---</option>
                                     @foreach($type as $t)
@@ -140,6 +169,7 @@
         //日期范围
         laydate.render({
             elem: '#date'
+            ,min:1
             ,range: true
         });
 

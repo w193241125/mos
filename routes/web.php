@@ -46,7 +46,7 @@ Route::group(['middleware'=>'admin'],function (){
     Route::get('/admin/order','Admin\OrderController@show');
     Route::get('/admin/dayorder','Admin\OrderController@dayOrder');
     Route::get('/admin/allOrder','Admin\OrderController@allShow');
-    Route::post('/admin/cancelOrder/{tmark}','Admin\OrderController@cancelOrder');
+    Route::post('/admin/cancelOrder','Admin\OrderController@cancelOrder');
     //Route::get('/admin/order/search','Admin\OrderController@search');
 //Route::get('/admin/order/allExport/{start?}/{end?}','Admin\OrderController@search');
     Route::get('/admin/order/export/{start?}/{end?}','Admin\OrderController@export');
