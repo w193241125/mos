@@ -47,10 +47,12 @@
                 var tmark = $('#time_tmark ').val();
                 var company = $('#company ').val();
                 var date_ = $('#date ').val();
-                console.log(tmark)
-                console.log(company)
-                console.log(date_)
-                if(tmark == '' && date_ ==''){
+
+                if(tmark != '' && date_ !=''){
+                    alert('时间二选一哦!')
+                    return;
+                }
+                (tmark == '' && date_ ==''){
                     alert('请选择时间!')
                     return;
                 }
