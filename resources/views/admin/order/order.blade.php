@@ -52,7 +52,7 @@
                     alert('时间二选一哦!')
                     return;
                 }
-                (tmark == '' && date_ ==''){
+                if(tmark == '' && date_ ==''){
                     alert('请选择时间!')
                     return;
                 }
