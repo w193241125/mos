@@ -38,6 +38,7 @@
                             <small><span class="">时间(天)：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$rdate or ''}}"></small>
                         </label>
                         <a href="javascript:;" onclick="cancelOrder();" class="btn btn-info right">取消订单</a>
+                        <br><span style="color:red"> &nbsp;****************  </span><span style="font-weight:bold">时间(天)选了就会取消整天的餐, 只取消一餐的话,只选时间(餐)就好</span><span style="color:red">******* </span>
                     </form>
             </ol>
         </div>
