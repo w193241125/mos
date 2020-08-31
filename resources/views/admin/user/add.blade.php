@@ -43,7 +43,7 @@
                                                 <option value="4">牛越</option>
                                             </select>
                                         </div>
-                                        <div class="sub-title">用户名(上一个:{{$uid}})</div>
+                                        <div class="sub-title">用户名(三五零:{{$uid}}, 牛越:{{$ny_uid}})</div>
                                         <div>
                                             <input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名" required value="">
                                         </div>
