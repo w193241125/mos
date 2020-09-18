@@ -615,7 +615,7 @@ class OrderController extends Controller
         $edate = $request->dates ? $request->dates:date('Y-m-d');
 
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
-        $where = " date BETWEEN '$sdate' AND '$edate' ";
+        $where = " date BETWEEN '$sdate' AND '$edate' AND ostate = 1 ";
 
         if ($request->sid){
             $where .= " and o.sid = $sid ";
@@ -637,7 +637,7 @@ class OrderController extends Controller
         $sdate = $request->date?$request->date: date('Y-m-1');
         $edate = $request->dates?$request->dates:date('Y-m-d');
 
-        $where = " date BETWEEN '$sdate' AND '$edate' ";
+        $where = " date BETWEEN '$sdate' AND '$edate' AND ostate = 1 ";
         $excelName = '按日统计';
         if (!empty($request->sid)){
             $where .= " and o.sid = $request->sid ";
