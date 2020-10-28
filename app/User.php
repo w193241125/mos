@@ -33,7 +33,7 @@ class User extends Authenticatable
 
     public function ifAdmin()
     {
-        return $this->state === 3;
+        return $this->state == 3;
     }
 
     public function ifShops()
