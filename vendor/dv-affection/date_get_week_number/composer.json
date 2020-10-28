@@ -1,0 +1,28 @@
+{
+    "name": "dv-affection/date_get_week_number",
+    "description": "Provide support for obtaining a week number of year (week starts on Sunday)",
+    "type": "library",
+    "keywords": [
+        "php", "date", "week"
+    ],
+    "homepage": "https://github.com/dvAffection/date_get_week_number",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "dV",
+            "email": "dvAffection@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    },
+    "support": {
+        "issues": "https://github.com/dvAffection/date_get_week_number/issues",
+        "source": "https://github.com/dvAffection/date_get_week_number"
+    },
+    "autoload": {
+        "files": [
+            "src/date_get_week_number.php"
+        ]
+    }
+}
