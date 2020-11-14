@@ -64,7 +64,7 @@
                                         <tr class="gradeA">
                                             <td>{{$u->uname}}</td>
                                             <td>{{$u->realname}}</td>
-                                            <td>@if($u->company ==1) 三五零 @elseif($u->company ==2) 旭力 @elseif($u->company ==3) 瑞鲨 @elseif($u->company ==4) 牛越@elseif($u->company ==5) XT@endif</td>
+                                            <td>@if($u->company ==1) 三五零 @elseif($u->company ==2) 旭力 @elseif($u->company ==3) 瑞鲨 @elseif($u->company ==4) 牛越@elseif($u->company ==5) XT @endif</td>
                                             <td>@if($u->state==1)启用@elseif($u->state==2)禁用@elseif($u->state==3)管理员@elseif($u->state==4)商家@endif</td>
                                             <td><a href="{{url('admin/user/edit/').'/'.$u->uid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
