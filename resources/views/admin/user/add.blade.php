@@ -41,6 +41,7 @@
                                                 <option value="2">旭力</option>
                                                 <option value="3">瑞鲨</option>
                                                 <option value="4">牛越</option>
+                                                <option value="5">XT</option>
                                             </select>
                                         </div>
                                         <div class="sub-title">用户名(三五零:{{$uid}}, 牛越:{{$ny_uid}})</div>

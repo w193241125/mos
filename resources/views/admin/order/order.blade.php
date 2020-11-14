@@ -24,6 +24,7 @@
                             <option value="2">旭力</option>
                             <option value="3">瑞鲨</option>
                             <option value="4">牛越</option>
+                            <option value="5">XT</option>
                         </select>
                         </label>
                         <label for="time_tmark" >

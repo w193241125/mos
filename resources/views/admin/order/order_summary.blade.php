@@ -49,6 +49,7 @@
                                         <option value="2" @if($company==2) selected @endif>旭力</option>
                                         <option value="3" @if($company==3) selected @endif>瑞鲨</option>
                                         <option value="4" @if($company==4) selected @endif>牛越</option>
+                                        <option value="5" @if($company==5) selected @endif>XT</option>
                                     </select>
                                 @endif
                                 <small><button class="btn btn-primary">提交</button></small>
