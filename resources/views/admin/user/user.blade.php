@@ -37,7 +37,8 @@
                                     <form action="/admin/user" class="form-inline" method="post">
                                         {{csrf_field()}}
 
-                                        账号：<input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名" required value="{{$uname}}">
+                                        账号：<input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名"  value="{{$uname}}">
+                                        姓名：<input type="text" id="realname" name="realname" class="form-control" placeholder="请输入姓名"  value="{{$realname}}">
 
                                         用户状态:<select name="state" id="">
                                             <option value="">---全部---</option>

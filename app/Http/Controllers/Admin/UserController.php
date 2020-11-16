@@ -20,6 +20,7 @@ class UserController extends Controller
     {
         $state = $request->input('state');
         $uname = $request->input('uname');
+        $realname = $request->input('realname');
         $company = $request->input('company');
         $user = DB::table('users')
             ->when($state,function ($query) use ($state){
@@ -27,6 +28,9 @@ class UserController extends Controller
             })
             ->when($uname,function ($query) use ($uname){
                 return $query->where('uname','like','%'.$uname.'%');
+            })
+            ->when($realname,function ($query) use ($realname){
+                return $query->where('realname','like','%'.$realname.'%');
             })
             ->when($company,function ($query) use ($company){
                 return $query->where('company','=',$company);
@@ -37,6 +41,7 @@ class UserController extends Controller
             'user'=> $user,
             'company'=>$company,
             'uname'=>$uname,
+            'realname'=>$realname,
             'state'=>$state,
         ]);
     }
