@@ -36,12 +36,23 @@
                                  @endif
                                     <form action="/admin/user" class="form-inline" method="post">
                                         {{csrf_field()}}
+
+                                        账号：<input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名" required value="{{$uname}}">
+
                                         用户状态:<select name="state" id="">
                                             <option value="">---全部---</option>
-                                            <option value="1">启用</option>
-                                            <option value="2">禁用</option>
-                                            <option value="3">管理员</option>
-                                            <option value="4">商家</option>
+                                            <option value="1" @if($state==1) selected @endif>启用</option>
+                                            <option value="2" @if($state==2) selected @endif>禁用</option>
+                                            <option value="3" @if($state==3) selected @endif>管理员</option>
+                                            <option value="4" @if($state==4) selected @endif>商家</option>
+                                        </select>
+                                        公司:<select name="company" id="">
+                                            <option value="">---全部---</option>
+                                            <option value="1" @if($company==1) selected @endif>350</option>
+                                            <option value="2" @if($company==2) selected @endif>旭力</option>
+                                            <option value="3" @if($company==3) selected @endif>瑞鲨</option>
+                                            <option value="4" @if($company==4) selected @endif>牛越</option>
+                                            <option value="5" @if($company==5) selected @endif>XT</option>
                                         </select>
                                         <small><button class="btn btn-primary">提交</button></small>
                                         <a href="/admin/user/add" class="btn btn-primary">添加用户</a>

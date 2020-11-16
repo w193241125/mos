@@ -19,13 +19,26 @@ class UserController extends Controller
     public function show(Request $request)
     {
         $state = $request->input('state');
+        $uname = $request->input('uname');
+        $company = $request->input('company');
         $user = DB::table('users')
             ->when($state,function ($query) use ($state){
                 return $query->where('state','=',$state);
             })
+            ->when($uname,function ($query) use ($uname){
+                return $query->where('uname','like','%'.$uname.'%');
+            })
+            ->when($company,function ($query) use ($company){
+                return $query->where('company','=',$company);
+            })
             ->orderBy('uid','desc')
             ->get();
-        return view('admin.user.user',compact('user'));
+        return view('admin.user.user')->with([
+            'user'=> $user,
+            'company'=>$company,
+            'uname'=>$uname,
+            'state'=>$state,
+        ]);
     }
 
     public function add()
