@@ -44,7 +44,7 @@
                                                 <option value="5">XT</option>
                                             </select>
                                         </div>
-                                        <div class="sub-title">用户名(三五零:{{$uid}}, 牛越:{{$ny_uid}})</div>
+                                        <div class="sub-title">用户名(三五零:{{$uid}}, 牛越:{{$ny_uid}}, XT:{{$xt_uid}})</div>
                                         <div>
                                             <input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名" required value="">
                                         </div>

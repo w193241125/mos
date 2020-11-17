@@ -49,10 +49,12 @@ class UserController extends Controller
     public function add()
     {
         $ny_uid = DB::table('users')->orderBy('uid','desc')->whereNotIn('state',[4])->where(['company'=>4])->first();
-        $ny_uids = $ny_uid->uname;
+        $ny_uids = $ny_uid->uname ?? '无';
         $uid = DB::table('users')->orderBy('uid','desc')->whereNotIn('state',[4])->where(['company'=>1])->first();
-        $uids = $uid->uname;
-        return view('admin.user.add')->with(['uid'=> $uids,'ny_uid'=>$ny_uids]);
+        $uids = $uid->uname ?? '无';
+        $xt_uid = DB::table('users')->orderBy('uid','desc')->whereNotIn('state',[4])->where(['company'=>5])->first();
+        $xt_uids = $xt_uid->uname ?? '无';
+        return view('admin.user.add')->with(['uid'=> $uids,'ny_uid'=>$ny_uids,'xt_uid'=>$xt_uids]);
     }
 
     public function doadd(Request $request)
