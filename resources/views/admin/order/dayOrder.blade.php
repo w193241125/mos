@@ -78,10 +78,7 @@
                                             {{--<td>@if($o->week_of_year-$thisWeek==0)本周@elseif($o->week_of_year-$thisWeek==1)下周@else其他时间@endif</td>--}}
                                             <td>
                                                 {{--城市简餐，隆江猪脚饭，木桶饭--}}
-                                                @if($d->sid==2 || $d->sid == 11)
-                                                    {{$d->total + $d->num}}
-                                                {{-- 味中味--}}
-                                                @elseif(strtotime($date)>=1551369600 and strtotime($dates)>=1551369600 and $d->sid==8)
+                                                @if($d->sid==2)
                                                     {{$d->total + $d->num}}
                                                 @else{{$d->total}}@endif
                                             </td>
