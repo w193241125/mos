@@ -160,7 +160,6 @@
                         <div class="panel-heading" style="text-align:center"><a name="{{$t->tmark}}"></a><b style="font-size: large">{{$t->tname}}</b></div>
                         @foreach($shop as $s){{--shop--}}
                         @foreach($menu as $m){{--menu--}}
-                        @if(Auth::user()->company ==4 && !in_array($s->sid, [0,14,15])) @continue  @endif
                         @if($t->tmark === $m->tmark && $s->sid === $m->sid){{--同一餐, 同一商店--}}
                         <div class="panel-heading" ><span style="color:deepskyblue"></span></div>
                         <div class="one-option">
