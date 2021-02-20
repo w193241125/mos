@@ -187,8 +187,30 @@ class HomeController extends Controller
                         $m++;
                     }
                 }
+                // 早餐
+                if ($this->time_type[$data['tmark']]==1 && (($dayWeek +1)  == ($this->week_type[$data['tmark']]))  && $data['sid'] == 17){
+                    if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
+                    }
+
+                }
+                // 早餐--周日特殊处理。
+                if ($this->time_type[$data['tmark']]==1 && $dayWeek == 6 &&  $this->week_type[$data['tmark']] == 0  && $data['sid'] == 17){
+                    if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
+                    }
+
+                }
+
+                if ($this->time_type[$data['tmark']]==1 && $dayWeek == $this->week_type[$data['tmark']]  && $data['sid'] == 17){
+                    if (strtotime(date('Y-m-d 00:00:00')) < time()){
+                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
+                    }
+
+                }
+
                 // 判断点餐时间是否超时
-                if ($dayWeek == $this->week_type[$data['tmark']]  &&  time()>strtotime($t_limit[$this->time_type[$data['tmark']]]) ){
+                if ($dayWeek == $this->week_type[$data['tmark']]  &&  time() > strtotime($t_limit[$this->time_type[$data['tmark']]]) ){
                     return redirect('home/show')->with(['error_msg'=>'点餐失败，超过点餐时限']);
                 }elseif($dayWeek > $this->week_type[$data['tmark']] && $this->week_type[$data['tmark']] != 0){//排除周日的
                     return redirect('home/show')->with(['error_msg'=>'点餐失败，不能点今天之前的餐']);
@@ -309,8 +331,22 @@ class HomeController extends Controller
                     }
                 }
                 //判断点餐金额是否超额度 todo
-                if ($money_limit[$data['sid']]<$data['total']){
+                if ($money_limit[$data['sid']] < $data['total']){
                     return redirect('home/showNextWeek')->with(['error_msg'=>'点餐失败，点餐金额超过限额']);
+                }
+                 // 早餐
+                if ($this->time_type[$data['tmark']]==1 && (($dayWeek +1)  == ($this->week_type[$data['tmark']])) && $data['sid'] == 17){
+                    if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
+                    }
+
+                }
+                // 早餐--周日特殊处理。
+                if ($this->time_type[$data['tmark']]==1 && $dayWeek == 6 &&  $this->week_type[$data['tmark']] == 0 && $data['sid'] == 17){
+                    if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
+                    }
+
                 }
                 $data['food'] = trim($data['food'],'+');
                 $data['year'] = date('Y',time());
