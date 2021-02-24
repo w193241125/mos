@@ -8,32 +8,50 @@
     @stop
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
                 订单列表 <small>本周</small>
             </h1>
         </div>
-        <div id="page-inner">
+        <div class="container-fluid">
 
             <div class="row">
                 <div class="col-md-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <form action="/admin/companyorder/" method="get" class="list-inline">
-                                <label for="test6" >
-                                    <small><span class="">范围选择：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$rdate or ''}}"></small>
-                                </label>
-                                &nbsp;商家:<select name="sid" id="">
-                                    <option value="">---全部---</option>
-                                    @foreach($shop as $s)
-                                        <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
-                                    @endforeach
-                                </select>
+                            <form action="/admin/companyorder/" method="get" class="form-inline">
 
-                                <button type="submit" class="btn btn-info right">查询</button>
-                                <a href="/admin/order/export/1/1" class="btn btn-info right">导出本周Excel表</a>
+                                <div class="input-group mb-1 col-lg-3 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text">
+                                        时间选择
+                                      </span>
+                                    </div>
+                                    <input type="text" name="date"  class="form-control float-right" id="range_date" value="{{$date or ''}}">
+                                  </div>
+                                </div>
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            选择商家
+                                          </span>
+                                        </div>
+                                        <select name="sid" class="form-control">
+                                            <option value="">---选择商家---</option>
+                                            @foreach($shop as $s)
+                                            <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                 <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <button type="submit" class="btn btn-info btn-sm">提交</button>&nbsp;
+                                    <a href="/admin/order/export/1/1" class="btn btn-info right">导出本周Excel表</a>
+                                </div>
                             </form>
                         </div>
 
@@ -73,7 +91,7 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['tmark'=>$tmark,'sid'=>$sid])->links() }}
+                                {{ $order->appends(['tmark'=>$tmark,'sid'=>$sid])->links('admin.layouts.pagination') }}
                             </div>
 
                         </div>

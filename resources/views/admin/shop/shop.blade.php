@@ -6,19 +6,13 @@
 
 @section('content')
 
-        <div id="page-wrapper" >
-            <div class="header">
+        <div class="content-wrapper">
+            <div class="content-header">
                 <h1 class="page-header">
-                    商家列表 <small>Responsive tables</small>
+                    商家列表 <a href="/admin/shop/add" class="btn btn-primary btn-xs">添加商家</a>
                 </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#">主页</a></li>
-                    <li><a href="#">商家设置</a></li>
-                    <li class="active">商家列表</li>
-                </ol>
-
             </div>
-            <div id="page-inner">
+            <div class="container-fluid">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -34,7 +28,7 @@
                                         <strong>操作失败!</strong>
                                     </div>
                                  @endif
-                                    <a href="/admin/shop/add" class="btn btn-primary">添加商家</a>
+
                             </div>
                             <div class="panel-body">
                                 <div class="table-responsive">
@@ -42,6 +36,8 @@
                                         <thead>
                                         <tr>
                                             <th>商家名称</th>
+                                            <th>供餐</th>
+                                            <th>金额限制</th>
                                             <th>联系方式</th>
                                             <th>地址</th>
                                             <th>是否启用</th>
@@ -52,6 +48,8 @@
                                         @foreach($shop as $s)
                                         <tr class="gradeA">
                                             <td>{{$s->sname}}</td>
+                                            <td>{{$type[$s->type]}}</td>
+                                            <td>{{$s->limit_money}}</td>
                                             <td>{{$s->phone}}</td>
                                             <td>{{$s->address}}</td>
                                             <td>@if($s->state==1)启用@elseif($s->state==2)禁用@else其他@endif</td>

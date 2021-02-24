@@ -8,20 +8,14 @@
     @stop
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
-                订单列表 <small>本周</small>
+                所有订单列表 <small>本周</small>
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#">主页</a></li>
-                <li><a href="#">订单设置</a></li>
-                <li class="active">订单列表</li>
-            </ol>
-
         </div>
 
-        <div id="page-inner">
+        <div class="container-fluid">
 
             <div class="row">
                 <div class="col-md-12">
@@ -29,23 +23,58 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             <form action="/admin/allOrder" class="form-inline">
-                                <label for="test6" >
-                                    <small><span class="">范围选择：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$date or ''}}"></small>
-                                </label>
-                                商家:<select name="sid" id="">
-                                    <option value="">---全部---</option>
-                                    @foreach($shop as $s)
-                                        <option value="{{$s->sid}}">{{$s->sname}}</option>
-                                    @endforeach
-                                </select>
-                                用户名：<label for="uname">
-                                    <input type="number" name="uname" placeholder="请输入用户编号" class="small" min="1" value="{{$uname or NULL}}">
-                                </label>
-                                姓名：<label for="name">
-                                    <input type="text" name="name" placeholder="请输入姓名" class="small" min="1" value="{{$name or NULL}}">
-                                </label>
-                                <small><button class="btn btn-primary">提交</button></small>
-                                <a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>
+                                <div class="input-group mb-1 col-lg-3 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text">
+                                        时间选择
+                                      </span>
+                                    </div>
+                                    <input type="text" name="date"  class="form-control float-right" id="range_date" value="{{$date or ''}}">
+                                  </div>
+                                </div>
+
+
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            选择商家
+                                          </span>
+                                        </div>
+                                        <select name="sid" class="form-control">
+                                            <option value="">---选择商家---</option>
+                                            @foreach($shop as $s)
+                                            <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            用户名
+                                          </span>
+                                        </div>
+                                        <input type="number" name="uname" placeholder="请输入用户编号" class="small" min="1" value="{{$uname or NULL}}"/>
+                                    </div>
+                                </div>
+
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            姓名
+                                          </span>
+                                        </div>
+                                        <input type="text" name="name" placeholder="请输入姓名" class="small" min="1" value="{{$name or NULL}}"/>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <button type="submit" class="btn btn-primary btn-sm">提交</button>&nbsp;
+                                    <a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>
+                                </div>
                             </form>
                         </div>
 
@@ -84,7 +113,7 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['date'=>$date,'sid'=>$sid,'uname'=>$uname,'name'=>$name])->links() }}
+                                {{ $order->appends(['date'=>$date,'sid'=>$sid,'uname'=>$uname,'name'=>$name])->links('admin.layouts.pagination') }}
                             </div>
 
                         </div>
@@ -100,12 +129,5 @@
 @stop
 
 @section('scripts')
-    <script>
-        //日期范围
-        laydate.render({
-            elem: '#date'
-            ,range: true
-        });
 
-    </script>
     @stop

@@ -8,8 +8,8 @@
 @stop
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
                 订单列表 <small>默认显示今明两天早上</small>
             </h1>
@@ -21,7 +21,7 @@
 
         </div>
 
-        <div id="page-inner">
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
                     <!-- Advanced Tables -->

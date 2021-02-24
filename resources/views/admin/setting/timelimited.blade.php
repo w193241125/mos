@@ -6,19 +6,13 @@
 
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
-                商家列表 <small>Responsive tables</small>
+                时间设置
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#">主页</a></li>
-                <li><a href="#">商家设置</a></li>
-                <li class="active">商家列表</li>
-            </ol>
-
         </div>
-        <div id="page-inner">
+        <div class="container-fluid">
 
             <div class="row">
                 <div class="col-md-12">

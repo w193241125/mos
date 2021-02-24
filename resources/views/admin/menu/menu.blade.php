@@ -6,17 +6,17 @@
 
 @section('content')
 
-        <div id="page-wrapper" >
-            <div class="header">
+        <div class="content-wrapper">
+            <div class="content-header">
                 <h1 class="page-header">
-                    菜单列表 <small>Responsive tables</small>
+                    菜单列表&nbsp;&nbsp;&nbsp;<a href="/admin/menu/add" class="btn btn-primary btn-xs">添加菜单</a>
                 </h1>
                 <ol class="breadcrumb">
-                    <a href="JavaScript:void();" onclick="setBreakfast();" class="btn btn-primary">早餐一键设置</a>&nbsp;&nbsp;&nbsp;
+{{--                    <a href="JavaScript:void();" onclick="setBreakfast();" class="btn btn-primary">早餐一键设置</a>&nbsp;&nbsp;&nbsp;--}}
                 </ol>
 
             </div>
-            <div id="page-inner">
+            <div class="container-fluid">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -32,21 +32,38 @@
                                         <strong>添加失败!</strong>
                                     </div>
                                  @endif
-                                    <form action="/admin/menu" method="get">
-                                        <a href="/admin/menu/add" class="btn btn-primary">添加菜单</a>&nbsp;&nbsp;&nbsp;
-                                        按周查询：<select name="mweek">
-                                            <option value="">--选择时间--</option>
-                                            <option value="1" @if($week == 1) selected @endif>本周</option>
-                                            <option value="2" @if($week == 2) selected @endif>下周</option>
-                                        </select>
-                                        @if(Auth::user()->state != 4)
-                                        按商家：<select name="sid" id="">
-                                            <option value="">--选择商家--</option>
+                                    <form action="/admin/menu" method="get" class="form-inline">
+                                    <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                按周查询
+                                              </span>
+                                            </div>
+                                            <select name="mweek" class="form-control">
+                                                <option value="">--选择时间--</option>
+                                                <option value="1" @if($week == 1) selected @endif>本周</option>
+                                                <option value="2" @if($week == 2) selected @endif>下周</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @if(Auth::user()->state != 4)
+                                    <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                按商家
+                                              </span>
+                                            </div>
+                                            <select name="sid" class="form-control">
+                                                <option value="">--选择商家--</option>
                                             @foreach($shop as $s)
                                                 <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
                                             @endforeach
-                                        </select>
-                                        @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @endif
                                         <button type="submit" class="btn btn-primary">提交</button>
                                     </form>
                             </div>

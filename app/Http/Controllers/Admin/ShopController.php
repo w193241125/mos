@@ -17,7 +17,8 @@ class ShopController extends Controller
     public function show()
     {
         $shop = DB::table('shops')->where('state','!=',3)->get();
-        return view('admin.shop.shop', compact('shop'));
+        $type =[1=>'早餐',2=>'中晚餐'];
+        return view('admin.shop.shop', compact(['shop','type']));
     }
 
     public function add()
@@ -27,6 +28,7 @@ class ShopController extends Controller
 
     public function doadd(Request $request)
     {
+        $shop['type'] = $request->type;
         $shop['sname'] = $request->sname;
         $shop['address'] = $request->address;
         $shop['phone'] = $request->phone;
@@ -54,6 +56,7 @@ class ShopController extends Controller
     {
         //dd($request);
         $sid= $request->sid;
+        $data['type'] = $request->type;
         $data['sname'] = $request->sname;
         $data['address'] = $request->address;
         $data['phone'] = $request->phone;

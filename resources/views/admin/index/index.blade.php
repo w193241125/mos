@@ -6,16 +6,16 @@
 
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
                 350点餐系统 <small>后台</small>
             </h1>
         </div>
 
-        <div id="page-inner">
-
-            <div class="row">
+      <section class="content">
+      <div class="container-fluid">
+            <div class="row mb-2">
                 <div class="col-md-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
@@ -34,6 +34,7 @@
             <!-- /. ROW  -->
 
         </div>
+    </section>
     </div>
     <!-- /. PAGE INNER  -->
 @stop

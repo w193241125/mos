@@ -124,8 +124,8 @@ class OrderController extends Controller
         $sdate = $request->date?$request->date:'';
         $uname = $request->uname?$request->uname:'';
         $name = $request->name?$request->name:'';
-        $start = 1;
-        $end = 1;
+        $start = '';
+        $end = '';
         $where = [];
         if ($uname){
             $id = DB::table('users')->select('uid')->where(['uname'=>$uname])->get();
@@ -153,7 +153,6 @@ class OrderController extends Controller
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
         $user = DB::table('users')->get()->toArray();
-
         return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end,'uname'=>$uname,'name'=>$name]);
     }
 
@@ -252,10 +251,11 @@ class OrderController extends Controller
         $weekOfYear = date_get_week_number($date);
         if ($dayWeek==7 || $dayWeek === 0){$weekOfYear = date_get_week_number($date)-1;}
         $where['week_of_year'] = $weekOfYear;
-        $sdate = $request->date?$request->date:' ';
-        $edate = $request->dates?$request->dates:' ';
+        $sdate = $request->date?$request->date:'';
+        $edate = $request->dates?$request->dates:'';
         $tdate = $request->dates?$request->date.'到'.$request->dates:'本周';
         $sid = $request->sid?$request->sid:'';
+
 
         $where = " week_of_year = $weekOfYear and ostate=1 and year=".date('Y',time());
 
@@ -278,7 +278,6 @@ class OrderController extends Controller
         }
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
         $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid JOIN users as u ON u.uid=o.uid where {$where}  GROUP BY o.sid");
-
         return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'dates'=>$edate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,'company'=>$request->company,]);
     }
 
@@ -581,6 +580,8 @@ class OrderController extends Controller
         $tmark = $request->tmark?$request->tmark:'';
         $sid = $request->sid?$request->sid:'';
         $query = DB::table('orders as o');
+        $start = substr($rdate,0,10);
+        $end = substr($rdate,-10);
         $order = $query
             ->leftJoin('users as u','o.uid','=','u.uid')
             ->where($where)->where('ostate','=',1)
@@ -604,7 +605,7 @@ class OrderController extends Controller
         }
         //用户名
         $user = DB::table('users')->get()->toArray();
-        return view('admin.order.companyOrder', ['order'=>$order,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'types'=>$types,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'shops'=>$shops,'rdate'=>$rdate,]);
+        return view('admin.order.companyOrder', ['order'=>$order,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'types'=>$types,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'shops'=>$shops,'date'=>$rdate,'start'=>$start,'end'=>$end,]);
     }
 
     public function order_summary(Request $request)

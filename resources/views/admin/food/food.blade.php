@@ -6,20 +6,14 @@
 
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
-                食物列表 <small>Responsive tables</small>
+                食物列表 <a href="/admin/food/add" class="btn btn-info btn-xs">添加食物</a>
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#">主页</a></li>
-                <li><a href="#">食物设置</a></li>
-                <li class="active">食物列表</li>
-            </ol>
-
         </div>
 
-        <div id="page-inner">
+        <div class="container-fluid">
 
             <div class="row">
                 <div class="col-md-12">
@@ -37,16 +31,25 @@
                             @endif
 
 
-                                <form action="/admin/food" method="post" class="list-inline">
+                                <form action="/admin/food" method="post" class="form-inline">
                                     {{ csrf_field() }}
-                                    商家：<select name="sid" id="">
-                                        <option value="">---全部---</option>
-                                        @foreach($shop as $s)
-                                        <option value="{{$s->sid}}" @if($s->sid == $shopId) selected @endif> {{$s->sname}}</option>
+                                    <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            选择商家
+                                          </span>
+                                        </div>
+                                        <select name="sid" class="form-control">
+                                            <option value="">---选择商家---</option>
+                                            @foreach($shop as $s)
+                                            <option value="{{$s->sid}}" @if($s->sid == $shopId) selected @endif>{{$s->sname}}</option>
                                             @endforeach
-                                    </select>
+                                        </select>
+                                    </div>
+                                </div>
                                     <button class="btn btn-info right">提交</button>
-                                    <a href="/admin/food/add" class="btn btn-info right">添加食物</a>
+
                                 </form>
                         </div>
                         <div class="panel-body">
@@ -82,7 +85,7 @@
                                             <td>@if($f->ischecked==1)否@elseif($f->ischecked==2)是@else其他@endif</td>
                                             <td>@if($f->fstate==1)启用@elseif($f->fstate==2)禁用@else其他@endif</td>
                                             <td>
-                                                <a href="food/edit/{{$f->fid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a>
+                                                <a href="/admin/food/edit/{{$f->fid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a>
                                                 <a href="javascript:;" onclick="delFood({{$f->fid}});" class="btn btn-danger btn-xs"><i class="fa fa-pencil"></i>删除</a>
                                             </td>
                                         </tr>

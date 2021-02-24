@@ -8,14 +8,14 @@
     @stop
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
                 订单列表
             </h1>
         </div>
 
-        {{--<div id="page-inner">--}}
+        {{--<div class="container-fluid">--}}
 
             {{--<div class="row">--}}
                 {{--<div class="col-md-12">--}}

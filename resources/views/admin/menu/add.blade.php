@@ -10,28 +10,19 @@
     @stop
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
-                菜单添加 <small>Responsive tables</small>
+                菜单添加
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#">主页</a></li>
-                <li><a href="#">菜单设置</a></li>
-                <li class="active">添加菜单</li>
-            </ol>
-
         </div>
 
-        <div id="page-inner">
+        <div class="container-fluid">
 
             <div class="row">
                 <div class="col-md-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
-                        <div class="panel-heading">
-                            添加菜单
-                        </div>
                         <div class="panel-body">
                             @if(session('error'))
                                 <div class="alert alert-danger">
@@ -51,12 +42,14 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        &nbsp;
                                         <div class="sub-title">选择食物 &nbsp;&nbsp;&nbsp;
                                             <button type="button" id="clear" class="btn btn-default btn-sm">清空</button>
                                             <button type="button" id="selectall" class="btn btn-default btn-sm">全选</button></div>
                                         <div id="getFromAjax">
-                                            选择商家后显示!
+                                            <span style="color: red">选择商家后显示!</span>
                                         </div>
+                                        &nbsp;
                                         <div class="sub-title">选择设置时间</div>
                                         <div>
                                             @foreach($type as $t)

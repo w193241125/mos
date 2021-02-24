@@ -6,19 +6,13 @@
 
 @section('content')
 
-        <div id="page-wrapper" >
-            <div class="header">
+        <div class="content-wrapper">
+            <div class="content-header">
                 <h1 class="page-header">
-                    用户列表 <small>Responsive tables</small>
+                    用户列表&nbsp;&nbsp;<a href="/admin/user/add" class="btn btn-primary btn-xs">添加用户</a>
                 </h1>
-                <ol class="breadcrumb">
-                    <li><a href="#">主页</a></li>
-                    <li><a href="#">用户设置</a></li>
-                    <li class="active">用户列表</li>
-                </ol>
-
             </div>
-            <div id="page-inner">
+            <div class="container-fluid">
 
                 <div class="row">
                     <div class="col-md-12">
@@ -37,26 +31,64 @@
                                     <form action="/admin/user" class="form-inline" method="post">
                                         {{csrf_field()}}
 
-                                        账号：<input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名"  value="{{$uname}}">
-                                        姓名：<input type="text" id="realname" name="realname" class="form-control" placeholder="请输入姓名"  value="{{$realname}}">
-
-                                        用户状态:<select name="state" id="">
-                                            <option value="">---全部---</option>
+                                        <div class="input-group mb-1 col-lg-2 col-md-3 col-sm-6">
+                                            <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                账号
+                                              </span>
+                                            </div>
+                                            <input type="text" id="uname" name="uname" class="form-control" placeholder="请输入用户名"  value="{{$uname}}">
+                                          </div>
+                                        </div>
+                                        <div class="input-group mb-1 col-lg-2 col-md-3 col-sm-6">
+                                            <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                姓名
+                                              </span>
+                                            </div>
+                                            <input type="text" id="realname" name="realname" class="form-control" placeholder="请输入姓名"  value="{{$realname}}">
+                                          </div>
+                                        </div>
+                                    <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                用户状态
+                                              </span>
+                                            </div>
+                                            <select name="state" class="form-control">
+                                                <option value="">---全部---</option>
                                             <option value="1" @if($state==1) selected @endif>启用</option>
                                             <option value="2" @if($state==2) selected @endif>禁用</option>
                                             <option value="3" @if($state==3) selected @endif>管理员</option>
                                             <option value="4" @if($state==4) selected @endif>商家</option>
-                                        </select>
-                                        公司:<select name="company" id="">
-                                            <option value="">---全部---</option>
-                                            <option value="1" @if($company==1) selected @endif>350</option>
-                                            <option value="2" @if($company==2) selected @endif>旭力</option>
-                                            <option value="3" @if($company==3) selected @endif>瑞鲨</option>
-                                            <option value="4" @if($company==4) selected @endif>牛越</option>
-                                            <option value="5" @if($company==5) selected @endif>XT</option>
-                                        </select>
-                                        <small><button class="btn btn-primary">提交</button></small>
-                                        <a href="/admin/user/add" class="btn btn-primary">添加用户</a>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                选择公司
+                                              </span>
+                                            </div>
+                                            <select name="company" class="form-control">
+                                                <option value="">---选择公司---</option>
+                                                <option value="1" @if($company==1) selected @endif>350</option>
+                                                <option value="2" @if($company==2) selected @endif>旭力</option>
+                                                <option value="3" @if($company==3) selected @endif>瑞鲨</option>
+                                                <option value="4" @if($company==4) selected @endif>牛越</option>
+                                                <option value="5" @if($company==5) selected @endif>XT</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                        <button class="btn btn-primary">提交</button>&nbsp;
+                                    </div>
+
                                     </form>
                             </div>
                             <div class="panel-body">

@@ -6,27 +6,20 @@
 
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
+    <div class="content-wrapper">
+        <div class="content-header">
             <h1 class="page-header">
-                菜单编辑 <small>Responsive tables</small>
+                菜单编辑&nbsp;&nbsp;<a href="javascript:history.go(-1);" style="font-size: 14px;" class="btn btn-xs btn-info">返回</a>
             </h1>
-            <ol class="breadcrumb">
-                <li><a href="#">主页</a></li>
-                <li><a href="#">菜单设置</a></li>
-                <li class="active">编辑菜单</li>
-            </ol>
-
         </div>
 
-        <div id="page-inner">
+        <div class="container-fluid">
 
             <div class="row">
                 <div class="col-md-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-body">
-                            <a href="javascript:history.go(-1);" class="btn btn-primary btn-toolbar ">返回</a>
                             @if(session('error'))
                                 <div class="alert alert-danger">
                                     <strong> {{session('error')}}</strong>
@@ -38,6 +31,7 @@
                                     {{ csrf_field() }}
                                     <div class="panel-body">
                                         <div class="sub-title" >选择商家 <span style="color:red">*选择第一个选项后,再重新选择商家, 可以重置菜单, 并勾选预设了`设置菜单时勾选`的食物哦</span></div>
+                                        &nbsp;
                                         <div id="domark">
                                             <select class="selectbox" name="sid" style="width: auto;" id="selectshop">
                                                 <option value="">--请选择商家--</option>
@@ -46,8 +40,10 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                        &nbsp;
                                         <div class="sub-title">选择食物 &nbsp;&nbsp;&nbsp;<button type="button" id="clear" class="btn btn-default btn-sm">清空</button>
                                             <button type="button" id="selectall" class="btn btn-default btn-sm">全选</button></div></div>
+                                        &nbsp;
                                         <div id="getFromAjax">
                                             @foreach($food as $f)
                                                 <label for="foods{{$f->fid}}"><input id="foods{{$f->fid}}" type="checkbox" name="fid[]" class="checkbox3" value="{{$f->fid}}" @if(in_array($f->fid,$fidArr)||$f->ischecked==2) checked @endif> <span style="color: #0a689d">{{$f->fname}}</span><span style="color: red">{{$f->price}}</span> <span style="color: #0a689d">元，</span></label>
@@ -71,9 +67,10 @@
                                         </div>
 
                                         <div class="sub-title"></div>
-                                        <button type="submit" class="btn btn-default">确认修改</button>
+                                        <button type="submit" class="btn btn-info">确认修改</button>
+                                       </form>
                                     </div>
-                                </form>
+
                             </div>
 
                         </div>

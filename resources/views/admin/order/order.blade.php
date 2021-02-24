@@ -8,46 +8,74 @@
     @stop
 @section('content')
 
-    <div id="page-wrapper" >
-        <div class="header">
-            <h1 class="page-header">
-                订单列表 <small>本周</small>
-            </h1>
+    <div class="content-wrapper">
+        <div class="content-header">
+        <h4>批量取消:</h4>
             <ol class="breadcrumb">
-                <li><h3>批量取消:</h3></li>
-                    <form action="/admin/order/" method="get" class="list-inline">
-                        <label for="date" >
-                        公司:<select name="company" id="company">
-                            <option value="">---请选择---</option>
-                            <option value="666">全部</option>
-                            <option value="1">350</option>
-                            <option value="2">旭力</option>
-                            <option value="3">瑞鲨</option>
-                            <option value="4">牛越</option>
-                            <option value="5">XT</option>
-                        </select>
-                        </label>
-                        <label for="time_tmark" >
-                        时间(餐):<select name="time_mark" id="time_tmark">
-                            <option value="">---请选择---</option>
-                            @foreach($type as $t)
-                                <option value="{{$t->tmark}}">{{$t->tname}}</option>
-                            @endforeach
-                        </select>
-                        </label>
-                        <label for="date" >
-                            <small><span class="">时间(天)：</span><input class="layui-input" type="text" id="date" name="date" placeholder="yyyy-MM-dd" lay-key="1" value="{{$rdate or ''}}"></small>
-                        </label>
+                <li></li><br>
+                <li>
+                    <form action="/admin/order/" method="get" class="form-inline">
+                        <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                <div class="input-group">
+                                <div class="input-group-prepend">
+                                      <span class="input-group-text">
+                                        选择公司
+                                      </span>
+                                    </div>
+                                      <select name="company" class="form-control" id="company">
+                                        <option value="">---请选择---</option>
+                                        <option value="666">全部</option>
+                                        <option value="1">350</option>
+                                        <option value="2">旭力</option>
+                                        <option value="3">瑞鲨</option>
+                                        <option value="4">牛越</option>
+                                        <option value="5">XT</option>
+                                      </select>
+                                    </div>
+                                    </div>
+
+                        <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text">
+                                    时间(餐):
+                                  </span>
+                                </div>
+                                    <select name="time_mark" id="time_tmark" class="form-control">
+                                    <option value="">---请选择---</option>
+                                    @foreach($type as $t)
+                                        <option value="{{$t->tmark}}">{{$t->tname}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="input-group mb-1 col-lg-2 col-md-3 col-sm-6">
+                            <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">
+                                时间(天)
+                              </span>
+                            </div>
+                            <input type="text" name="date"  class="form-control float-right" id="date_for_cancel" value="{{$date or ''}}">
+                          </div>
+                        </div>
                         <a href="javascript:;" onclick="cancelOrder();" class="btn btn-info right">取消订单</a>
-                        <br><span style="color:red"> &nbsp;****************  </span><span style="font-weight:bold">时间(天)选了就会取消整天的餐, 只取消一餐的话,只选时间(餐)就好</span><span style="color:red">******* </span>
+                        <br>
+                        <span style="color:red"> &nbsp;****************  </span><span style="font-weight:bold">时间(天)选了就会取消整天的餐, 只取消一餐的话,只选时间(餐)就好</span><span style="color:red">******* </span>
                     </form>
+                    </li>
             </ol>
+        &nbsp;
+        <h1 class="page-header">
+            本周订单列表
+        </h1>
         </div>
         <script>
             function cancelOrder() {
                 var tmark = $('#time_tmark ').val();
                 var company = $('#company ').val();
-                var date_ = $('#date ').val();
+                var date_ = $('#date_for_cancel ').val();
 
                 if(tmark != '' && date_ !=''){
                     alert('时间二选一哦!')
@@ -88,30 +116,49 @@
             }
         </script>
 
-        <div id="page-inner">
+        <div class="container-fluid">
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <form action="/admin/order/" method="get" class="list-inline">
+                            <form action="/admin/order/" class="form-inline" method="get" >
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            时间
+                                          </span>
+                                        </div>
+                                        <select name="tmark" class="form-control">
+                                            <option value="">---请选择---</option>
+                                            @foreach($type as $t)
+                                            <option value="{{$t->tmark}}" @if($t->tmark == $tmark) selected @endif>{{$t->tname}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
 
-                                时间:<select name="tmark" id="">
-                                    <option value="">---请选择---</option>
-                                    @foreach($type as $t)
-                                    <option value="{{$t->tmark}}" @if($t->tmark == $tmark) selected @endif>{{$t->tname}}</option>
-                                    @endforeach
-                                </select>
-                                &nbsp;商家:<select name="sid" id="">
-                                    <option value="">---全部---</option>
-                                    @foreach($shop as $s)
-                                        <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
-                                    @endforeach
-                                </select>
-
-                                <button type="submit" class="btn btn-info right">查询</button>
-                                <a href="/admin/order/export/1/1" class="btn btn-info right">导出本周Excel表</a>
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            选择商家
+                                          </span>
+                                        </div>
+                                        <select name="sid" class="form-control">
+                                            <option value="">---选择商家---</option>
+                                            @foreach($shop as $s)
+                                            <option value="{{$s->sid}}" @if($s->sid == $sid) selected @endif>{{$s->sname}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <button type="submit" class="btn btn-info btn-sm">提交</button>&nbsp;
+                                    <a href="/admin/order/export/1/1" class="btn btn-info right">导出本周Excel表</a>
+                                </div>
                             </form>
                         </div>
 
@@ -153,7 +200,7 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['tmark'=>$tmark,'sid'=>$sid])->links() }}
+                                {{ $order->appends(['tmark'=>$tmark,'sid'=>$sid])->links('admin.layouts.pagination') }}
                             </div>
 
                         </div>
@@ -170,12 +217,25 @@
 
 @section('scripts')
     <script>
-        //日期范围
-        laydate.render({
-            elem: '#date'
-            ,min:1
-            ,range: true
+        $('#date_for_cancel').daterangepicker({
+            "singleDatePicker": true,
+            "showDropdowns": true,
+            "startDate": moment(),
+            "locale": {
+                "format":'YYYY-MM-DD',
+                "daysOfWeek": daterangepicker_config.daysOfWeek,
+                "monthNames": daterangepicker_config.monthNames,
+                "applyLabel": "确认",
+                "cancelLabel": "清空",
+            }
         });
 
+        $(function(){
+            $('#date_for_cancel').on('cancel.daterangepicker', function(ev, picker) {
+                //做点什么，比如清除输入
+                $('#date_for_cancel').val('');
+            });
+          $('#date_for_cancel').val('');
+        });
     </script>
     @stop
