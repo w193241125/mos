@@ -90,6 +90,7 @@
                                         <th>订单类型</th>
                                         <th>价格</th>
                                         <th>订单时间</th>
+                                        <th>下单时间</th>
                                         {{--<th>操作</th>--}}
                                     </tr>
                                     </thead>
@@ -107,7 +108,8 @@
                                             <td>{{$o->tname}}</td>
                                             {{--<td>@if($o->week_of_year-$thisWeek==0)本周@elseif($o->week_of_year-$thisWeek==1)下周@else其他时间@endif</td>--}}
                                             <td>{{$o->total}}</td>
-                                                <td>{{$o->date}}</td>
+                                            <td>{{$o->date}}</td>
+                                                <td>{{$o->created_at}}</td>
                                                 {{--<td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>--}}
                                         </tr>
                                     @endforeach
