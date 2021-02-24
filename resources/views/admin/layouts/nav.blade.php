@@ -113,14 +113,23 @@
             @if(Auth::user()->state == 4)
                 <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/myorder')}}"><i class="nav-icon  fa fa-desktop"></i> <p> 我的订单列表</p></a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/myordercount')}}"><i class="nav-icon  fa fa-desktop"></i><p> 订单统计</p></a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/food')}}"><i class="nav-icon  fa fa-desktop"></i><p> 食物设置</p></a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{url('admin/menu')}}"><i class="nav-icon  fa fa-desktop"></i><p> 菜单设置</p></a>
-                    @if(Auth::user()->realname == '包大哥' ||  Auth::user()->realname == '客来湘' ||  Auth::user()->realname == '客来湘早餐')
-                        <a class="nav-link" href="{{url('admin/order/countbysort')}}"><i class="nav-icon  fa fa-desktop"></i><p> 分类统计</p></a>
-                    @endif
+                </li>
+                @if(Auth::user()->realname == '包大哥' ||  Auth::user()->realname == '客来湘' ||  Auth::user()->realname == '客来湘早餐')
+                <li class="nav-item">
+                    <a class="nav-link" href="{{url('admin/order/countbysort')}}"><i class="nav-icon  fa fa-desktop"></i><p> 分类统计</p></a>
                 </li>
                 @endif
+
+            @endif
 
     </ul>
   </nav>
