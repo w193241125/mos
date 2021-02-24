@@ -144,6 +144,17 @@
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">
+                                            编号
+                                          </span>
+                                        </div>
+                                        <input type="number" name="uname" placeholder="请输入用户编号" class="small" min="1" value="{{$uname or NULL}}"/>
+                                    </div>
+                                </div>
+
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
                                             选择商家
                                           </span>
                                         </div>

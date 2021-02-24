@@ -36,11 +36,15 @@ class OrderController extends Controller
         if ($request->tmark){
             $where['o.tmark'] = $request->tmark;
         }
+        if ($request->uname){
+            $where['o.uname'] = $request->uname;
+        }
         if ($request->sid){
             $where['o.sid'] = $request->sid;
         }
         $tmark = $request->tmark?$request->tmark:'';
         $sid = $request->sid?$request->sid:'';
+        $uname = $request->uname?$request->uname:'';
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->where('ostate','=',1)->orderBy($orderBy)->paginate(20);
@@ -61,7 +65,7 @@ class OrderController extends Controller
         //    $item->list = trim($item->list,'+');
         //}
 
-        return view('admin.order.order', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,]);
+        return view('admin.order.order', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'uname'=>$uname,]);
     }
 
 
