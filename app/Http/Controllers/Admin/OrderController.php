@@ -181,10 +181,10 @@ class OrderController extends Controller
         $start = '';
         $end = '';
 
-        if ($request->start&&$request->end){
+        if ($request->date&&$request->dates){
             unset($where['week_of_year']);
-            $start = $request->start;
-            $end = $request->end;
+            $start = $request->date;
+            $end = $request->dates;
             $where[] = ['date','>=',$start];
             $where[] = ['date','<=',$end];
             $orderBy = ' o.date ';
@@ -206,7 +206,7 @@ class OrderController extends Controller
         $type = DB::table('types')->get()->toArray();
         $user = DB::table('users')->get()->toArray();
 
-        return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'date'=>$sdate,'start'=>$start,'end'=>$end]);
+        return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'date'=>$start,'dates'=>$end]);
 
     }
     //商家导出自己的excel

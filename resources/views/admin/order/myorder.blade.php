@@ -22,24 +22,48 @@
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <form action="/admin/myorder/" method="get" class="list-inline">
-                                    <label for="date1" >
-                                        <small><span class="">开始时间：</span><input class="layui-input date-item" type="text" id="date1" name="start" placeholder="yyyy-MM-dd" lay-key="1" value="{{$start or '1'}}"></small>
-                                    </label>
+                            <form action="/admin/myorder/" method="get" class="form-inline">
+                                <div class="input-group mb-1 col-lg-2 col-md-3 col-sm-6">
+                                    <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text">
+                                        开始时间
+                                      </span>
+                                    </div>
+                                    <input type="text" name="date"  class="form-control float-right" id="date" value="{{$date or ''}}">
+                                  </div>
+                                </div>
 
-                                <label for="date2" >
-                                    <small><span class="">结束时间：</span><input class="layui-input date-item" type="text" id="date2" name="end" placeholder="yyyy-MM-dd" lay-key="2" value="{{$end or ''}}"></small>
-                                </label>
-                                <label>
-                                    <small>时间:<select name="tmark" id="">
-                                    <option value="">---请选择---</option>
-                                    @foreach($type as $t)
-                                    <option value="{{$t->tmark}}">{{$t->tname}}</option>
-                                    @endforeach
-                                </select> </small>
-                                </label>
-                                <button type="submit" class="btn btn-info right">查询</button>
-                                <a href="/admin/order/shopexport/@if($start==0)1 @else{{$start}}@endif/@if($end==0)1 @else{{$end}}@endif" class="btn btn-info right">导出Excel表</a>*先选开始/结束时间查询后,再导出
+                                <div class="input-group mb-1 col-lg-2 col-md-3 col-sm-6">
+                                    <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text">
+                                        结束时间
+                                      </span>
+                                    </div>
+                                    <input type="text" name="dates"  class="form-control float-right" id="dates" value="{{$dates or ''}}">
+                                  </div>
+                                </div>
+
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            时间
+                                          </span>
+                                        </div>
+                                        <select name="tmark" class="form-control">
+                                            <option value="">---请选择---</option>
+                                            @foreach($type as $t)
+                                            <option value="{{$t->tmark}}" @if($t->tmark == $tmark) selected @endif>{{$t->tname}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <button type="submit" class="btn btn-primary btn-sm">查询</button>&nbsp;
+                                    <a href="/admin/order/shopexport/@if($date==0)1 @else{{$date}}@endif/@if($dates==0)1 @else{{$dates}}@endif" class="btn btn-info right">导出Excel表</a>
+                                </div>*先选开始/结束时间查询后,再导出
                             </form>
                         </div>
 
@@ -81,7 +105,7 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['tmark'=>$tmark,'start'=>$start,'end'=>$end])->links() }}
+                                {{ $order->appends(['tmark'=>$tmark,'date'=>$date,'dates'=>$dates])->links() }}
                             </div>
 
                         </div>
