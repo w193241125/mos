@@ -67,9 +67,8 @@
                             </form>
                         </div>
 
-                        <div class="panel-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <table class="table table-striped table-head-fixed text-nowrap table-bordered table-hover" id="dataTables-example">
                                     <thead>
                                     <tr>
                                         <th>用户编号</th>
@@ -108,7 +107,6 @@
                                 {{ $order->appends(['tmark'=>$tmark,'date'=>$date,'dates'=>$dates])->links('admin.layouts.pagination') }}
                             </div>
 
-                        </div>
                     </div>
                     <!--End Advanced Tables -->
                 {{--</div>--}}
