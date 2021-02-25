@@ -57,7 +57,7 @@
                                             用户名
                                           </span>
                                         </div>
-                                        <input type="number" name="uname" placeholder="请输入用户编号" class="small" min="1" value="{{$uname or NULL}}"/>
+                                        <input type="text" name="uname" placeholder="请输入用户编号" class="small" min="1" value="{{$uname or NULL}}"/>
                                     </div>
                                 </div>
 
