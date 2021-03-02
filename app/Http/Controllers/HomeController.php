@@ -139,6 +139,7 @@ class HomeController extends Controller
 
         $weekOfYear = date('W',time());
         $data['uid'] = Auth::user()->uid;
+        $data['cid'] = Auth::user()->company;
         $data['uname'] = $uname = Auth::user()->uname;
         $data['total'] = 0;
         $data['food'] = '';
@@ -281,6 +282,7 @@ class HomeController extends Controller
         }
         $weekOfYear = date('W',time());
         $data['uid'] = Auth::user()->uid;
+        $data['cid'] = Auth::user()->company;
         $data['uname'] = $uname = Auth::user()->uname;
         $data['total'] = 0;
         $data['food'] = '';
