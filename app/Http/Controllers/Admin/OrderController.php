@@ -108,10 +108,11 @@ class OrderController extends Controller
             $excelName = substr($start,0,10).' 到 '.substr($end,0,10).' 的订单';
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->join('users as u','u.uid','=','o.uid')->orWhereBetween('date',[$start,$end])->where('ostate','=',1)->get()->toArray();
         }
-
-        $cellData[0] = ['用户编号','用户名称','商家','食物','订单类型','订单时间','价格',];
+        $company = [1,'350','旭力','瑞鲨','牛越','XT'];
+        $cellData[0] = ['用户编号','用户名称','商家','食物','订单类型','订单时间','价格','公司'];
         foreach ($order as $item) {
-            array_push($cellData,[$item->uname,$item->realname,$item->sname,$item->food,$item->tname,$item->date,$item->total]);
+            $cp = $company[$item->cid] ?? '';
+            array_push($cellData,[$item->uname,$item->realname,$item->sname,$item->food,$item->tname,$item->date,$item->total,$cp]);
         }
         //dd($cellData);
         Excel::create($excelName,function($excel) use ($cellData){
@@ -216,9 +217,8 @@ class OrderController extends Controller
         return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'date'=>$start,'dates'=>$end]);
 
     }
+
     //商家导出自己的excel
-
-
     public function shopExport(Request $request)
     {
         $dayWeek = Carbon::parse(date('Y-m-d'))->dayOfWeek;//获取今天是周几
