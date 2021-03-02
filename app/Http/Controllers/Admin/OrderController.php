@@ -42,12 +42,17 @@ class OrderController extends Controller
         if ($request->sid){
             $where['o.sid'] = $request->sid;
         }
+        if ($request->company){
+            $where['o.cid'] = $request->company;
+        }
         $tmark = $request->tmark?$request->tmark:'';
         $sid = $request->sid?$request->sid:'';
         $uname = $request->uname?$request->uname:'';
 
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
+
         $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->where($where)->where('ostate','=',1)->orderBy($orderBy)->paginate(20);
+
         $type = DB::table('types')->get()->toArray();
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
 
@@ -65,7 +70,7 @@ class OrderController extends Controller
         //    $item->list = trim($item->list,'+');
         //}
 
-        return view('admin.order.order', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'uname'=>$uname,]);
+        return view('admin.order.order', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'uname'=>$uname,'company'=>$request->company,]);
     }
 
 
@@ -141,6 +146,9 @@ class OrderController extends Controller
             $uid = $id[0]->uid;
             array_push($where,['o.uid','=',$uid]);
         }
+        if ($request->company){
+            array_push($where,['o.cid','=',$request->company]);
+        }
 
         !empty($request->sid)?array_push($where,['o.sid','=',$request->sid]): array_push($where,['o.sid','!=',0]);
         if ($request->date){
@@ -149,7 +157,6 @@ class OrderController extends Controller
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->whereBetween('date',[$start,$end])->where($where)->where('ostate','=',1)->paginate(20);
 
         } else {
-
             $order = DB::table('orders as o')->leftJoin('shops as s','o.sid','=','s.sid')->join('types as t','t.tmark','=','o.tmark')->orderBy('date')->where($where)->where('ostate','=',1)->paginate(20);
 
         }
@@ -157,7 +164,7 @@ class OrderController extends Controller
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
         $user = DB::table('users')->get()->toArray();
-        return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end,'uname'=>$uname,'name'=>$name]);
+        return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end,'uname'=>$uname,'name'=>$name,'company'=>$request->company]);
     }
 
 

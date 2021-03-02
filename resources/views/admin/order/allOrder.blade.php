@@ -18,7 +18,7 @@
         <div class="container-fluid">
 
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-lg-12 col-md-12 col-sm-12">
                     <!-- Advanced Tables -->
                     <div class="panel panel-default">
                         <div class="panel-heading">
@@ -50,18 +50,18 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                <div class="input-group mb-1 col-lg-2 col-md-2 col-sm-6">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">
-                                            用户名
+                                            用户
                                           </span>
                                         </div>
                                         <input type="text" name="uname" placeholder="请输入用户编号" class="small" min="1" value="{{$uname or NULL}}"/>
                                     </div>
                                 </div>
 
-                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                <div class="input-group mb-1 col-lg-2 col-md-2 col-sm-6">
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                           <span class="input-group-text">
@@ -71,6 +71,23 @@
                                         <input type="text" name="name" placeholder="请输入姓名" class="small" min="1" value="{{$name or NULL}}"/>
                                     </div>
                                 </div>
+                                <div class="input-group mb-1 col-lg-2 col-md-2 col-sm-6">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                选择公司
+                                              </span>
+                                            </div>
+                                            <select name="company" class="form-control">
+                                                <option value="">---选择公司---</option>
+                                                <option value="1" @if($company==1) selected @endif>350</option>
+                                                <option value="2" @if($company==2) selected @endif>旭力</option>
+                                                <option value="3" @if($company==3) selected @endif>瑞鲨</option>
+                                                <option value="4" @if($company==4) selected @endif>牛越</option>
+                                                <option value="5" @if($company==5) selected @endif>XT</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
                                     <button type="submit" class="btn btn-primary btn-sm">提交</button>&nbsp;
                                     <a href="/admin/order/export/{{$start or 1}}/{{$end or 1}}" class="btn btn-info right" data-toggle="tooltip"  title="默认本周,选择时间查询后可导出时间段订单">导出Excel表</a>
