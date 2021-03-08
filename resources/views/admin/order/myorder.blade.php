@@ -121,7 +121,7 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{ $order->appends(['tmark'=>$tmark,'date'=>$date,'dates'=>$dates])->links('admin.layouts.pagination') }}
+                                {{ $order->appends(['tmark'=>$tmark,'date'=>$date,'dates'=>$dates,'company'=>$company])->links('admin.layouts.pagination') }}
                             </div>
 
                     </div>
