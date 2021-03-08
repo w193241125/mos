@@ -44,6 +44,23 @@
                                     <input type="text" name="dates"  class="form-control float-right" id="dates" value="{{$dates or ''}}">
                                   </div>
                                 </div>
+                                <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text">
+                                            选择公司
+                                          </span>
+                                        </div>
+                                      <select name="company" class="form-control">
+                                        <option value="">---选择公司---</option>
+                                        <option value="1" @if($company==1) selected @endif>350</option>
+                                        <option value="2" @if($company==2) selected @endif>旭力</option>
+                                        <option value="3" @if($company==3) selected @endif>瑞鲨</option>
+                                        <option value="4" @if($company==4) selected @endif>牛越</option>
+                                        <option value="5" @if($company==5) selected @endif>XT</option>
+                                      </select>
+                                    </div>
+                                </div>
 
                                 <div class="input-group mb-1 col-lg-2 col-md-4 col-sm-6">
                                     <div class="input-group">
