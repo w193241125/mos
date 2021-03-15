@@ -149,7 +149,37 @@ class HomeController extends Controller
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
                 if ($shop == 0){
-                    $res = DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear,'year'=>date('Y',time())])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
+                    $res = DB::table('orders')->where(['tmark'=>$mark,'week_of_year'=>$weekOfYear,'uid'=>$data['uid'],'ostate'=>1, 'year'=>date('Y',time())])->get()->toArray();
+
+                    if (!empty($res)){
+                        // 都城早餐当天限制
+                        if ($this->time_type[$mark]==1 && $dayWeek == $this->week_type[$mark]){
+                            if ($res[0]->sid == '16'){
+                                if (strtotime(date('Y-m-d 00:00:00')) < time()){
+                                    return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
+                                }
+                            }
+                        }
+                        // 都城早餐
+                        if ($this->time_type[$mark]==1 && (($dayWeek +1)  == ($this->week_type[$mark]))  ){
+                            if ($res[0]->sid == '16'){
+                                if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                                    return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
+                                }
+                            }
+                        }
+                        // 都城早餐--周日特殊处理。
+                        if ($this->time_type[$mark]==1 && $dayWeek == 6 &&  $this->week_type[$mark] == 0 ){
+                             if ($res[0]->sid == '16'){
+                                if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                                    return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
+                                }
+                            }
+                        }
+                    }
+
+                //取消点餐
+                DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear,'year'=>date('Y',time())])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }
             }
         }
@@ -189,24 +219,10 @@ class HomeController extends Controller
                     }
                 }
 
-                // 早餐
-                if ($this->time_type[$data['tmark']]==1 && (($dayWeek +1)  == ($this->week_type[$data['tmark']]))  && $data['sid'] == 16){
-                    if (strtotime(date('Y-m-d 13:00:00')) < time()){
-                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
-                    }
-
-                }
-                // 早餐--周日特殊处理。
-                if ($this->time_type[$data['tmark']]==1 && $dayWeek == 6 &&  $this->week_type[$data['tmark']] == 0  && $data['sid'] == 16){
-                    if (strtotime(date('Y-m-d 13:00:00')) < time()){
-                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
-                    }
-
-                }
-
+                // 都城早餐当天限制
                 if ($this->time_type[$data['tmark']]==1 && $dayWeek == $this->week_type[$data['tmark']]  && $data['sid'] == 16){
                     if (strtotime(date('Y-m-d 00:00:00')) < time()){
-                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
+                        return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
                     }
 
                 }
@@ -226,6 +242,24 @@ class HomeController extends Controller
                 $data['food'] = trim($data['food'],'+');
                 $data['year'] = date('Y',time());
                 $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$weekOfYear,'uid'=>$data['uid'],'ostate'=>1, 'year'=>date('Y',time())])->get()->toArray();
+
+                 // 都城早餐
+                if ($this->time_type[$data['tmark']]==1 && (($dayWeek +1)  == ($this->week_type[$data['tmark']]))  ){
+                    if ($data['sid'] == 16 || (!empty($res) && $res[0]->sid == '16') ){
+                        if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                            return redirect('home/show')->with(['error_msg'=>'别闹，早餐超过点餐时限(或者你点了都城早餐)']);
+                        }
+                    }
+                }
+                // 都城早餐--周日特殊处理。
+                if ($this->time_type[$data['tmark']]==1 && $dayWeek == 6 &&  $this->week_type[$data['tmark']] == 0 ){
+                     if ($data['sid'] == 16 || (!empty($res) && $res[0]->sid == '16')){
+                        if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                            return redirect('home/show')->with(['error_msg'=>'别闹，早餐超过点餐时限(或者你点了都城早餐)']);
+                        }
+                    }
+                }
+
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
@@ -291,7 +325,18 @@ class HomeController extends Controller
         //判断是否取消订餐
         if (isset($request->shop)){
             foreach ($request->shop as $mark=>$shop) {
+                //取消点餐
                 if ($shop == 0){
+                    if (!empty($res)){
+                        // 都城早餐--周日特殊处理。
+                        if ($this->time_type[$mark]==1 && $dayWeek == 6 &&  $this->week_type[$mark] == 0 ){
+                             if ($res[0]->sid == '16'){
+                                if (strtotime(date('Y-m-d 13:00:00')) < time()){
+                                    return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
+                                }
+                            }
+                        }
+                    }
                     $res=DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$data['week_of_year'],'year'=>date('Y',time())])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }
             }
