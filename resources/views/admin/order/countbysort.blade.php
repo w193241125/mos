@@ -28,6 +28,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                         </div>
+
 {{-- --------------------------------------今日餐--------------------------------------------}}
                         @if(Auth::user()->state==4)
                         @foreach($food_count_today as $mark=>$marks)
@@ -56,6 +57,28 @@
                         @endif
 
                         @if(Auth::user()->state==3)
+                            @foreach($food_count_today2 as $mark=>$food)
+                        <div class="panel-body">
+                            <h2 class="page-header">城市简餐：{{$week_name[$mark]}}:</h2>
+                            <div class="table-responsive">
+                                <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                    <thead>
+                                    <tr>
+                                        <th>食物</th>
+                                        <th>数量</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($food as $k=>$d)
+                                        <tr class="gradeA">
+                                            <td>{{$k}}</td>
+                                            <td>{{$d}}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endforeach
                             <h1 class="page-header">今日:</h1>
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
@@ -93,10 +116,8 @@
                                                 <td>{{$d7}}</td>
                                             </tr>
                                         @endforeach
-                                        {{--<td><a href="{{url('admin/shop')}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>--}}
                                         </tbody>
                                     </table>
-                                    {{--{{ $order->appends(['date'=>$date,'sid'=>$sid,])->links() }}--}}
                                 </div>
                         @endif
 

@@ -307,10 +307,25 @@ class OrderController extends Controller
             $date = date('Y-m-d',time());//获取今天天日期
             $edate = date('Y-m-d',time()+86400);//获取明天天日期
 
+            $today_order_2 = DB::table('orders')->where(['date'=>$date,'sid'=>2,'ostate'=>1])->get()->toArray();
             $today_order = DB::table('orders')->where(['date'=>$date,'sid'=>4,'ostate'=>1])->get()->toArray();
             $today_order7 = DB::table('orders')->where(['date'=>$date,'sid'=>15,'ostate'=>1])->get()->toArray();
             $next_order = DB::table('orders')->where(['date'=>$edate,'sid'=>4,'ostate'=>1])->get()->toArray();
             $next_order7 = DB::table('orders')->where(['date'=>$edate,'sid'=>15,'ostate'=>1])->get()->toArray();
+            $food_arr_today2 =[];
+            foreach ($today_order_2 as $o) {
+                $food_arr_tmp2 = explode('+',$o->food);
+                $food_arr_today2[$o->tmark] = isset($food_arr_today2[$o->tmark])? $food_arr_today2[$o->tmark] : [];
+                foreach ($food_arr_tmp2 as $f) {
+                    array_push($food_arr_today2[$o->tmark],$f);
+                }
+
+            }
+            $keys = array_keys($food_arr_today2);
+            foreach ($keys as $key) {
+                $food_count_today2[$key] = array_count_values($food_arr_today2[$key]);
+            }
+
             $food_arr_today = [];
             foreach ($today_order as $o) {
                 $food_arr_tmp = explode('+',$o->food);
@@ -342,12 +357,13 @@ class OrderController extends Controller
                 }
             }
 
+
             $food_count_today = array_count_values($food_arr_today);
             $food_count_today7 = array_count_values($food_arr_today7);
             $food_count_next7 = array_count_values($food_arr_next7);
             $food_count_next = array_count_values($food_arr_next);
 
-            return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_next'=>$food_count_next,'food_count_today7'=>$food_count_today7,'food_count_next7'=>$food_count_next7,'week_name'=>$this->week_name]);
+            return view('admin.order.countbysort',['food_count_today'=>$food_count_today,'food_count_today2'=>$food_count_today2,'food_count_next'=>$food_count_next,'food_count_today7'=>$food_count_today7,'food_count_next7'=>$food_count_next7,'week_name'=>$this->week_name]);
         }elseif($state==4){
             $sname = Auth::user()->realname;
             $sidObj = DB::table('shops')->where(['sname'=>$sname])->get();
