@@ -97,6 +97,9 @@
                 <a class="nav-link" href="{{url('admin/shop')}}"><i class="nav-icon  fa fa-list"></i><p> 商家列表</p></a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{{url('admin/company')}}"><i class="nav-icon  fa fa-list"></i><p> 公司列表</p></a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{url('admin/food')}}"><i class="nav-icon  fa fa-list"></i><p> 食物列表</p></a>
             </li>
             <li class="nav-item">

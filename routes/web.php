@@ -29,6 +29,12 @@ Route::group(['middleware'=>'admin'],function (){
     Route::post('/admin/shop/doadd', 'Admin\ShopController@doadd');
     Route::get('/admin/shop/edit/{sid}', 'Admin\ShopController@edit')->name('shopEdit');
     Route::post('/admin/shop/doedit', 'Admin\ShopController@doedit');
+//后台公司设置
+    Route::get('/admin/company', 'Admin\CompanyController@show');
+    Route::get('/admin/company/add', 'Admin\CompanyController@add');
+    Route::post('/admin/company/doadd', 'Admin\CompanyController@doadd');
+    Route::get('/admin/company/edit/{id}', 'Admin\CompanyController@edit')->name('companyEdit');
+    Route::post('/admin/company/doedit', 'Admin\CompanyController@doedit');
 
 //食物设置
     Route::get('/admin/food','Admin\FoodController@show');
