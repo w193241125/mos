@@ -84,6 +84,16 @@
                                             &nbsp;&nbsp;<label for="qy"><input type="radio" name="state" class="radio3" value="1" id="qy" checked>启用</label>
                                             &nbsp;&nbsp;<label for="jy"><input type="radio" name="state" class="radio3" value="2" id="jy">禁用</label>
                                         </div>
+                                        &nbsp;<div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                可点餐公司
+                                              </span>
+                                            </div>
+                                            @foreach($companys as $c)
+                        &nbsp;&nbsp;<label for="qy_{{$c['id']}}"><input type="checkbox" name="company[]" class="checkbox" value="{{$c['id']}}" id="qy_{{$c['id']}}" checked>{{$c['company_name']}}</label>
+                                            @endforeach
+                                        </div>
                                         &nbsp;
                                         <div class="sub-title"></div>
                                         <button type="submit" class="btn btn-info">确认添加</button>

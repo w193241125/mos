@@ -85,7 +85,17 @@
                                             &nbsp;&nbsp;<label for="jy"><input type="radio" name="state" class="radio3" value="2" id="jy" {{$shop->state == 2?'checked':''}}>禁用</label>
                                         </div>
                                         &nbsp;
-
+                                        &nbsp;<div class="input-group">
+                                            <div class="input-group-prepend">
+                                              <span class="input-group-text">
+                                                可点餐公司
+                                              </span>
+                                            </div>
+                                            @foreach($companys as $c)
+                        &nbsp;&nbsp;<label for="qy_{{$c['id']}}"><input type="checkbox" name="companys[]" class="checkbox" value="{{$c['id']}}" id="qy_{{$c['id']}}" @if(in_array($c['id'],$shop->companys)) checked @endif>{{$c['company_name']}}</label>
+                                            @endforeach
+                                        </div>
+                                        &nbsp;
                                         <div class="sub-title"></div>
                                         <button type="submit" class="btn btn-info">确认修改</button>
                                     </div>

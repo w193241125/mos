@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -14,16 +15,18 @@ class ShopController extends Controller
         $this->middleware('auth');
     }
 
-    public function show()
+    public function show(Company $company)
     {
         $shop = DB::table('shops')->where('state','!=',3)->get();
-        $type =[1=>'早餐',2=>'中晚餐'];
-        return view('admin.shop.shop', compact(['shop','type']));
+        $type = [1=>'早餐', 2=>'中晚餐'];
+        $companys = $company->get()->toArray();
+        return view('admin.shop.shop', compact(['shop','type','companys']));
     }
 
-    public function add()
+    public function add(Company $company)
     {
-        return view('admin.shop.add');
+        $companys = $company->where(['state'=>1])->get()->toArray();
+        return view('admin.shop.add',compact(['companys']));
     }
 
     public function doadd(Request $request)
@@ -33,6 +36,7 @@ class ShopController extends Controller
         $shop['address'] = $request->address;
         $shop['phone'] = $request->phone;
         $shop['state'] = $request->state;
+        $shop['companys'] = json_encode($request->companys);
         $shop['limit_money'] = $request->limit_money;
         $shop['state'] = $request->state;
 
@@ -44,12 +48,14 @@ class ShopController extends Controller
         }
     }
 
-    public function edit(Request $request)
+    public function edit(Request $request,Company $company)
     {
         $sid = $request->route('sid');
         $shop = DB::table('shops')->where('sid','=',$sid)->get()->toArray();
+        $shop[0]->companys= json_decode($shop[0]->companys,true) ?? [];
         //dd($shop);
-        return view('admin.shop.edit',['shop'=>$shop[0]]);
+        $companys = $company->where(['state'=>1])->get()->toArray();
+        return view('admin.shop.edit',['shop'=>$shop[0],'companys'=>$companys]);
     }
 
     public function doedit(Request $request)
@@ -61,6 +67,7 @@ class ShopController extends Controller
         $data['address'] = $request->address;
         $data['phone'] = $request->phone;
         $data['state'] = $request->state;
+        $data['companys'] = json_encode($request->companys);
         $data['limit_money'] = $request->limit_money;
         $res = DB::table('shops')->where('sid','=',$sid)->update($data);
         if ($res){
