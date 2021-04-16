@@ -17,9 +17,16 @@ class ShopController extends Controller
 
     public function show(Company $company)
     {
-        $shop = DB::table('shops')->where('state','!=',3)->get();
+        $shop = DB::table('shops')->where('state','!=',3)->orderBy('state')->get()->toArray();
+        foreach ($shop as $k=>$v) {
+            $shop[$k]->companys = json_decode($v->companys,true);
+        }
         $type = [1=>'早餐', 2=>'中晚餐'];
-        $companys = $company->get()->toArray();
+        $company = $company->get()->toArray();
+        $companys = [];
+        foreach ($company as $v){
+            $companys[$v['id']] = $v['company_name'];
+        }
         return view('admin.shop.shop', compact(['shop','type','companys']));
     }
 

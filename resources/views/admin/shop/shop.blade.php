@@ -41,6 +41,7 @@
                                             <th>联系方式</th>
                                             <th>地址</th>
                                             <th>是否启用</th>
+                                            <th>可点餐公司</th>
                                             <th>操作</th>
                                         </tr>
                                         </thead>
@@ -53,6 +54,14 @@
                                             <td>{{$s->phone}}</td>
                                             <td>{{$s->address}}</td>
                                             <td>@if($s->state==1)启用@elseif($s->state==2)禁用@else其他@endif</td>
+                                            <td>
+                                                @if(is_array($s->companys))
+                                                @foreach($s->companys as $v)
+                                                    {{$companys[$v]}}&nbsp;
+                                                @endforeach
+                                                @endif
+
+                                            </td>
                                             <td>
                                                 <a href="/admin/shop/edit/{{$s->sid}}" class="btn btn-primary btn-xs"><i class="fa fa-edit "></i>编辑</a> </td>
                                         </tr>
