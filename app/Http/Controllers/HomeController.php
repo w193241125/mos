@@ -102,7 +102,10 @@ class HomeController extends Controller
         $fmods = fmod($weekOfYear,2);
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $food = DB::table('foods')->orderBy('price','desc')->where('fstate','=',1)->get();
-        $shop = DB::table('shops')->where('state','!=',2)->get();
+        $shop = DB::table('shops')->where('state','!=',2)->get()->toArray();
+        foreach ($shop as $k=>$v) {
+            $shop[$k]->companys = json_decode($v->companys,true);
+        }
         $menu = DB::table('menus')->where(['mweek'=>1,'mstate'=>1])->get()->toArray();
         $time_limited = DB::table('time_limited')->get()->toArray();
 
@@ -292,7 +295,10 @@ class HomeController extends Controller
 
         $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
         $food = DB::table('foods')->orderBy('price','desc')->where('fstate','=',1)->get();
-        $shop = DB::table('shops')->where('state','!=',2)->get();
+        $shop = DB::table('shops')->where('state','!=',2)->get()->toArray();
+        foreach ($shop as $k=>$v) {
+            $shop[$k]->companys = json_decode($v->companys,true);
+        }
         $menu = DB::table('menus')->where(['mweek'=>2,'mstate'=>1])->get()->toArray();
         foreach ($menu as &$v) {
             $v->food = explode(',',trim($v->fid,','));

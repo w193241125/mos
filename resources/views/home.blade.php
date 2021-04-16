@@ -162,6 +162,7 @@
                     <div class="panel panel-default meal" style="" >
                         <div class="panel-heading" style="text-align:center"><a name="{{$t->tmark}}"></a><b style="font-size: large">{{$t->tname}}</b></div>
                         @foreach($shop as $s){{--shop--}}
+                        @if($s->sid != 0 && !in_array(Auth::user()->company, $s->companys ?? [])) @continue  @endif
                         @foreach($menu as $m){{--menu--}}
                         @if($t->tmark === $m->tmark && $s->sid === $m->sid){{--同一餐, 同一商店--}}
                         <div class="panel-heading" >
