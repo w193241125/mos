@@ -244,7 +244,7 @@ class HomeController extends Controller
 
                 $data['food'] = trim($data['food'],'+');
                 $data['year'] = date('Y',time());
-                $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$weekOfYear,'uid'=>$data['uid'],'ostate'=>1, 'year'=>date('Y',time())])->get()->toArray();
+                $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$weekOfYear,'uid'=>$data['uid'],'ostate'=>1, 'year'=>date('Y',time()),'date'=>$data['date']])->get()->toArray();
 
                  // 都城早餐
                 if ($this->time_type[$data['tmark']]==1 && (($dayWeek +1)  == ($this->week_type[$data['tmark']]))  ){
@@ -404,7 +404,7 @@ class HomeController extends Controller
                 }
                 $data['food'] = trim($data['food'],'+');
                 $data['year'] = date('Y',time());
-                $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$data['week_of_year'],'uid'=>$data['uid'],'ostate'=>1,])->get()->toArray();
+                $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$data['week_of_year'],'uid'=>$data['uid'],'ostate'=>1,'date'=>$data['date']])->get()->toArray();
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
