@@ -30,11 +30,9 @@
                                         </div>
                                         <select name="company" class="form-control">
                                             <option value="0" >--请选择--</option>
-                                            <option value="1">三五零</option>
-                                            <option value="2">旭力</option>
-                                            <option value="3">瑞鲨</option>
-                                            <option value="4">牛越</option>
-                                            <option value="5">XT</option>
+                                            @foreach($companys as $c)
+                                                <option value="{{$c->id}}">{{$c->company_name}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                     &nbsp;

@@ -37,9 +37,11 @@ class UserController extends Controller
             })
             ->orderBy('uid','desc')
             ->get();
+        $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
         return view('admin.user.user')->with([
             'user'=> $user,
             'company'=>$company,
+            'companys'=>$companys,
             'uname'=>$uname,
             'realname'=>$realname,
             'state'=>$state,
@@ -54,7 +56,8 @@ class UserController extends Controller
         $uids = $uid->uname ?? '无';
         $xt_uid = DB::table('users')->orderBy('uid','desc')->whereNotIn('state',[4])->where(['company'=>5])->first();
         $xt_uids = $xt_uid->uname ?? '无';
-        return view('admin.user.add')->with(['uid'=> $uids,'ny_uid'=>$ny_uids,'xt_uid'=>$xt_uids]);
+        $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
+        return view('admin.user.add')->with(['uid'=> $uids,'ny_uid'=>$ny_uids,'xt_uid'=>$xt_uids,'companys'=>$companys,]);
     }
 
     public function doadd(Request $request)
