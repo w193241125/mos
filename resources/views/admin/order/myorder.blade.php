@@ -51,14 +51,12 @@
                                             选择公司
                                           </span>
                                         </div>
-                                      <select name="company" class="form-control">
-                                        <option value="">---选择公司---</option>
+
                                         <select name="company" class="form-control">
                                                 <option value="">---选择公司---</option>
                                                  @foreach($companys as $c)
                                                 <option value="{{$c->id}}" @if($company==$c->id) selected @endif>{{$c->company_name}}</option>
                                             @endforeach
-                                            </select>
                                       </select>
                                     </div>
                                 </div>
