@@ -88,7 +88,8 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         $user = DB::table('users')->where('uid','=',$request->uid)->get()->toArray();
-        return view('admin.user.edit',['user'=>$user[0]]);
+        $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
+        return view('admin.user.edit',['user'=>$user[0],'companys'=>$companys,]);
     }
 
     public function doedit(Request $request)
