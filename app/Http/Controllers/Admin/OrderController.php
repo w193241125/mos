@@ -69,8 +69,8 @@ class OrderController extends Controller
         //    }
         //    $item->list = trim($item->list,'+');
         //}
-
-        return view('admin.order.order', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'uname'=>$uname,'company'=>$request->company,]);
+        $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
+        return view('admin.order.order', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'shop'=>$shop,'tmark'=>$tmark,'sid'=>$sid,'uname'=>$uname,'company'=>$request->company,'companys'=>$companys,]);
     }
 
 
@@ -165,7 +165,8 @@ class OrderController extends Controller
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
         $user = DB::table('users')->get()->toArray();
-        return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end,'uname'=>$uname,'name'=>$name,'company'=>$request->company]);
+        $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
+        return view('admin.order.allOrder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'shop'=>$shop,'sid'=>$sid,'date'=>$sdate,'start'=>$start,'end'=>$end,'uname'=>$uname,'name'=>$name,'company'=>$request->company,'companys'=>$companys,]);
     }
 
 
@@ -217,8 +218,9 @@ class OrderController extends Controller
         $food = DB::table('foods')->select(['fid','fname'])->get()->toArray();
         $type = DB::table('types')->get()->toArray();
         $user = DB::table('users')->get()->toArray();
+        $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
 
-        return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'date'=>$start,'dates'=>$end,'company'=>$request->company]);
+        return view('admin.order.myorder', ['order'=>$order, 'food'=>$food,'user'=>$user,'thisWeek'=>$weekOfYear,'type'=>$type,'tmark'=>$tmark,'date'=>$start,'dates'=>$end,'company'=>$request->company,'companys'=>$companys,]);
 
     }
 
@@ -294,7 +296,9 @@ class OrderController extends Controller
         }
         $shop = DB::table('shops')->get()->where('sid','!=',0)->toArray();
         $dayOrder = DB::select("select count(o.oid) as num,sum(o.total) as total,s.sname,o.sid from orders as o LEFT JOIN shops as s ON s.sid=o.sid JOIN users as u ON u.uid=o.uid where {$where}  GROUP BY o.sid");
-        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'dates'=>$edate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,'company'=>$request->company,]);
+        $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
+
+        return view('admin.order.dayOrder',['dayOrder'=>$dayOrder,'shop'=>$shop, 'date'=>$sdate,'dates'=>$edate,'start'=>$start,'end'=>$end,'sid'=>$sid,'tdate'=>$tdate,'company'=>$request->company,'companys'=>$companys,]);
     }
 
     //处理早餐订单订单为分类统计
@@ -660,8 +664,8 @@ class OrderController extends Controller
         $total = DB::select("select count(o.oid) as num,sum(o.total) as total FROM orders as o LEFT JOIN users as u ON u.uid=o.uid  WHERE {$where}");
 
         $dayOrder = DB::select("select o.date, count(o.oid) as num,sum(o.total) as total FROM orders as o LEFT JOIN users as u ON u.uid=o.uid  WHERE {$where}  GROUP BY date");
-
-        return view('admin.order.order_summary',['dayOrder'=>$dayOrder,'shop'=>$shop,'sid'=>$sid,'company'=>$request->company,'total'=>$total,'date'=>$sdate,'dates'=>$edate]);
+        $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
+        return view('admin.order.order_summary',['dayOrder'=>$dayOrder,'shop'=>$shop,'sid'=>$sid,'company'=>$request->company,'companys'=>$companys,'total'=>$total,'date'=>$sdate,'dates'=>$edate]);
     }
 
     public function export_summary(Request $request)

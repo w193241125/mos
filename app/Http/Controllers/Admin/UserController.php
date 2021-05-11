@@ -38,12 +38,17 @@ class UserController extends Controller
             ->orderBy('uid','desc')
             ->get();
         $companys = DB::table('companys')->where('state','=',1)->get()->toArray();
+        $cp = [];
+        foreach ($companys as $c) {
+            $cp[$c->id] = $c->company_name;
+        }
         return view('admin.user.user')->with([
             'user'=> $user,
             'company'=>$company,
             'companys'=>$companys,
             'uname'=>$uname,
             'realname'=>$realname,
+            'cp'=>$cp,
             'state'=>$state,
         ]);
     }

@@ -72,11 +72,9 @@
                                         </div>
                                       <select name="company" class="form-control">
                                         <option value="">---选择公司---</option>
-                                        <option value="1" @if($company==1) selected @endif>350</option>
-                                        <option value="2" @if($company==2) selected @endif>旭力</option>
-                                        <option value="3" @if($company==3) selected @endif>瑞鲨</option>
-                                        <option value="4" @if($company==4) selected @endif>牛越</option>
-                                        <option value="5" @if($company==5) selected @endif>XT</option>
+                                                 @foreach($companys as $c)
+                                                <option value="{{$c->id}}" @if($company==$c->id) selected @endif>{{$c->company_name}}</option>
+                                            @endforeach
                                       </select>
                                     </div>
                                 </div>
