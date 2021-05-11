@@ -34,7 +34,7 @@
                                         <select name="company" class="form-control" id="company">
                                                 <option value="0">--请选择--</option>
                                                  @foreach($companys as $c)
-                                                <option value="{{$c->id}}" @if($company==$c->id) selected @endif>{{$c->company_name}}</option>
+                                                <option value="{{$c->id}}" @if($user->company==$c->id) selected @endif>{{$c->company_name}}</option>
                                             @endforeach
                                       </select>
                                     </div>
