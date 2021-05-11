@@ -31,14 +31,12 @@
                                             所属公司
                                           </span>
                                         </div>
-                                        <select name="company" class="form-control">
-                                            <option value="0" >--请选择--</option>
-                                             <option value="1" @if($user->company==1) selected @endif>三五零</option>
-                                                <option value="2" @if($user->company==2) selected @endif>旭力</option>
-                                                <option value="3" @if($user->company==3) selected @endif>瑞鲨</option>
-                                                <option value="4" @if($user->company==4) selected @endif>牛越</option>
-                                                <option value="5" @if($user->company==5) selected @endif>XT</option>
-                                        </select>
+                                        <select name="company" class="form-control" id="company">
+                                                <option value="0">--请选择--</option>
+                                                 @foreach($companys as $c)
+                                                <option value="{{$c->id}}" @if($company==$c->id) selected @endif>{{$c->company_name}}</option>
+                                            @endforeach
+                                      </select>
                                     </div>
                                        &nbsp;
                                     <div class="input-group">
