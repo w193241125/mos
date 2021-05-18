@@ -50,6 +50,7 @@ class SettingController extends Controller
 
     public function timeLimitedDel(Request $request)
     {
+        return json_encode('别闹，不能删~',200);
         $id = $request->id;
         $res = DB::table('time_limited')->delete($id);
         if ($res){
