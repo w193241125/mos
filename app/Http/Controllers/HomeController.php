@@ -222,13 +222,6 @@ class HomeController extends Controller
                     }
                 }
 
-                // 都城早餐当天限制
-                if ($this->time_type[$data['tmark']]==1 && $dayWeek == $this->week_type[$data['tmark']]  && $data['sid'] == 16){
-                    if (strtotime(date('Y-m-d 00:00:00')) < time()){
-                        return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
-                    }
-
-                }
 
                 // 判断点餐时间是否超时
                 if ($dayWeek == $this->week_type[$data['tmark']]  &&  time() > strtotime($t_limit[$this->time_type[$data['tmark']]]) ){
@@ -246,22 +239,6 @@ class HomeController extends Controller
                 $data['year'] = date('Y',time());
                 $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$weekOfYear,'uid'=>$data['uid'],'ostate'=>1, 'year'=>date('Y',time()),'date'=>$data['date']])->get()->toArray();
 
-                 // 都城早餐
-                if ($this->time_type[$data['tmark']]==1 && (($dayWeek +1)  == ($this->week_type[$data['tmark']]))  ){
-                    if ($data['sid'] == 16 || (!empty($res) && $res[0]->sid == '16') ){
-                        if (strtotime(date('Y-m-d 13:00:00')) < time()){
-                            return redirect('home/show')->with(['error_msg'=>'别闹，早餐超过点餐时限(或者你点了都城早餐)']);
-                        }
-                    }
-                }
-                // 都城早餐--周日特殊处理。
-                if ($this->time_type[$data['tmark']]==1 && $dayWeek == 6 &&  $this->week_type[$data['tmark']] == 0 ){
-                     if ($data['sid'] == 16 || (!empty($res) && $res[0]->sid == '16')){
-                        if (strtotime(date('Y-m-d 13:00:00')) < time()){
-                            return redirect('home/show')->with(['error_msg'=>'别闹，早餐超过点餐时限(或者你点了都城早餐)']);
-                        }
-                    }
-                }
 
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
@@ -388,20 +365,7 @@ class HomeController extends Controller
                 if ($money_limit[$data['sid']] < $data['total']){
                     return redirect('home/showNextWeek')->with(['error_msg'=>'点餐失败，点餐金额超过限额']);
                 }
-                 // 早餐
-                if ($this->time_type[$data['tmark']]==1 && (($dayWeek +1)  == ($this->week_type[$data['tmark']])) && $data['sid'] == 16){
-                    if (strtotime(date('Y-m-d 13:00:00')) < time()){
-                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
-                    }
 
-                }
-                // 早餐--周日特殊处理。
-                if ($this->time_type[$data['tmark']]==1 && $dayWeek == 6 &&  $this->week_type[$data['tmark']] == 0 && $data['sid'] == 16){
-                    if (strtotime(date('Y-m-d 13:00:00')) < time()){
-                        return redirect('home/show')->with(['error_msg'=>'早餐点餐失败，超过点餐时限']);
-                    }
-
-                }
                 $data['food'] = trim($data['food'],'+');
                 $data['year'] = date('Y',time());
                 $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$data['week_of_year'],'uid'=>$data['uid'],'ostate'=>1,'date'=>$data['date']])->get()->toArray();
