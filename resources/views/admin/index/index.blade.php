@@ -32,8 +32,39 @@
                 </div>
             </div>
             <!-- /. ROW  -->
-
-        </div>
+            @if(!empty($repeat))
+            <h1 style="color:red" >有重复订单！！！</h1>
+            <h1 style="color:red" >有重复订单！！！</h1>
+            <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                            <thead>
+                            <tr>
+                                <th>用户ID</th>
+                                <th>日期</th>
+                                <th>金额</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($repeat as $r)
+                                <tr class="gradeA">
+                                    <td class="selectId">
+                                        {{$r->uname}}
+                                    </td>
+                                    <td class="selectId">
+                                        {{$r->date}}
+                                    </td>
+                                    <td class="selectId">
+                                        {{$r->total}}
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @endif
     </section>
     </div>
     <!-- /. PAGE INNER  -->
