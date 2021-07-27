@@ -153,36 +153,8 @@ class HomeController extends Controller
             foreach ($request->shop as $mark=>$shop) {
                 if ($shop == 0){
                     $res = DB::table('orders')->where(['tmark'=>$mark,'week_of_year'=>$weekOfYear,'uid'=>$data['uid'],'ostate'=>1, 'year'=>date('Y',time())])->get()->toArray();
-
-                    if (!empty($res)){
-                        // 都城早餐当天限制
-                        if ($this->time_type[$mark]==1 && $dayWeek == $this->week_type[$mark]){
-                            if ($res[0]->sid == '16'){
-                                if (strtotime(date('Y-m-d 00:00:00')) < time()){
-                                    return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
-                                }
-                            }
-                        }
-                        // 都城早餐
-                        if ($this->time_type[$mark]==1 && (($dayWeek +1)  == ($this->week_type[$mark]))  ){
-                            if ($res[0]->sid == '16'){
-                                if (strtotime(date('Y-m-d 13:00:00')) < time()){
-                                    return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
-                                }
-                            }
-                        }
-                        // 都城早餐--周日特殊处理。
-                        if ($this->time_type[$mark]==1 && $dayWeek == 6 &&  $this->week_type[$mark] == 0 ){
-                             if ($res[0]->sid == '16'){
-                                if (strtotime(date('Y-m-d 13:00:00')) < time()){
-                                    return redirect('home/show')->with(['error_msg'=>'别闹，超过点餐时限你没法取消都城早餐']);
-                                }
-                            }
-                        }
-                    }
-
-                //取消点餐
-                DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear,'year'=>date('Y',time())])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
+                    //取消点餐
+                    DB::table('orders')->where(['uid'=>$data['uid'],'tmark'=>$mark,'week_of_year'=>$weekOfYear,'year'=>date('Y',time())])->update(['ostate'=>2,'delete_at'=>date('Y-m-d H:i:s',time())]);
                 }
             }
         }
@@ -396,7 +368,7 @@ class HomeController extends Controller
 
     public function jishubu()
     {
-        $name = [16=>'何海平',17=>'闵小明',19=>'刘冠生',20=>'杨南峰',41=>'樊君泽',83=>'郭志昊',84=>'吴顺',85=>'陈裕升',89=>'冼永豪',96=>'姚秋号',102=>'林尤鑫',130=>'李锦明',110=>'陈诗友',44=>'范文彬'];
+        $name = [16=>'何海平',17=>'闵小明',19=>'刘冠生',20=>'杨南峰',83=>'郭志昊',84=>'吴顺',96=>'姚秋号',130=>'李锦明',44=>'范文彬','158'=>'李志鹏','123'=>'王军',];
         $uname = array_keys($name);
         //获取本周是今年第几周
         $weekOfYear = date('W',time());
