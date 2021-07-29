@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 
 class HomeController extends Controller
@@ -162,13 +163,14 @@ class HomeController extends Controller
         if (isset($request->order)){
             $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
             $today = date('Y-m-d');//获取今天日期
+            $fail_tmark = [];//失败加锁导致的点餐
 
             foreach ($request->order as $key=>$item) {
                 $data['tmark'] = $key;
                 $data['date']=date("Y-m-d",strtotime("+".$this->day_add[$dayWeek][$key]." day"));
 
                 if (is_array($item)){
-                    $m=0;
+                    $m=0; //用于判断是否同一餐点了2家餐厅
                     $sid = '';
                     foreach ($item as $k=>$v) {
                         $data['sid'] = $k;
@@ -212,6 +214,21 @@ class HomeController extends Controller
                 $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$weekOfYear,'uid'=>$data['uid'],'ostate'=>1, 'year'=>date('Y',time()),'date'=>$data['date']])->get()->toArray();
 
 
+
+                $redis_key  = $data['uname'].'_'.$data['tmark'];
+
+                //加锁，避免重复
+                $r_get = Redis::setnx($redis_key, 'live');
+
+                if ($r_get){
+                    $redis_res = Redis::expire($redis_key,  '5');//加锁5秒不能重复点，防止重复订单
+                }else{
+                    $fail_tmark[] = $data['tmark'];
+                    $data['total'] = 0;
+                    $data['food'] = '';
+                    continue;
+                }
+
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
@@ -221,7 +238,19 @@ class HomeController extends Controller
                 $data['food'] = '';
             }
         }
-        return redirect('home/show')->with(['message'=>'点餐成功']);
+
+        $msg_err = '';
+        if ($fail_tmark){
+            foreach ($fail_tmark as $v)
+            $msg_err .= $this->week_name[$v].',';
+        }
+
+        if ($msg_err){
+            return redirect('home/show')->with(['error_msg'=>$msg_err.'可能点餐失败，请自行查看，若已成功，请忽略']);
+        }else{
+            return redirect('home/show')->with(['message'=>'点餐成功']);
+        }
+
     }
 
     public function show()
@@ -304,6 +333,9 @@ class HomeController extends Controller
 
         if (isset($request->order)){
             $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
+
+            $fail_tmark = [];//加锁导致失败的点餐
+
             foreach ($request->order as $key=>$item) {
                 $data['tmark'] = $key;
                 $data['date']=date("Y-m-d",strtotime("+".$this->day_add_nextweek[$dayWeek][$key]." day"));
@@ -341,6 +373,23 @@ class HomeController extends Controller
                 $data['food'] = trim($data['food'],'+');
                 $data['year'] = date('Y',time());
                 $res = DB::table('orders')->where(['tmark'=>$data['tmark'],'week_of_year'=>$data['week_of_year'],'uid'=>$data['uid'],'ostate'=>1,'date'=>$data['date']])->get()->toArray();
+
+
+                $redis_key  = $data['uname'].'_nextweek_'.$data['tmark'];
+
+                //加锁，避免重复
+                $r_get = Redis::setnx($redis_key, 'live');
+
+                if ($r_get){
+                    $redis_res = Redis::expire($redis_key,  '5');//加锁5秒不能重复点，防止重复订单
+                }else{
+                    $fail_tmark[] = $data['tmark'];
+                    $data['total'] = 0;
+                    $data['food'] = '';
+                    continue;
+                }
+
+
                 if ($res){
                     DB::table('orders')->where('oid','=',$res[0]->oid)->update($data);
                 } else {
@@ -351,7 +400,18 @@ class HomeController extends Controller
                 $data['food'] = '';
             }
         }
-        return redirect('home/showNextWeek')->with(['message'=>'点餐成功']);
+
+        $msg_err = '';
+        if ($fail_tmark){
+            foreach ($fail_tmark as $v)
+            $msg_err .= $this->week_name[$v].',';
+        }
+
+        if ($msg_err){
+            return redirect('home/showNextWeek')->with(['error_msg'=>$msg_err.'可能点餐失败，请自行查看，若已成功，请忽略']);
+        }else{
+            return redirect('home/showNextWeek')->with(['message'=>'点餐成功']);
+        }
     }
 
     public function showNextWeek()
