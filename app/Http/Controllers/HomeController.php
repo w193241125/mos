@@ -160,10 +160,11 @@ class HomeController extends Controller
             }
         }
 
+        $fail_tmark = [];//失败加锁导致的点餐
         if (isset($request->order)){
             $dayWeek = Carbon::parse(date('Y-m-d',time()))->dayOfWeek;//获取今天是周几
             $today = date('Y-m-d');//获取今天日期
-            $fail_tmark = [];//失败加锁导致的点餐
+
 
             foreach ($request->order as $key=>$item) {
                 $data['tmark'] = $key;
